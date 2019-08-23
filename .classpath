@@ -5,6 +5,9 @@
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Programming/javaDocs/jdk-8u192-docs-all"/>
 		</attributes>
+		<accessrules>
+			<accessrule kind="accessible" pattern="javafx/**"/>
+		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
