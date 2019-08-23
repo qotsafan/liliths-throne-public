@@ -35,15 +35,15 @@ public enum OrificePlasticity {
 
 	/**Normal value, along with FOUR_ACCOMMODATING. Will slowly return to starting value after sex, at a rate of 2 cm per 3 hours.*/
 	THREE_RESILIENT("resilient",
-			"[style.colourPlasticity(slowly recovers all of its original capacity)]",
-			"[style.colourPlasticity(slowly recover all of their original capacity)]",
-			3, 0, 2/(60*60f*4), Colour.GENERIC_SIZE_FOUR),
+			"[style.colourPlasticity(slowly recovers almost all of its original capacity)]",
+			"[style.colourPlasticity(slowly recover almost all of their original capacity)]",
+			3, 0.1f, 2/(60*60f*4), Colour.GENERIC_SIZE_FOUR),
 
 	/**Normal value, along with THREE_RESILIENT. Will very slowly return to starting value after sex, at a rate of 2 cm per 12 hours.*/
 	FOUR_ACCOMMODATING("accommodating",
-			"[style.colourPlasticity(very slowly recovers all of its original capacity)]",
-			"[style.colourPlasticity(very slowly recover all of their original capacity)]",
-			4, 0, 2/(60*60f*12), Colour.GENERIC_SIZE_FIVE),
+			"[style.colourPlasticity(very slowly recovers most of its original capacity)]",
+			"[style.colourPlasticity(very slowly recover most of their original capacity)]",
+			4, 0.15f, 2/(60*60f*12), Colour.GENERIC_SIZE_FIVE),
 
 	/*-------STRETCHY:---------*/
 
@@ -59,11 +59,11 @@ public enum OrificePlasticity {
 			"[style.colourPlasticity(very slowly recover [style.italicsBad(only a fraction)] of their original capacity)]",
 			6, 0.6f, 2/(60*60f*24), Colour.GENERIC_SIZE_SEVEN),
 
-	/**Will recover none of its original size after sex.*/
+	/**Will recover almost none of its original size after sex.*/
 	SEVEN_MOULDABLE("mouldable",
-			"remains [style.italicsTerrible(permanently stretched)] [style.colourPlasticity(and recovers none of its original capacity)]",
-			"remains [style.italicsTerrible(permanently stretched)] [style.colourPlasticity(and recovers none of their original capacity)]",
-			7, 1, 2/(60*60f*24), Colour.GENERIC_SIZE_EIGHT);
+			"remains [style.italicsTerrible(permanently stretched)] [style.colourPlasticity(and recovers almost none of its original capacity)]",
+			"remains [style.italicsTerrible(permanently stretched)] [style.colourPlasticity(and recovers almost none of their original capacity)]",
+			7, 0.9f, 2/(60*60f*24), Colour.GENERIC_SIZE_EIGHT);
 
 	
 	private String descriptor;
