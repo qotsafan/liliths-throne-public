@@ -897,7 +897,7 @@ public class ClothingType {
 			false,
 			"antler headband",
 			"antler headbands",
-			"A thin band of metal that sits atop your head.",
+			"A felt-covered headband with a pair of novelty plush reindeer antlers attached to the top.",
 			0,
 			null,
 			InventorySlot.HEAD,
@@ -2086,8 +2086,12 @@ public class ClothingType {
 									InventorySlot.TAIL,
 									InventorySlot.TORSO_UNDER,
 									InventorySlot.VAGINA,
-									InventorySlot.WEAPON_MAIN,
-									InventorySlot.WEAPON_OFFHAND,
+									InventorySlot.WEAPON_MAIN_1,
+									InventorySlot.WEAPON_MAIN_2,
+									InventorySlot.WEAPON_MAIN_3,
+									InventorySlot.WEAPON_OFFHAND_1,
+									InventorySlot.WEAPON_OFFHAND_2,
+									InventorySlot.WEAPON_OFFHAND_3,
 									InventorySlot.WRIST))),
 			null,
 			ColourListPresets.LEATHER,
@@ -5433,7 +5437,7 @@ public class ClothingType {
 		}
 	};
 	
-	public static AbstractClothingType LEG_HOTPANTS = new AbstractClothingType(150,
+	public static AbstractClothingType LEG_HOTPANTS = new AbstractClothingType(150, //TODO
 			"a pair of",
 			true,
 			"hotpants",
@@ -6000,7 +6004,7 @@ public class ClothingType {
 
 	// GROIN
 
-	public static AbstractClothingType GROIN_PANTIES = new AbstractClothingType(100,
+	public static AbstractClothingType GROIN_PANTIES = new AbstractClothingType(100, //TODO
 			"a pair of",
 			true,
 			"panties",
@@ -7863,15 +7867,15 @@ public class ClothingType {
 			"Enforcer's shirt",
 			"Enforcer's shirts",
 			"An Enforcer's shirt, it comes with what appears to be a stab-proof vest.",
-			3,
+			0.2f,
 			null,
 			InventorySlot.TORSO_UNDER,
 			Rarity.EPIC,
-			ClothingSet.ENFORCER,
+			ClothingSet.SLUTTY_ENFORCER,
 			"clothing/enforcerShirt",
 			Util.newArrayListOfValues(
-					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_MAJOR_ATTRIBUTE, TFModifier.STRENGTH, TFPotency.MAJOR_BOOST, 0),
-					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.DAMAGE_PHYSICAL, TFPotency.MAJOR_BOOST, 0)),
+					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.DAMAGE_LUST, TFPotency.MAJOR_BOOST, 0),
+					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.DAMAGE_LUST, TFPotency.MAJOR_BOOST, 0)),
 			Util.newArrayListOfValues(
 					new BlockedParts(
 							DisplacementType.REMOVE_OR_EQUIP,
@@ -7936,11 +7940,10 @@ public class ClothingType {
 			null,
 			InventorySlot.LEG,
 			Rarity.EPIC,
-			ClothingSet.ENFORCER,
+			ClothingSet.SLUTTY_ENFORCER,
 			"clothing/enforcerShorts",
 			Util.newArrayListOfValues(
-					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_MAJOR_ATTRIBUTE, TFModifier.STRENGTH, TFPotency.MAJOR_BOOST, 0),
-					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.DAMAGE_PHYSICAL, TFPotency.MAJOR_BOOST, 0)),
+					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.DAMAGE_LUST, TFPotency.MAJOR_BOOST, 0)),
 			Util.newArrayListOfValues(
 					new BlockedParts(
 									DisplacementType.REMOVE_OR_EQUIP,
@@ -8010,11 +8013,10 @@ public class ClothingType {
 			Femininity.FEMININE,
 			InventorySlot.LEG,
 			Rarity.EPIC,
-			ClothingSet.ENFORCER,
+			ClothingSet.SLUTTY_ENFORCER,
 			"clothing/enforcer_miniskirt",
 			Util.newArrayListOfValues(
-					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_MAJOR_ATTRIBUTE, TFModifier.STRENGTH, TFPotency.MAJOR_BOOST, 0),
-					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.DAMAGE_PHYSICAL, TFPotency.MAJOR_BOOST, 0)),
+					new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.DAMAGE_LUST, TFPotency.MAJOR_BOOST, 0)),
 			Util.newArrayListOfValues(
 					new BlockedParts(DisplacementType.PULLS_UP,
 							null,
@@ -8905,7 +8907,11 @@ public class ClothingType {
 					new BlockedParts(
 							DisplacementType.REMOVE_OR_EQUIP,
 							Util.newArrayListOfValues(ClothingAccess.ARMS_UP_TO_SHOULDER),
-							null,
+							Util.newArrayListOfValues(
+									CoverableArea.BREASTS,
+									CoverableArea.NIPPLES,
+									CoverableArea.STOMACH,
+									CoverableArea.BACK),
 							Util.newArrayListOfValues(ClothingAccess.ARMS_UP_TO_SHOULDER),
 							PresetConcealmentLists.CONCEALED_FULL_TORSO.getPresetInventorySlotList())),
 			null,

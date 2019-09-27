@@ -39,12 +39,11 @@ import com.lilithsthrone.game.inventory.item.AbstractItemType;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.sex.Sex;
 import com.lilithsthrone.game.sex.SexAreaOrifice;
-import com.lilithsthrone.game.sex.managers.submission.SMBreedingStallBack;
-import com.lilithsthrone.game.sex.managers.submission.SMBreedingStallFront;
+import com.lilithsthrone.game.sex.managers.submission.SMBreedingStall;
 import com.lilithsthrone.game.sex.managers.submission.SMRoxyPussyLicker;
 import com.lilithsthrone.game.sex.managers.universal.SMGeneric;
+import com.lilithsthrone.game.sex.positions.slots.SexSlotBreedingStall;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotLyingDown;
-import com.lilithsthrone.game.sex.positions.slots.SexSlotUnique;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Colour;
 import com.lilithsthrone.utils.Util;
@@ -55,7 +54,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.2.6
- * @version 0.3.4
+ * @version 0.3.4.5
  * @author Innoxia
  */
 public class GamblingDenDialogue {
@@ -1227,16 +1226,16 @@ public class GamblingDenDialogue {
 				return new ResponseSex("Front "+breeder.getName(true), "Lie on your front, where "+breeder.getName(true)+" will be the first to move up to fuck you.",
 						null, null, null, null, null, null,
 						true, false,
-						new SMBreedingStallFront(true, false, false,
-								Util.newHashMapOfValues(new Value<>(breeder, SexSlotUnique.BREEDING_STALL_FUCKING)),
-								Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotUnique.BREEDING_STALL_FRONT))) {
+						new SMBreedingStall(true, false, false,
+								Util.newHashMapOfValues(new Value<>(breeder, SexSlotBreedingStall.BREEDING_STALL_FUCKING)),
+								Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotBreedingStall.BREEDING_STALL_FRONT))) {
 							@Override
 							public boolean isPositionChangingAllowed(GameCharacter character) {
 								return false;
 							}
 							@Override
 							public boolean isPartnerWantingToStopSex(GameCharacter partner) {
-								return Sex.getNumberOfOrgasms(Sex.getActivePartner())>=1;
+								return Sex.getNumberOfOrgasms(partner)>=1;
 							}
 							@Override
 							public void initStartingLustAndArousal(GameCharacter character) {
@@ -1261,7 +1260,7 @@ public class GamblingDenDialogue {
 			} else if(index==2) {
 				NPC breeder = breeders.get(breederIndex);
 
-				if(!Main.game.getPlayer().getLegConfiguration().isBipedalPositionedGenitals()) {
+				if(Main.game.getPlayer().isTaur()) {
 					return new Response("Back "+breeder.getName(true),
 							"Due to your lower body being that of a feral [pc.legRace], you're unable to fit into the breeding stall by lying on your back. You'll have to lie down on your front instead...",
 							null);
@@ -1270,16 +1269,16 @@ public class GamblingDenDialogue {
 				return new ResponseSex("Back "+breeder.getName(true), "Lie on your back, where "+breeder.getName(true)+" will be the first to move up to fuck you.",
 						null, null, null, null, null, null,
 						true, false,
-						new SMBreedingStallBack(true, false, false,
-								Util.newHashMapOfValues(new Value<>(breeder, SexSlotUnique.BREEDING_STALL_FUCKING)),
-								Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotUnique.BREEDING_STALL_BACK))) {
+						new SMBreedingStall(true, false, false,
+								Util.newHashMapOfValues(new Value<>(breeder, SexSlotBreedingStall.BREEDING_STALL_FUCKING)),
+								Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotBreedingStall.BREEDING_STALL_BACK))) {
 							@Override
 							public boolean isPositionChangingAllowed(GameCharacter character) {
 								return false;
 							}
 							@Override
 							public boolean isPartnerWantingToStopSex(GameCharacter partner) {
-								return Sex.getNumberOfOrgasms(Sex.getActivePartner())>=1;
+								return Sex.getNumberOfOrgasms(partner)>=1;
 							}
 							@Override
 							public void initStartingLustAndArousal(GameCharacter character) {
@@ -1329,16 +1328,16 @@ public class GamblingDenDialogue {
 					return new ResponseSex("Front "+breeder.getName(true), "Position yourself so that you're lying on your front, where "+breeder.getName(true)+" will be the next breeder to move up to fuck you.",
 							null, null, null, null, null, null,
 							true, false,
-							new SMBreedingStallFront(true, false, false,
-									Util.newHashMapOfValues(new Value<>(breeder, SexSlotUnique.BREEDING_STALL_FUCKING)),
-									Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotUnique.BREEDING_STALL_FRONT))) {
+							new SMBreedingStall(true, false, false,
+									Util.newHashMapOfValues(new Value<>(breeder, SexSlotBreedingStall.BREEDING_STALL_FUCKING)),
+									Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotBreedingStall.BREEDING_STALL_FRONT))) {
 								@Override
 								public boolean isPositionChangingAllowed(GameCharacter character) {
 									return false;
 								}
 								@Override
 								public boolean isPartnerWantingToStopSex(GameCharacter partner) {
-									return Sex.getNumberOfOrgasms(Sex.getActivePartner())>=1;
+									return Sex.getNumberOfOrgasms(partner)>=1;
 								}
 								@Override
 								public void initStartingLustAndArousal(GameCharacter character) {
@@ -1363,7 +1362,7 @@ public class GamblingDenDialogue {
 				} else if(index==2) {
 					NPC breeder = breeders.get(breederIndex);
 
-					if(!Main.game.getPlayer().getLegConfiguration().isBipedalPositionedGenitals()) {
+					if(Main.game.getPlayer().isTaur()) {
 						return new Response("Back "+breeder.getName(true),
 								"Due to your lower body being that of a feral [pc.legRace], you're unable to fit into the breeding stall by lying on your back. You'll have to lie down on your front instead...",
 								null);
@@ -1372,16 +1371,16 @@ public class GamblingDenDialogue {
 					return new ResponseSex("Back "+breeder.getName(true), "Position yourself so that you're lying on your back, where "+breeder.getName(true)+" will be the next breeder to move up to fuck you.",
 							null, null, null, null, null, null,
 							true, false,
-							new SMBreedingStallBack(true, false, false,
-									Util.newHashMapOfValues(new Value<>(breeder, SexSlotUnique.BREEDING_STALL_FUCKING)),
-									Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotUnique.BREEDING_STALL_BACK))) {
+							new SMBreedingStall(true, false, false,
+									Util.newHashMapOfValues(new Value<>(breeder, SexSlotBreedingStall.BREEDING_STALL_FUCKING)),
+									Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotBreedingStall.BREEDING_STALL_BACK))) {
 								@Override
 								public boolean isPositionChangingAllowed(GameCharacter character) {
 									return false;
 								}
 								@Override
 								public boolean isPartnerWantingToStopSex(GameCharacter partner) {
-									return Sex.getNumberOfOrgasms(Sex.getActivePartner())>=1;
+									return Sex.getNumberOfOrgasms(partner)>=1;
 								}
 								@Override
 								public void initStartingLustAndArousal(GameCharacter character) {
@@ -1560,9 +1559,9 @@ public class GamblingDenDialogue {
 							:"As the breeder steps away from the volunteer, you step forwards to take your turn at fucking her creampied-pussy.",
 						null, null, null, null, null, null,
 						true, false,
-						new SMBreedingStallBack(true, false, false,
-								Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotUnique.BREEDING_STALL_FUCKING)),
-								Util.newHashMapOfValues(new Value<>(mother, SexSlotUnique.BREEDING_STALL_BACK))) {
+						new SMBreedingStall(true, false, false,
+								Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotBreedingStall.BREEDING_STALL_FUCKING)),
+								Util.newHashMapOfValues(new Value<>(mother, SexSlotBreedingStall.BREEDING_STALL_BACK))) {
 							@Override
 							public Map<GameCharacter, List<CoverableArea>> exposeAtStartOfSexMap() {
 								Map<GameCharacter, List<CoverableArea>> map = new HashMap<>();

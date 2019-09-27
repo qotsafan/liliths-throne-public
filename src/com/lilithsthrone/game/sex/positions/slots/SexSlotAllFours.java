@@ -16,7 +16,7 @@ public class SexSlotAllFours {
 	public static final SexSlot ALL_FOURS = new SexSlot(
 			"Down on all fours",
 			"all fours",
-			"With trembling [npc.legs], [npc.name] [npc.do] [npc.her] best to [npc.verb(steady)] [npc2.herself], and with [npc.a_moan+], [npc.she] [npc.verb(prepare)] to reach [npc.her] climax.",
+			"With trembling [npc.legs], [npc.name] [npc.do] [npc.her] best to steady [npc.herself], and with [npc.a_moan+], [npc.she] [npc.verb(prepare)] to reach [npc.her] climax.",
 			false,
 			SexSlotTag.ALL_FOURS);
 	public static final SexSlot ALL_FOURS_TWO = new SexSlot(ALL_FOURS){
@@ -57,7 +57,7 @@ public class SexSlotAllFours {
 		@Override
 		public boolean isStanding(GameCharacter target) {
 			GameCharacter partner = getCharacterInSlot(ALL_FOURS);
-			return partner!=null && (partner.isSizeDifferenceTallerThan(target) || !partner.getLegConfiguration().isBipedalPositionedGenitals());
+			return partner!=null && (partner.isSizeDifferenceTallerThan(target) || partner.isTaur());
 		}
 	};
 	public static final SexSlot BEHIND_TWO = new SexSlot(
@@ -79,7 +79,7 @@ public class SexSlotAllFours {
 		@Override
 		public boolean isStanding(GameCharacter target) {
 			GameCharacter partner = getCharacterInSlot(ALL_FOURS_TWO);
-			return partner!=null && (partner.isSizeDifferenceTallerThan(target) || !partner.getLegConfiguration().isBipedalPositionedGenitals());
+			return partner!=null && (partner.isSizeDifferenceTallerThan(target) || partner.isTaur());
 		}
 	};
 	public static final SexSlot BEHIND_THREE = new SexSlot(
@@ -101,7 +101,7 @@ public class SexSlotAllFours {
 		@Override
 		public boolean isStanding(GameCharacter target) {
 			GameCharacter partner = getCharacterInSlot(ALL_FOURS_THREE);
-			return partner!=null && (partner.isSizeDifferenceTallerThan(target) || !partner.getLegConfiguration().isBipedalPositionedGenitals());
+			return partner!=null && (partner.isSizeDifferenceTallerThan(target) || partner.isTaur());
 		}
 	};
 	public static final SexSlot BEHIND_FOUR = new SexSlot(
@@ -123,7 +123,7 @@ public class SexSlotAllFours {
 		@Override
 		public boolean isStanding(GameCharacter target) {
 			GameCharacter partner = getCharacterInSlot(ALL_FOURS_FOUR);
-			return partner!=null && (partner.isSizeDifferenceTallerThan(target) || !partner.getLegConfiguration().isBipedalPositionedGenitals());
+			return partner!=null && (partner.isSizeDifferenceTallerThan(target) || partner.isTaur());
 		}
 	};
 	

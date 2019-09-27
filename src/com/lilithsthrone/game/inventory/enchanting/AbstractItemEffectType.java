@@ -410,7 +410,7 @@ public abstract class AbstractItemEffectType {
 		} else if(primaryModifier==TFModifier.TF_BREASTS) {
 			orificeName = "nipple";
 		} else if(primaryModifier==TFModifier.TF_BREASTS_CROTCH) {
-			orificeName = "teat";
+			orificeName = "teat (crotch)";
 		} else if(primaryModifier==TFModifier.TF_ASS) {
 			orificeName = "anus";
 		}
@@ -470,7 +470,7 @@ public abstract class AbstractItemEffectType {
 						break;
 				}
 				break;
-			case TF_BREASTS: case TF_BREASTS_CROTCH:
+			case TF_BREASTS:
 				switch(secondaryModifier) {
 					case TF_MOD_SIZE:
 						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "cup size", CupSize.getCupSizeFromInt(limit).getCupSizeName()+"-cup"));
@@ -498,6 +498,39 @@ public abstract class AbstractItemEffectType {
 						break;
 					case TF_MOD_ORIFICE_TENTACLED:
 						descriptions.add(getClothingOrificeTFChangeDescriptionEntry(potency, "nipples internally tentacled", "nipple tentacles"));
+						break;
+					default:
+						break;
+				}
+				break;
+			case TF_BREASTS_CROTCH:
+				switch(secondaryModifier) {
+					case TF_MOD_SIZE:
+						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "cup size (crotch)", CupSize.getCupSizeFromInt(limit).getCupSizeName()+"-cup"));
+						break;
+					case TF_MOD_SIZE_SECONDARY:
+						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "nipple size (crotch)", NippleSize.getNippleSizeFromInt(limit).getName()));
+						break;
+					case TF_MOD_SIZE_TERTIARY:
+						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "areolae size (crotch)", AreolaeSize.getAreolaeSizeFromInt(limit).getName()));
+						break;
+					case TF_MOD_WETNESS:
+						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "lactation (crotch)", Units.fluid(limit, Units.ValueType.PRECISE, Units.UnitType.SHORT)));
+						break;
+					case TF_MOD_REGENERATION:
+						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "milk regeneration (crotch)", String.valueOf(limit)));
+						break;
+					case TF_MOD_ORIFICE_PUFFY:
+						descriptions.add(getClothingOrificeTFChangeDescriptionEntry(potency, "nipples puffy (crotch)", "nipple puffyness"));
+						break;
+					case TF_MOD_ORIFICE_RIBBED:
+						descriptions.add(getClothingOrificeTFChangeDescriptionEntry(potency, "nipples internally ribbed (crotch)",  "nipple ribbing"));
+						break;
+					case TF_MOD_ORIFICE_MUSCLED:
+						descriptions.add(getClothingOrificeTFChangeDescriptionEntry(potency, "nipples internally muscled (crotch)", "internal nipple muscles"));
+						break;
+					case TF_MOD_ORIFICE_TENTACLED:
+						descriptions.add(getClothingOrificeTFChangeDescriptionEntry(potency, "nipples internally tentacled (crotch)", "nipple tentacles"));
 						break;
 					default:
 						break;
@@ -3254,27 +3287,27 @@ public abstract class AbstractItemEffectType {
 
 					case TF_MOD_LEG_CONFIG_BIPEDAL:
 						return new RacialEffectUtil(" Transforms legs to bipedal "+race.getName(false)+"'s.") {
-							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.BIPEDAL, true); } };
+							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.BIPEDAL, true, false); } };
 
 					case TF_MOD_LEG_CONFIG_TAUR:
 						return new RacialEffectUtil(" Transforms lower body to a quadrupedal, feral "+race.getName(true)+"'s.") {
-							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.TAUR, true); } };
+							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.TAUR, true, false); } };
 
 					case TF_MOD_LEG_CONFIG_TAIL_LONG:
 						return new RacialEffectUtil(" Transforms lower body to a long-tailed, feral "+race.getName(true)+"'s.") {
-							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.TAIL_LONG, true); } };
+							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.TAIL_LONG, true, false); } };
 
 					case TF_MOD_LEG_CONFIG_TAIL:
 						return new RacialEffectUtil(" Transforms lower body to a tailed, feral "+race.getName(true)+"'s.") {
-							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.TAIL, true); } };
+							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.TAIL, true, false); } };
 
 					case TF_MOD_LEG_CONFIG_ARACHNID:
 						return new RacialEffectUtil(" Transforms lower body to an eight-legged, feral "+race.getName(true)+"'s.") {
-							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.ARACHNID, true); } };
+							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.ARACHNID, true, false); } };
 
 					case TF_MOD_LEG_CONFIG_CEPHALOPOD:
 						return new RacialEffectUtil(" Transforms lower body to an eight-tentacled, feral "+race.getName(true)+"'s.") {
-							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.CEPHALOPOD, true); } };
+							@Override public String applyEffect() { return RacialBody.valueOfRace(race).getLegType().applyLegConfigurationTransformation(target, LegConfiguration.CEPHALOPOD, true, false); } };
 							
 
 					case TF_MOD_FOOT_STRUCTURE_PLANTIGRADE:

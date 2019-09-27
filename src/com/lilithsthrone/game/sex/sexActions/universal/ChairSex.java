@@ -11,7 +11,7 @@ import com.lilithsthrone.game.sex.Sex;
 import com.lilithsthrone.game.sex.SexControl;
 import com.lilithsthrone.game.sex.SexParticipantType;
 import com.lilithsthrone.game.sex.managers.SexManagerDefault;
-import com.lilithsthrone.game.sex.positions.SexPositionOther;
+import com.lilithsthrone.game.sex.positions.SexPosition;
 import com.lilithsthrone.game.sex.positions.slots.SexSlot;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotSitting;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotStanding;
@@ -19,7 +19,7 @@ import com.lilithsthrone.game.sex.sexActions.PositioningData;
 import com.lilithsthrone.game.sex.sexActions.SexAction;
 import com.lilithsthrone.game.sex.sexActions.SexActionPriority;
 import com.lilithsthrone.game.sex.sexActions.SexActionType;
-import com.lilithsthrone.game.sex.sexActions.baseActionsMisc.GenericPositioningNew;
+import com.lilithsthrone.game.sex.sexActions.baseActionsMisc.GenericPositioning;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
 
@@ -48,7 +48,7 @@ public class ChairSex {
 	}
 	
 	private static boolean isSittingAvailable(GameCharacter gettingFucked) {
-		return gettingFucked.getLegConfiguration().isBipedalPositionedGenitals();
+		return !gettingFucked.isTaur();
 	}
 	
 	public static final SexAction SWITCH_TO_STANDING = new SexAction(
@@ -60,7 +60,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 		
 		private PositioningData data = new PositioningData(
-				SexPositionOther.STANDING,
+				SexPosition.STANDING,
 				Util.newArrayListOfValues(
 						SexSlotStanding.STANDING_DOMINANT,
 						SexSlotStanding.STANDING_DOMINANT_TWO,
@@ -92,7 +92,7 @@ public class ChairSex {
 		}
 		@Override
 		public void applyEffects() {
-			GenericPositioningNew.setNewSexManager(data, false);
+			GenericPositioning.setNewSexManager(data, false);
 		}
 	};
 	
@@ -119,7 +119,7 @@ public class ChairSex {
 		}
 
 		Sex.setSexManager(new SexManagerDefault(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				dominants,
 				submissives){
 		});
@@ -134,7 +134,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 		
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.PERFORMING_ORAL),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING));
 
@@ -176,7 +176,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.PERFORMING_ORAL),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING));
 		
@@ -211,7 +211,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING),
 				Util.newArrayListOfValues(SexSlotSitting.PERFORMING_ORAL));
 		
@@ -254,7 +254,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING),
 				Util.newArrayListOfValues(SexSlotSitting.PERFORMING_ORAL));
 		
@@ -290,13 +290,13 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING_TAUR_PRESENTING_ORAL),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING));
 		
 		@Override
 		public boolean isBaseRequirementsMet() {
-			return !Sex.getCharacterPerformingAction().getLegConfiguration().isBipedalPositionedGenitals()
+			return Sex.getCharacterPerformingAction().isTaur()
 					&& checkBaseRequirements(data, false);
 		}
 		@Override
@@ -333,13 +333,13 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING_TAUR_PRESENTING_ORAL),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING));
 		
 		@Override
 		public boolean isBaseRequirementsMet() {
-			return !Sex.getCharacterPerformingAction().getLegConfiguration().isBipedalPositionedGenitals()
+			return Sex.getCharacterPerformingAction().isTaur()
 					&& checkBaseRequirements(data, true);
 		}
 		@Override
@@ -370,7 +370,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING_IN_LAP));
 
@@ -413,7 +413,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING_IN_LAP));
 		
@@ -449,7 +449,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING_IN_LAP),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING));
 
@@ -463,7 +463,7 @@ public class ChairSex {
 		}
 		@Override
 		public String getActionDescription() {
-			if(Sex.getCharacterPerformingAction().getLegConfiguration().isBipedalPositionedGenitals()) {
+			if(!Sex.getCharacterPerformingAction().isTaur()) {
 				return "Switch positions so that [npc2.name] is the one sitting down, with you sitting in [npc2.her] lap.";
 			} else {
 				return "Switch positions so that [npc2.name] is the one sitting down, with you having turned around and lowered your animalistic genitals down into [npc2.her] lap";
@@ -471,7 +471,7 @@ public class ChairSex {
 		}
 		@Override
 		public String getDescription() {
-			if(Sex.getCharacterPerformingAction().getLegConfiguration().isBipedalPositionedGenitals()) {
+			if(!Sex.getCharacterPerformingAction().isTaur()) {
 				return "[npc.Name] [npc.verb(decide)] to switch positions, and, getting [npc2.name] to sit down, [npc.she] [npc.verb(sit)] down on [npc2.her] lap."
 						+ " Looking down into [npc2.her] [npc2.eyes], [npc.she] [npc.moansVerb], "
 						+ "[npc.speech(Good [npc2.girl]!)]";
@@ -501,7 +501,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING_IN_LAP),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING));
 		
@@ -536,7 +536,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING_BETWEEN_LEGS),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING));
 
@@ -581,7 +581,7 @@ public class ChairSex {
 			SexParticipantType.NORMAL) {
 
 		private PositioningData data = new PositioningData(
-				SexPositionOther.SITTING,
+				SexPosition.SITTING,
 				Util.newArrayListOfValues(SexSlotSitting.SITTING_BETWEEN_LEGS),
 				Util.newArrayListOfValues(SexSlotSitting.SITTING));
 		
@@ -650,7 +650,7 @@ public class ChairSex {
 			
 			if(Sex.getPositionRequest().getPartnerSlots().get(0)==SexSlotSitting.SITTING_IN_LAP) {
 				if(isHappy) {
-					switch(Sex.getSexPace(Sex.getActivePartner())) {
+					switch(Sex.getSexPace(Sex.getCharacterPerformingAction())) {
 						case DOM_ROUGH:
 							return "Roughly pushing [npc2.name] down, [npc.name] [npc.verb(straddle)] [npc2.her] lap, leaning forwards to glare into [npc2.her] eyes as [npc.she] [npc.moansVerb],"
 									+ " [npc.speech(Alright, slut, I'll take you for a ride!)]";
@@ -667,7 +667,7 @@ public class ChairSex {
 			} else if(Sex.getPositionRequest().getPartnerSlots().get(0)==SexSlotSitting.SITTING) {
 				if(Sex.getPositionRequest().getPerformerSlots().get(0)==SexSlotSitting.SITTING_IN_LAP) {
 					if(isHappy) {
-						switch(Sex.getSexPace(Sex.getActivePartner())) {
+						switch(Sex.getSexPace(Sex.getCharacterPerformingAction())) {
 							case DOM_ROUGH:
 								return "Sitting down, [npc.name] [npc.verb(grab)] hold of [npc2.namePos] [npc2.arm], and with a sharp tug,"
 											+ " [npc.she] [npc.verb(pull)] [npc2.herHim] down so that [npc2.sheIs] straddling [npc.her] lap. Leaning forwards to glare into [npc2.her] eyes, [npc.name] [npc.moansVerb],"
@@ -685,7 +685,7 @@ public class ChairSex {
 					
 				} else if(Sex.getPositionRequest().getPerformerSlots().get(0)==SexSlotSitting.SITTING_TAUR_PRESENTING_ORAL) {
 					if(isHappy) {
-						switch(Sex.getSexPace(Sex.getActivePartner())) {
+						switch(Sex.getSexPace(Sex.getCharacterPerformingAction())) {
 							case DOM_ROUGH:
 								return "Letting [npc2.name] finish [npc2.her] manoeuvre, [npc.name] reaches out to grab [npc2.her] hind-legs, before pulling [npc2.her] animalistic groin up to [npc.her] face."
 										+ " Giving [npc2.her] rump a sharp slap, [npc.name] then [npc.moansVerb],"
@@ -703,7 +703,7 @@ public class ChairSex {
 					
 				} else if(Sex.getPositionRequest().getPerformerSlots().get(0)==SexSlotSitting.SITTING_BETWEEN_LEGS) {
 					if(isHappy) {
-						switch(Sex.getSexPace(Sex.getActivePartner())) {
+						switch(Sex.getSexPace(Sex.getCharacterPerformingAction())) {
 							case DOM_ROUGH:
 								return "Letting [npc2.name] finish [npc2.her] manoeuvre, [npc.name] sits down, before lifting [npc.her] [np.legs], wrapping them around [npc2.namePos] lower back, and roughly forcing [npc2.herHim] forwards."
 										+ " Glaring up at [npc2.herHim], [npc.name] then spreads [npc.her] [npc.legs] and [npc.moansVerb],"
@@ -721,7 +721,7 @@ public class ChairSex {
 					
 				} else {
 					if(isHappy) {
-						switch(Sex.getSexPace(Sex.getActivePartner())) {
+						switch(Sex.getSexPace(Sex.getCharacterPerformingAction())) {
 							case DOM_ROUGH:
 								return "Sitting down, [npc.name] [npc.verb(grab)] hold of [npc2.namePos] [npc2.arm], and with a sharp tug, [npc.she] [npc.verb(pull)] [npc2.herHim] down onto [npc2.her] knees before [npc.herHim]."
 										+ " Leaning forwards to glare down into [npc2.her] eyes, [npc.name] [npc.moansVerb],"
@@ -740,7 +740,7 @@ public class ChairSex {
 				
 			} else if(Sex.getPositionRequest().getPartnerSlots().get(0)==SexSlotSitting.PERFORMING_ORAL) {
 				if(isHappy) {
-					switch(Sex.getSexPace(Sex.getActivePartner())) {
+					switch(Sex.getSexPace(Sex.getCharacterPerformingAction())) {
 						case DOM_ROUGH:
 							return "Roughly pushing [npc2.name] down, [npc.name] kneels before [npc2.herHim], leaning forwards to glare up into [npc2.her] eyes as [npc.she] [npc.moansVerb],"
 									+ " [npc.speech(Alright, slut, you'd better be glad that I like performing oral!)]";

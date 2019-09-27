@@ -18,7 +18,7 @@ import com.lilithsthrone.utils.Util;
 
 /**
  * @since 0.3.2
- * @version 0.3.2
+ * @version 0.3.4
  * @author Innoxia
  */
 public class FingerMouth {
@@ -71,6 +71,7 @@ public class FingerMouth {
 //		}
 //	};
 	
+
 	public static final SexAction PARTNER_ASSIST_BLOWJOB = new SexAction(
 			SexActionType.ONGOING,
 			ArousalIncrease.ONE_MINIMUM,
@@ -144,7 +145,7 @@ public class FingerMouth {
 									:""),
 								"Roughly grabbing hold of the sides of [npc2.namePos] head, [npc.name] violently [npc.verb(slam)] [npc2.namePos] head up and down, forcing [npc2.herHim] to [npc2.verb(continue)] sucking [npc3.namePos] [npc3.cock+].",
 								"Snarling a series of lewd, degrading remarks into [npc2.her] [npc2.ear], [npc.name] [npc.verb(slam)] [npc2.namePos] head into [npc3.namePos] crotch,"
-										+ " thereby forcing [npc2.herHim] to take [npc.her] [npc3.cock+] fully into [npc.her] mouth."));
+										+ " thereby forcing [npc2.herHim] to take [npc3.her] [npc3.cock+] fully into [npc2.her] mouth."));
 				
 			} else {
 				return UtilText.parse(
@@ -160,7 +161,7 @@ public class FingerMouth {
 									:""),
 								"Taking hold of the sides of [npc2.namePos] head, [npc.name] [npc.verb(help)] to lift and push [npc2.her] head up and down, helping [npc2.herHim] to continue sucking on [npc3.namePos] [npc3.cock+].",
 								"Giving [npc2.herHim] some lewd words of encouragement, [npc.name] [npc.verb(help)] to push [npc2.namePos] head into [npc3.namePos] crotch,"
-										+ " thereby ensuring that [npc2.she] [npc2.verb(take)] [npc.her] [npc3.cock+] fully into [npc.her] mouth."));
+										+ " thereby ensuring that [npc2.she] [npc2.verb(take)] [npc3.her] [npc3.cock+] fully into [npc2.her] mouth."));
 			}
 		}
 	};

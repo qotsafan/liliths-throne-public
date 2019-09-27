@@ -116,10 +116,10 @@ public class BatCavernSlimeAttackerDialogue {
 							if(getSlime().isVisiblyPregnant()){
 								getSlime().setCharacterReactedToPregnancy(Main.game.getPlayer(), true);
 							}
-							Main.game.getPlayer().removeItem(AbstractItemType.generateItem(ItemType.MUSHROOM));
+							Main.game.getPlayer().removeItem(AbstractItemType.generateItem(ItemType.MUSHROOM), 1, true);
 							Main.game.getTextStartStringBuilder().append(UtilText.parseFromXMLFile("characters/submission/batCavernSlime", "ATTACK_PAID_OFF_WITH_MUSHROOM")
 									+"<p>"
-										+ "You gave away one "+ItemType.MUSHROOM.getName(true)+"!"
+										+ Main.game.getPlayer().removedItemFromInventoryText(ItemType.MUSHROOM)//"You gave away one "+ItemType.MUSHROOM.getName(true)+"!"
 									+ "</p>");
 						}
 					};
@@ -780,7 +780,7 @@ public class BatCavernSlimeAttackerDialogue {
 				if(Sex.getNumberOfOrgasms(getSlime()) >= getSlime().getOrgasmsBeforeSatisfied()) {
 					return UtilText.parse(getSlime(),
 							"<p>"
-								+ "As you step back from [npc.name], [npc.she] sinks to the floor, totally worn out from [npc.her] orgasm"+(Sex.getNumberOfOrgasms(Sex.getActivePartner()) > 1?"s":"")+"."
+								+ "As you step back from [npc.name], [npc.she] sinks to the floor, totally worn out from [npc.her] orgasm"+(Sex.getNumberOfOrgasms(getSlime()) > 1?"s":"")+"."
 								+ " Looking up at you, a satisfied smile settles across [npc.her] face, and you realise that you gave [npc.herHim] exactly what [npc.she] wanted."
 							+ "</p>");
 				} else {

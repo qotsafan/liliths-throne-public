@@ -36,7 +36,7 @@ import java.util.*;
 
 /**
  * @since 0.1.0
- * @version 0.3.2
+ * @version 0.3.4
  * @author Innoxia
  */
 public class Properties {
@@ -55,6 +55,8 @@ public class Properties {
 	public int money = 0;
 	public int arcaneEssences = 0;
 	public int humanEncountersLevel = 1;
+	public int taurFurryLevel = 1;
+	
 	
 	public int multiBreasts = 1;
 	public static String[] multiBreastsLabels = new String[] {"Off", "Furry-only", "On"};
@@ -171,10 +173,7 @@ public class Properties {
 			genderPronounMale.put(gp, gp.getMasculine());
 		}
 		
-		genderPreferencesMap = new EnumMap<>(Gender.class);
-		for(Gender g : Gender.values()) {
-			genderPreferencesMap.put(g, g.getGenderPreferenceDefault().getValue());
-		}
+		resetGenderPreferences();
 
 		orientationPreferencesMap = new EnumMap<>(SexualOrientation.class);
 		for(SexualOrientation o : SexualOrientation.values()) {
@@ -251,6 +250,7 @@ public class Properties {
 			
 			createXMLElementWithValue(doc, settings, "androgynousIdentification", String.valueOf(androgynousIdentification));
 			createXMLElementWithValue(doc, settings, "humanEncountersLevel", String.valueOf(humanEncountersLevel));
+			createXMLElementWithValue(doc, settings, "taurFurryLevel", String.valueOf(taurFurryLevel));
 			createXMLElementWithValue(doc, settings, "multiBreasts", String.valueOf(multiBreasts));
 			createXMLElementWithValue(doc, settings, "udders", String.valueOf(udders));
 			createXMLElementWithValue(doc, settings, "autoSaveFrequency", String.valueOf(autoSaveFrequency));
@@ -683,6 +683,12 @@ public class Properties {
 					humanEncountersLevel = 1;
 				}
 				
+				if(element.getElementsByTagName("taurFurryLevel").item(0)!=null) {
+					taurFurryLevel = Integer.valueOf(((Element)element.getElementsByTagName("taurFurryLevel").item(0)).getAttribute("value"));
+				} else {
+					taurFurryLevel = 1;
+				}
+				
 				if(element.getElementsByTagName("multiBreasts").item(0)!=null) {
 					multiBreasts = Integer.valueOf(((Element)element.getElementsByTagName("multiBreasts").item(0)).getAttribute("value"));
 				} else {
@@ -1077,6 +1083,13 @@ public class Properties {
 
 	public Map<Subspecies, SubspeciesPreference> getSubspeciesMasculinePreferencesMap() {
 		return subspeciesMasculinePreferencesMap;
+	}
+
+	public void resetGenderPreferences() {
+		genderPreferencesMap = new EnumMap<>(Gender.class);
+		for(Gender g : Gender.values()) {
+			genderPreferencesMap.put(g, g.getGenderPreferenceDefault().getValue());
+		}
 	}
 	
 	public void resetAgePreferences() {

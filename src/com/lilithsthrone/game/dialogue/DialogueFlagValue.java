@@ -69,6 +69,8 @@ public enum DialogueFlagValue {
 	
 	
 	// Shopping arcade:
+	ralphAskedAboutHundredKisses,
+	
 	nyanTalkedTo,
 	nyanComplimented,
 	nyanFlirtedWith,
@@ -104,21 +106,20 @@ public enum DialogueFlagValue {
 	readBook3,
 	readBook4,
 	
-	arthursRoomInstalled,
 	arthursPackageObtained,
 	
 	givenLilayaPresent1,
 	givenLilayaPresent2,
 	givenLilayaPresent3,
 	
-	// Brax:
+	// Enforcer HQ:
 	braxEncountered,
 	accessToEnforcerHQ,
 	braxTransformedPlayer,
-	braxBeaten,
 	seenBraxAfterQuest,
 	feminisedBrax,
 	bimbofiedBrax,
+	candiHarpyTransformation,
 	
 	// Harpy Nests:
 	hasHarpyNestAccess,
@@ -180,6 +181,13 @@ public enum DialogueFlagValue {
 	krugerIntroduced,
 	
 	// Submission:
+	claireAskedTeleportation,
+	claireWarning,
+	clairePadsInvestigated,
+	claireEnclosureEscaped,
+	claireObtainedLightningGlobe,
+	claireAskedWarehouseEscape,
+	
 	impCitadelEncountered,
 	impCitadelArcanistEncountered,
 	impCitadelArcanistAcceptedTF,

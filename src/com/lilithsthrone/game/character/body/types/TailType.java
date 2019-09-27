@@ -19,7 +19,7 @@ import com.lilithsthrone.utils.Util;
  * @author Innoxia
  */
 public enum TailType implements BodyPartTypeInterface {
-	NONE(null, null, false, false),
+	NONE(null, Race.NONE, false, false),
 
 	DEMON_COMMON(BodyCoveringType.DEMON_COMMON, Race.DEMON, true, true),
 	DEMON_HAIR_TIP(BodyCoveringType.DEMON_COMMON, Race.DEMON, true, false),
@@ -41,7 +41,7 @@ public enum TailType implements BodyPartTypeInterface {
 
 	SQUIRREL_MORPH(BodyCoveringType.SQUIRREL_FUR, Race.SQUIRREL_MORPH, false, false),
 
-	BAT_MORPH(BodyCoveringType.BAT_SKIN, Race.BAT_MORPH, true, true),
+	BAT_MORPH(BodyCoveringType.BAT_SKIN, Race.BAT_MORPH, true, false),
 	
 	RAT_MORPH(BodyCoveringType.RAT_SKIN, Race.RAT_MORPH, true, true),
 	
@@ -160,7 +160,7 @@ public enum TailType implements BodyPartTypeInterface {
 			case FOX_MORPH:
 				return UtilText.returnStringAtRandom("fox-like", "fluffy");
 			case FOX_MORPH_MAGIC:
-				return UtilText.returnStringAtRandom("magical", "fox-like", "fluffy");
+				return UtilText.returnStringAtRandom("arcane", "fox-like", "fluffy");
 			case SQUIRREL_MORPH:
 				return UtilText.returnStringAtRandom("squirrel-like", "fluffy");
 			case NONE:

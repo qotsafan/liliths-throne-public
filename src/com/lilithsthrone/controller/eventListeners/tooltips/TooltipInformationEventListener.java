@@ -50,6 +50,7 @@ import com.lilithsthrone.game.inventory.InventorySlot;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.enchanting.ItemEffect;
 import com.lilithsthrone.game.inventory.enchanting.LoadedEnchantment;
+import com.lilithsthrone.game.inventory.enchanting.TFEssence;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.rendering.CachedImage;
 import com.lilithsthrone.rendering.ImageCache;
@@ -124,7 +125,7 @@ public class TooltipInformationEventListener implements EventListener {
 					+ "<div class='title'>" + Util.capitaliseSentence(statusEffect.getName(owner)) + "</div>");
 
 			// Attribute modifiers:
-			tooltipSB.append("<div class='subTitle-picture' style='white-space: nowrap'>");
+			tooltipSB.append("<div class='subTitle-picture'>");// style='white-space: nowrap'>");
 				if (!statusEffect.getModifiersAsStringList(owner).isEmpty()) {
 					int i=0;
 					for (String s : statusEffect.getModifiersAsStringList(owner)) {
@@ -238,7 +239,7 @@ public class TooltipInformationEventListener implements EventListener {
 			tooltipSB.append("</div>");
 
 			// Picture:
-			tooltipSB.append("<div class='picture'>" + perk.getSVGString() + "</div>");
+			tooltipSB.append("<div class='picture'>" + perk.getSVGString(owner) + "</div>");
 
 			// Description:
 			tooltipSB.append("<div class='description'>" + UtilText.parse(owner, perk.getDescription(owner)) + "</div>");
@@ -286,7 +287,7 @@ public class TooltipInformationEventListener implements EventListener {
 			tooltipSB.append("</div>");
 
 			// Picture:
-			tooltipSB.append("<div class='picture'>" + levelUpPerk.getSVGString() + "</div>");
+			tooltipSB.append("<div class='picture'>" + levelUpPerk.getSVGString(owner) + "</div>");
 
 			// Description:
 			tooltipSB.append("<div class='description'>" + UtilText.parse(owner, levelUpPerk.getDescription(owner)) + "</div>");
@@ -346,9 +347,12 @@ public class TooltipInformationEventListener implements EventListener {
 
 			// Title:
 			tooltipSB.setLength(0);
-			tooltipSB.append("<div class='title'>" + Util.capitaliseSentence(move.getName(owner)) + "</div>");
+			tooltipSB.append("<div class='title'>" + Util.capitaliseSentence(move.getName(0, owner)) + "</div>");
 
-			tooltipSB.append("<div class='subTitle' style='color:"+move.getType().getColour().toWebHexString()+";'>"+move.getType().getName()+"</div>");
+			boolean coreMove = owner.getEquippedMoves().contains(move);
+			
+			tooltipSB.append("<div class='subTitle' style='width:46%; margin:2% 2% 0% 2%;'>"+(coreMove?"[style.colourMinorGood(Core)]":"[style.colourMinorBad(Non-core)]")+"</div>");
+			tooltipSB.append("<div class='subTitle' style='color:"+move.getType().getColour().toWebHexString()+"; width:46%; margin:2% 2% 0% 2%;'>"+move.getType().getName()+"</div>");
 			
 			if(currentCooldown>0) {
 				tooltipSB.append("<div class='subTitle'><span style='color:"+Colour.GENERIC_MINOR_BAD.toWebHexString()+";'>On cooldown</span>: "+currentCooldown+(currentCooldown==1?" turn":" turns")+"</div>");
@@ -359,13 +363,25 @@ public class TooltipInformationEventListener implements EventListener {
 
 			// Description:
 			tooltipSB.append("<div class='subTitle-picture'>");
-			int apCost = move.getAPcost();
-			Colour[] apColours = new Colour[] {Colour.GENERIC_EXCELLENT, Colour.GENERIC_GOOD, Colour.GENERIC_MINOR_GOOD, Colour.GENERIC_MINOR_BAD, Colour.GENERIC_BAD, Colour.GENERIC_TERRIBLE};
-			tooltipSB.append("AP cost: "+"<span style='color:"+(apColours[apCost]).toWebHexString()+";'>"+apCost+"</span>");
-			int cooldown = move.getCooldown();
-			tooltipSB.append("<br/>Cooldown: "+"<span style='color:"+(cooldown==0?Colour.GENERIC_MINOR_GOOD:Colour.GENERIC_MINOR_BAD).toWebHexString()+";'>"+cooldown+(cooldown==1?" turn":" turns")+"</span>");
-			if(move.getStatusEffects()!=null) {
-				for(Entry<StatusEffect, Integer> entry : move.getStatusEffects().entrySet()) {
+
+			int apCost = move.getAPcost(owner);
+			int cooldown = move.getCooldown(owner);
+
+			tooltipSB.append(
+					"AP cost: "
+						+"<span style='color:"+(Colour.ACTION_POINT_COLOURS[apCost]).toWebHexString()+";'>"
+						+(coreMove?apCost:(apCost-1)+"[style.colourBad(+1)]")
+						+"</span>"
+					+ "<br/>Cooldown: "
+						+ "<span style='color:"+(cooldown-(coreMove?0:1)<=0?Colour.GENERIC_MINOR_GOOD:Colour.GENERIC_MINOR_BAD).toWebHexString()+";'>"
+						+(coreMove?cooldown:(cooldown-1)+"[style.colourBad(+1)]")
+						+"</span> turn"+(cooldown==1?"":"s"));
+			
+//			tooltipSB.append("AP cost: "+"<span style='color:"+(apColours[apCost]).toWebHexString()+";'>"+apCost+"</span>");
+//			tooltipSB.append("<br/>Cooldown: "+"<span style='color:"+(cooldown==0?Colour.GENERIC_MINOR_GOOD:Colour.GENERIC_MINOR_BAD).toWebHexString()+";'>"+cooldown+(cooldown==1?" turn":" turns")+"</span>");
+			
+			if(move.getStatusEffects(owner, owner, false)!=null) {
+				for(Entry<StatusEffect, Integer> entry : move.getStatusEffects(owner, owner, false).entrySet()) {
 					tooltipSB.append("<br/>Applies: <span style='color:"+entry.getKey().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(entry.getKey().getName(null))+"</span> for "+entry.getValue()+(entry.getValue()==1?" turn":" turns"));
 				}
 			}
@@ -377,7 +393,7 @@ public class TooltipInformationEventListener implements EventListener {
 			tooltipSB.append(
 					"<div class='description'>"
 						+"<span style='color:"+(availableValue.getKey()?Colour.GENERIC_MINOR_GOOD:Colour.GENERIC_MINOR_BAD).toWebHexString()+";'>"+availableValue.getValue()+"</span> "
-						+ move.getDescription()
+						+ move.getDescription(owner)
 					+ "</div>");
 			
 
@@ -391,7 +407,7 @@ public class TooltipInformationEventListener implements EventListener {
 				tooltipSB.append("<div class='subTitle' style='color:"+Colour.GENERIC_MINOR_BAD.toWebHexString()+";'>Click to unequip move.</div>");
 			} else {
 				if(owner.getEquippedMoves().size()>=GameCharacter.MAX_COMBAT_MOVES) {
-					tooltipSB.append("<div class='subTitle' style='color:"+Colour.GENERIC_BAD.toWebHexString()+";'>Maximum moves activated.</div>");
+					tooltipSB.append("<div class='subTitle' style='color:"+Colour.GENERIC_BAD.toWebHexString()+";'>Maximum core moves selected.</div>");
 				} else {
 					tooltipSB.append("<div class='subTitle' style='color:"+Colour.TRAIT.toWebHexString()+";'>Click to equip move.</div>");
 				}
@@ -545,7 +561,7 @@ public class TooltipInformationEventListener implements EventListener {
 			tooltipSB.append(
 					"<div class='description'>"
 							+ (spell.isForbiddenSpell() && !owner.hasSpell(spell)?"[style.italicsArcane(This is a forbidden spell, and can only be discovered through a special quest!)]<br/>":"")
-							+ spell.getDescription()
+							+ spell.getDescription(owner)
 					+ "</div>"
 					+ "<div class='subTitle'>"
 						+ "<b style='color:" + Colour.GENERIC_BAD.toWebHexString() + ";'>Costs</b> <b>" + (spell.getModifiedCost(owner)) + "</b> <b style='color:" + Colour.ATTRIBUTE_MANA.toWebHexString() + ";'>aura</b>"
@@ -754,10 +770,10 @@ public class TooltipInformationEventListener implements EventListener {
 					
 					// LESSER:
 					tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(Util.intToString(owner.getArmRows()*2))+" arms", owner.getArmRace(), owner.getArmCovering(), owner.isArmBestial()));
-					tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(Util.intToString(owner.getLegCount()))+" legs", owner.getLegRace(), owner.getLegCovering(), owner.isLegBestial()));
+					tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(Util.intToString(owner.getLegCount()))+" "+owner.getFootStructure().getName()+" legs", owner.getLegRace(), owner.getLegCovering(), owner.isLegBestial()));
 					
 					// PARTIAL:
-					tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(owner.getHairLength().getDescriptor())+" "+owner.getHairName(), owner.getHairRace(), owner.getHairCovering(), owner.isHairBestial()));
+					tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(owner.getHairLength().getDescriptor())+" "+owner.getHairStyle().getName()+" "+owner.getHairName(), owner.getHairRace(), owner.getHairCovering(), owner.isHairBestial()));
 					tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(Util.intToString(owner.getEyePairs()*2))+" eyes", owner.getEyeRace(), owner.getEyeCovering(), owner.isEyeBestial()));
 					tooltipSB.append(getBodyPartDiv(owner, "Ears", owner.getEarRace(), owner.getEarCovering(), owner.isEarBestial()));
 					tooltipSB.append(getBodyPartDiv(owner, "Tongue", owner.getTongueRace(), owner.getTongueCovering(), owner.isTongueBestial()));
@@ -901,7 +917,7 @@ public class TooltipInformationEventListener implements EventListener {
 //						+ "</div>");
 //				
 //			} else {
-				Main.mainController.setTooltipSize(400, 516+(Main.game.isEnchantmentCapacityEnabled()?42:0));
+				Main.mainController.setTooltipSize(400, 516+(Main.game.isEnchantmentCapacityEnabled()?46:32));
 	
 				int enchantmentPointsUsed = owner.getEnchantmentPointsUsedTotal();
 				tooltipSB.setLength(0);
@@ -921,8 +937,8 @@ public class TooltipInformationEventListener implements EventListener {
 						+ "</div>"
 				
 						+ (Main.game.isEnchantmentCapacityEnabled()
-								?"<div class='subTitle' style='margin-bottom:4px;'>"
-										+ "[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "
+								?"<div class='subTitle-half' style='padding:2px; margin:2px 1%; width:48%;'>"
+										+ "[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]<br/>"
 										+ (enchantmentPointsUsed>owner.getAttributeValue(Attribute.ENCHANTMENT_LIMIT)
 												?"[style.colourBad("
 												:(enchantmentPointsUsed==owner.getAttributeValue(Attribute.ENCHANTMENT_LIMIT)
@@ -930,7 +946,11 @@ public class TooltipInformationEventListener implements EventListener {
 														:"[style.colourMinorGood("))
 										+ enchantmentPointsUsed + ")]" + "/" + Math.round(owner.getAttributeValue(Attribute.ENCHANTMENT_LIMIT))
 									+ "</div>"
-								:"")
+									+"<div class='subTitle-half' style='padding:2px; margin:2px 1%; width:48%;'>"
+								:"<div class='subTitle' style='margin:2px 1%; width:98%'>")
+							+ "[style.colourArcane(Essences)]"+(Main.game.isEnchantmentCapacityEnabled()?"<br/>":": ")
+							+ owner.getEssenceCount(TFEssence.ARCANE)
+						+ "</div>"
 						
 						+ extraAttributeBonus(owner, Attribute.MAJOR_PHYSIQUE)
 						+ extraAttributeBonus(owner, Attribute.MAJOR_ARCANE)

@@ -62,8 +62,8 @@ public class Arm implements BodyPartInterface {
 		descriptorList.add(type.getDescriptor(gc));
 		descriptorList.add(type.getDescriptor(gc));
 		descriptorList.add(Util.randomItemFrom(gc.getBodyShape().getLimbDescriptors()));
-		
-		return UtilText.returnStringAtRandom(descriptorList.toArray(new String[]{}));
+
+		return Util.randomItemFrom(descriptorList);
 	}
 
 	public String setType(GameCharacter owner, AbstractArmType type) {
@@ -179,6 +179,11 @@ public class Arm implements BodyPartInterface {
 		}
 		
 		this.armRows = armRows;
+		
+		UtilText.transformationContentSB.append(UtilText.parse(owner,
+				"<p>"
+					+ owner.postTransformationCalculation()
+				+ "</p>"));
 		
 		return UtilText.transformationContentSB.toString();
 	}

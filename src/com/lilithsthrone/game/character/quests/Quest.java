@@ -28,7 +28,8 @@ public enum Quest {
 
 		@Override
 		public String getCompletedDescription() {
-			return "Your evening at the museum turned out to be far more eventful than you'd have liked." + " A mysterious demon named Lilith tricked you into being pulled through a magical portal and into a parallel universe."
+			return "Your evening at the museum turned out to be far more eventful than you'd have liked."
+					+ " A mysterious demon named Lilith tricked you into being pulled through a magical portal and into a parallel universe."
 					+ " After waking up in the middle of an unfamiliar street, you were saved from a dire situation by the half-demon 'Lilaya'."
 					+ " She seems to be this universe's version of your aunt Lily, and, in return for agreeing to help her with her experiments, she's allowed you to stay at her home.";
 		}
@@ -354,7 +355,7 @@ public enum Quest {
 
 		@Override
 		public String getDescription() {
-			return "There are a lot of magical items in this new world. You wonder if you can find them all...";
+			return "There are a lot of curious items in this new world. You wonder if you can find them all...";
 		}
 
 		@Override
@@ -835,6 +836,51 @@ public enum Quest {
 	},
 	
 	
+	// Teleporting:
+	
+	TELEPORTING_START(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Escape from the warehouse";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Having accidentally teleported into the 'SWORD' enforcer division's storage warehouse, both you and Claire now need to avoid detection and make good your escape.";
+		}
+
+		@Override
+		public String getCompletedDescription() {
+			return "You and Claire managed to escape from SWORD's warehouse.";
+		}
+	},
+
+	TELEPORTING_CAUGHT(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Endure the stocks";
+		}
+
+		@Override
+		public String getDescription() {
+			if(Main.game.isNonConEnabled()) {
+				return "Having been defeated by the enforcers inside SWORD's warehouse, you've been sentenced to be locked into the public use stocks at slaver alley. Endure this ordeal until Claire comes to rescue you...";
+			} else {
+				return "Having been defeated by the enforcers inside SWORD's warehouse, you've been locked into the cells at Enforcer Headquarters. You'll have to wait until Claire comes to rescue you...";
+			}
+		}
+
+		@Override
+		public String getCompletedDescription() {
+			if(Main.game.isNonConEnabled()) {
+				return "Having been defeated by the enforcers inside SWORD's warehouse, you had to endure being locked into the public use stocks at slaver alley for several hours before Claire turned up to release you.";
+			} else {
+				return "Having been defeated by the enforcers inside SWORD's warehouse, you had to endure being locked into the cells at Enforcer Headquarters for a couple of hours before Claire turned up to release you.";
+			}
+		}
+	},
+	
+	
 	// Daddy:
 	
 	DADDY_START(QuestType.SIDE, 1, 5) {
@@ -939,6 +985,115 @@ public enum Quest {
 			return "You went with Lilaya to meet [daddy.name] for dinner, and while she had bad news for [daddy.herHim] regarding Lyssieth's romantic preferences, she did seem to like [daddy.herHim] well enough...";
 		}
 	},
+	
+	
+	// Buying Brax:
+	
+	BUYING_BRAX_START(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Perfume collection";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Candi said that she'd consider selling [brax.name] to you, but before she gives you a definite answer, she wants you to go and fetch her order of perfume from the shop 'Succubi's Secrets' in the shopping arcade.";
+		}
+
+		@Override
+		public String getCompletedDescription() {
+			return "You both paid for and collected Candi's order of perfume from Succubi's Secrets.";
+		}
+	},
+	
+	BUYING_BRAX_DELIVER_PERFUME(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Perfume delivery";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Now that you've collected the bottles of perfume, you need to deliver them to Candi back at the Enforcer headquarters.";
+		}
+
+		@Override
+		public String getCompletedDescription() {
+			return "You delivered Candi's bottles of perfume to her.";
+		}
+	},
+	
+	BUYING_BRAX_LOLLIPOPS(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Lollipop contraband";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Candi said she'd be willing to sell Brax to you, but she needs to think of how much [brax.sheIs] worth."
+					+ " She said that she'll have a price for you after you've fetched a box of contraband lollipops from the Harpy Nests' Enforcer checkpoint.";
+		}
+
+		@Override
+		public String getCompletedDescription() {
+			return "You retrieved the lollipops from the Harpy Nests' Enforcer checkpoint.";
+		}
+	},
+	
+	BUYING_BRAX_DELIVER_LOLLIPOPS(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Lollipops for Candi";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Now that the box of contraband lollipops are in your possession, you need to return them to Candi back at the Enforcer headquarters.";
+		}
+
+		@Override
+		public String getCompletedDescription() {
+			return "You delivered the box of contraband lollipops to Candi, who seemed to pay no attention to the warnings stamped all over it.";
+		}
+	},
+	
+	BUYING_BRAX_LIPSTICK(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "A wolf's weight in lipstick";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Candi said that Brax is far too precious to be sold for mere flames, but she'd be willing to give [brax.herHim] to you in exchange for something just as valuable; a box of limited-edition lipsticks, branded as 'A Hundred Kisses'."
+					+ " Apparently, Candi has discovered the whereabouts of one of the only boxes left for sale, which is at a store in the shopping arcade called 'Ralph's Snacks'.";
+		}
+
+		@Override
+		public String getCompletedDescription() {
+			return "You retrieved the box of 'A Hundred Kisses' from Ralph.";
+		}
+	},
+	
+	BUYING_BRAX_DELIVER_LIPSTICK(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "At the wolf's door";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Now that you've secured the box of 'A Hundred Kisses', all that's left to do is deliver it to Candi in exchange for ownership of [brax.name].";
+		}
+
+		@Override
+		public String getCompletedDescription() {
+			return "You handed over the box of 'A Hundred Kisses' to Candi, and finally gained your prize; ownership of [brax.name].";
+		}
+	},
+	
+	
 	
 	;
 

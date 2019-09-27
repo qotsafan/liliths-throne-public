@@ -21,6 +21,7 @@ import com.lilithsthrone.game.sex.InitialSexActionInformation;
 import com.lilithsthrone.game.sex.Sex;
 import com.lilithsthrone.game.sex.managers.dominion.vanessa.SMVanessaOral;
 import com.lilithsthrone.game.sex.managers.dominion.vanessa.SMVanessaSex;
+import com.lilithsthrone.game.sex.positions.SexPosition;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotAllFours;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotDesk;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotSitting;
@@ -371,6 +372,7 @@ public class CityHallDemographics {
 						"Shuffle forwards between [vanessa.namePos] legs and start eating her out.",
 						true, true,
 						new SMVanessaOral(
+								SexPosition.SITTING,
 								Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Vanessa.class), SexSlotSitting.SITTING)),
 								Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotSitting.PERFORMING_ORAL))),
 						null,
@@ -418,7 +420,7 @@ public class CityHallDemographics {
 			if(index==1) {
 				if(Main.game.getPlayer().hasPenis() && (Main.game.getPlayer().isAbleToAccessCoverableArea(CoverableArea.PENIS, true) || !Main.game.getPlayer().hasVagina())) {
 					if(Main.game.getPlayer().isAbleToAccessCoverableArea(CoverableArea.PENIS, true)) {
-						boolean biped = Main.game.getPlayer().getLegConfiguration().isBipedalPositionedGenitals();
+						boolean biped = !Main.game.getPlayer().isTaur();
 						return new ResponseSex("Sex",
 								biped
 									?"Push [vanessa.name] back onto her desk and fuck her."
@@ -426,9 +428,11 @@ public class CityHallDemographics {
 								true, true,
 								biped
 									?new SMVanessaSex(
+											SexPosition.OVER_DESK,
 											Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotDesk.BETWEEN_LEGS)),
 											Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Vanessa.class), SexSlotDesk.OVER_DESK_ON_BACK)))
 									:new SMVanessaSex(
+											SexPosition.ALL_FOURS,
 											Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotAllFours.BEHIND)),
 											Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Vanessa.class), SexSlotAllFours.ALL_FOURS))),
 								null,
@@ -451,7 +455,7 @@ public class CityHallDemographics {
 					
 				} else if(Main.game.getPlayer().hasVagina()) {
 					if(Main.game.getPlayer().isAbleToAccessCoverableArea(CoverableArea.VAGINA, true)) {
-						boolean biped = Main.game.getPlayer().getLegConfiguration().isBipedalPositionedGenitals();
+						boolean biped = !Main.game.getPlayer().isTaur();
 						return new ResponseSex("Receive cunnilingus",
 								biped
 									?"Allow [vanessa.name] to swap places with you so that she can eat you out."
@@ -459,9 +463,11 @@ public class CityHallDemographics {
 								true, true,
 								biped
 									?new SMVanessaOral(
+											SexPosition.SITTING,
 											Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotSitting.SITTING)),
 											Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Vanessa.class), SexSlotSitting.PERFORMING_ORAL)))
 									:new SMVanessaOral(
+											SexPosition.STANDING,
 											Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotStanding.STANDING_DOMINANT)),
 											Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Vanessa.class), SexSlotStanding.PERFORMING_ORAL_BEHIND))),
 								null,
@@ -484,7 +490,7 @@ public class CityHallDemographics {
 					
 				} else {
 					if(Main.game.getPlayer().isAbleToAccessCoverableArea(CoverableArea.VAGINA, true)) {
-						boolean biped = Main.game.getPlayer().getLegConfiguration().isBipedalPositionedGenitals();
+						boolean biped = !Main.game.getPlayer().isTaur();
 						return new ResponseSex("Receive oral",
 								biped
 									?"Allow [vanessa.name] to swap places with you so that she can perform oral on your genderless mound."
@@ -492,9 +498,11 @@ public class CityHallDemographics {
 								true, true,
 								biped
 									?new SMVanessaOral(
+											SexPosition.SITTING,
 											Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotSitting.SITTING)),
 											Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Vanessa.class), SexSlotSitting.PERFORMING_ORAL)))
 									:new SMVanessaOral(
+											SexPosition.STANDING,
 											Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotStanding.STANDING_DOMINANT)),
 											Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Vanessa.class), SexSlotStanding.PERFORMING_ORAL_BEHIND))),
 								null,

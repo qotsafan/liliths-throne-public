@@ -149,7 +149,7 @@ public enum Spell {
 			false,
 			"Flash",
 			"flash",
-			"Creates a blinding flash of light that stuns the target.",
+			"Creates a blinding flash of light which stuns the target.",
 			0,
 			DamageVariance.LOW,
 			75,
@@ -213,7 +213,6 @@ public enum Spell {
 			
 			// If attack hits, apply damage and effects:
 			if (isHit) {
-
 				applyStatusEffects(caster, target, isCritical);
 				descriptionSB.append(getStatusEffectApplication(caster, target, isHit, isCritical));
 				
@@ -439,7 +438,7 @@ public enum Spell {
 		@Override
 		public Map<StatusEffect, Integer> getStatusEffects(GameCharacter caster, GameCharacter target, boolean isCritical) {
 			if(caster!=null) {
-				if(caster.hasSpellUpgrade(SpellUpgrade.ICE_SHARD_3) && target.hasStatusEffect(StatusEffect.FREEZING_FOG) && isCritical) {
+				if(caster.hasSpellUpgrade(SpellUpgrade.ICE_SHARD_3) && isCritical) {
 					return Util.newHashMapOfValues(
 							new Value<StatusEffect, Integer>(StatusEffect.FREEZING_FOG, 3),
 							new Value<StatusEffect, Integer>(StatusEffect.FROZEN, 1));
@@ -477,7 +476,7 @@ public enum Spell {
 											"Summoning a swirling vortex of water from the moisture in the air, [npc1.name] focuses [npc1.her] energy on freezing it in place, creating a shard of ice that [npc.she] then launches at [npc2.name]!")
 								);
 			
-			if(isHit && isCritical && target.hasStatusEffect(StatusEffect.FREEZING_FOG) && caster.hasSpellUpgrade(SpellUpgrade.ICE_SHARD_2)) {
+			if(isHit && isCritical && caster.hasSpellUpgrade(SpellUpgrade.ICE_SHARD_2)) {
 				descriptionSB.append(" The freezing fog detonates as the Ice Shard travels through it");
 				if(caster.hasSpellUpgrade(SpellUpgrade.ICE_SHARD_3)) {
 					descriptionSB.append(", entombing everything in the immediate vicinity in a thin layer of ice!");
@@ -511,7 +510,7 @@ public enum Spell {
 		
 		//Differs from normal version; spells have special crit requirements.
 		public boolean canCrit(int turnIndex, GameCharacter source, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
-			return target.hasStatusEffect(StatusEffect.FREEZING_FOG);
+			return target.hasStatusEffect(StatusEffect.FREEZING_FOG) || Combat.getStatusEffectsToApply().get(target).containsKey(StatusEffect.FREEZING_FOG);
 		}
 	},
 
@@ -1579,7 +1578,7 @@ public enum Spell {
 			
 			descriptionSB.append(getCastDescription(caster, target,
 											Util.newArrayListOfValues(
-													"Through wit and wile, I now shatter the boundaries of space and time! The heavens themselves shall hear my voice, and despair!"),
+													"By my mastery of all dimensions, I now shatter the boundaries of space and time! The heavens themselves shall hear my voice, and despair!"),
 											"You focus your arcane energy on enabling your thoughts to be projected into others' minds!",
 											"You focus your arcane energy on enabling [npc.namePos] thoughts to be projected into others' minds!",
 											"[npc.Name] focuses [npc.her] arcane energy on enabling [npc.her] thoughts to be projected into others' minds!",
@@ -1590,7 +1589,6 @@ public enum Spell {
 			
 			// If attack hits, apply damage and effects:
 			if (isHit) {
-
 				target.removeStatusEffect(StatusEffect.TELEPATHIC_COMMUNICATION_PROJECTED_TOUCH);
 				target.removeStatusEffect(StatusEffect.TELEPATHIC_COMMUNICATION_POWER_OF_SUGGESTION);
 				target.removeStatusEffect(StatusEffect.TELEPATHIC_COMMUNICATION);
@@ -1870,10 +1868,34 @@ public enum Spell {
 						
 					}
 					
-					if(caster.hasSpellUpgrade(SpellUpgrade.STEAL_2)) {
-						mainWeaponSteal = target.getMainWeapon()!=null;
-						offhandWeaponSteal = target.getOffhandWeapon()!=null;
+					int mainWeaponIndex = 0;
+					AbstractWeapon mainWeapon = null;
+					int offhandWeaponIndex = 0;
+					AbstractWeapon offhandWeapon = null;
+					List<Integer> weaponIndexes = new ArrayList<>();
+					for(int i=0;i<target.getMainWeaponArray().length; i++) {
+						if(target.getMainWeapon(i)!=null) {
+							weaponIndexes.add(i);
+						}
+					}
+					if(!weaponIndexes.isEmpty()) {
+						mainWeaponIndex = Util.randomItemFrom(weaponIndexes);
+						mainWeapon = target.getMainWeapon(mainWeaponIndex);
+					}
+					weaponIndexes = new ArrayList<>();
+					for(int i=0;i<target.getOffhandWeaponArray().length; i++) {
+						if(target.getOffhandWeapon(i)!=null) {
+							weaponIndexes.add(i);
+						}
+					}
+					if(!weaponIndexes.isEmpty()) {
+						offhandWeaponIndex = Util.randomItemFrom(weaponIndexes);
+						offhandWeapon = target.getOffhandWeapon(offhandWeaponIndex);
+					}
 						
+					if(caster.hasSpellUpgrade(SpellUpgrade.STEAL_2)) {
+						mainWeaponSteal = mainWeapon!=null;
+						offhandWeaponSteal = offhandWeapon!=null;
 					}
 					
 					stealItem = target.getInventorySlotsTaken()>0;
@@ -1882,32 +1904,30 @@ public enum Spell {
 					double rnd = Math.random();
 					
 					if(mainWeaponSteal && (rnd<0.2 || (!offhandWeaponSteal && !stealItem && clothingToSteal==null))) {
-						AbstractWeapon weapon = target.getMainWeapon();
-						target.unequipMainWeapon(true, target.isPlayer());
+						target.unequipMainWeapon(mainWeaponIndex, true, target.isPlayer());
 						descriptionSB.append("<br/>"
 								+ getCastDescription(caster, target,
 										null,
-										"You stole your own "+weapon.getName()+"...",
-										"You stole [npc.namePos] "+weapon.getName()+" from out of [npc.her] [npc.hands]!",
+										"You stole your own "+mainWeapon.getName()+"...",
+										"You stole [npc.namePos] "+mainWeapon.getName()+" from out of [npc.her] [npc.hands]!",
 										"",
-										"[npc.Name] stole your "+weapon.getName()+" from out of your [pc.hands]!",
-										"[npc1.Name] stole [npc2.namePos] "+weapon.getName()+" from out of [npc2.her] [npc2.hands]!")
+										"[npc.Name] stole your "+mainWeapon.getName()+" from out of your [pc.hands]!",
+										"[npc1.Name] stole [npc2.namePos] "+mainWeapon.getName()+" from out of [npc2.her] [npc2.hands]!")
 								+ "<br/>"
-								+ caster.addWeapon(weapon, true));
+								+ caster.addWeapon(mainWeapon, true));
 						
 					} else if(offhandWeaponSteal && (rnd<0.2 || (!stealItem && clothingToSteal==null))) {
-						AbstractWeapon weapon = target.getOffhandWeapon();
-						target.unequipOffhandWeapon(true, target.isPlayer());
+						target.unequipOffhandWeapon(offhandWeaponIndex, true, target.isPlayer());
 						descriptionSB.append("<br/>"
 								+ getCastDescription(caster, target,
 										null,
-										"You stole your own "+weapon.getName()+"...",
-										"You stole [npc.namePos] "+weapon.getName()+" from out of [npc.her] [npc.hands]!",
+										"You stole your own "+offhandWeapon.getName()+"...",
+										"You stole [npc.namePos] "+offhandWeapon.getName()+" from out of [npc.her] [npc.hands]!",
 										"",
-										"[npc.Name] stole your "+weapon.getName()+" from out of your [pc.hands]!",
-										"[npc1.Name] stole [npc2.namePos] "+weapon.getName()+" from out of [npc2.her] [npc2.hands]!")
+										"[npc.Name] stole your "+offhandWeapon.getName()+" from out of your [pc.hands]!",
+										"[npc1.Name] stole [npc2.namePos] "+offhandWeapon.getName()+" from out of [npc2.her] [npc2.hands]!")
 								+ "<br/>"
-								+ caster.addWeapon(weapon, true));
+								+ caster.addWeapon(offhandWeapon, true));
 						
 					} else if(stealItem && (rnd<0.5 || (clothingToSteal==null))) {
 						AbstractItem item = null;
@@ -2429,6 +2449,188 @@ public enum Spell {
 			
 			return descriptionSB.toString();
 		}
+	},
+	
+
+	LIGHTNING_SPHERE_DISCHARGE(false,
+			SpellSchool.ARCANE,
+			SpellType.OFFENSIVE,
+			DamageType.LUST,
+			false,
+			"Lightning discharge",
+			"arcane_lightning_sphere_discharge",
+			"By drawing a small amount of aura from its wielder, the arcane lightning globe can discharge a burst of arousing arcane lightning, hitting everyone, [style.colourBad(including the caster)], in its immediate vicinity.",
+			10,
+			DamageVariance.MEDIUM,
+			50,
+			null,
+			null,
+			null,
+			Util.newArrayListOfValues(
+					"Affects [style.colourExcellent(all enemies)]",
+					"Affects [style.colourTerrible(the caster)]",
+					"Affects [style.colourTerrible(all allies)]")) {
+
+		@Override
+		public int getAPCost() {
+			return 1;
+		}
+
+		@Override
+		public int getCooldown() {
+			return 2;
+		}
+		
+		@Override
+		public boolean isSpellBook() {
+			return false;
+		}
+		
+		@Override
+		public String getBasicEffectsString(GameCharacter caster, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
+			return "Deals [style.colourDmgLust("
+					+Attack.getMinimumSpellDamage(caster, target, getDamageType(), this.getDamage(caster), this.getDamageVariance())
+					+"-"
+					+Attack.getMaximumSpellDamage(caster, target, getDamageType(), this.getDamage(caster), this.getDamageVariance())
+					+ " " +damageType.getName()
+					+ ")]"
+					+ " damage to [style.colourExcellent(all enemies)] <i>and</i> [style.colourTerrible(all allies, including the caster)].";
+		}
+		
+		public String applyEffect(GameCharacter caster, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies, boolean isHit, boolean isCritical) {
+			descriptionSB.setLength(0);
+
+			float cost = getModifiedCost(caster);
+			
+			descriptionSB.append(getCastDescription(caster, target,
+											Util.newArrayListOfValues(
+													"Sealed away for countless millennia, this infinite cosmic power shall now be unleashed! Witness the arcane maelstrom I call forth, then submit to your fate as my lust-crazed puppet!"),
+										"Channelling some of your aura into the arcane lightning globe, you force it to unleash a portion of its power in the form of a lightning discharge!",
+										"Channelling some of your aura into the arcane lightning globe, you force it to unleash a portion of its power in the form of a lightning discharge!",
+										"Channelling some of [npc.her] aura into the arcane lightning globe, [npc.name] [npc.verb(force)] it to unleash a portion of its power in the form of a lightning discharge!",
+										"Channelling some of [npc.her] aura into the arcane lightning globe, [npc.name] [npc.verb(force)] it to unleash a portion of its power in the form of a lightning discharge!",
+										"Channelling some of [npc.her] aura into the arcane lightning globe, [npc.name] [npc.verb(force)] it to unleash a portion of its power in the form of a lightning discharge!"));
+			
+			// If attack hits, apply damage. Status effect always applies.:
+			if (isHit) {
+				for(GameCharacter combatant : Combat.getAllCombatants(true)) {
+					float damage = Attack.calculateSpellDamage(caster, combatant, damageType, this.getDamage(caster), damageVariance, isCritical);
+					descriptionSB.append(getDamageDescription(caster, combatant, damage, isHit, isCritical));
+					if(damage>0) {
+						descriptionSB.append(applyDamage(caster, combatant, damage));
+					}
+					applyStatusEffects(caster, combatant, isCritical);
+					descriptionSB.append(getStatusEffectApplication(caster, combatant, isHit, isCritical));
+				}
+				
+			}
+			
+			descriptionSB.append(getCostDescription(caster, cost));
+			caster.incrementMana(-cost);
+			
+			return descriptionSB.toString();
+		}
+		
+		@Override
+	    public List<String> getCritRequirements(GameCharacter source, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
+	    	return Util.newArrayListOfValues("Cannot crit.");
+	    }
+
+		@Override
+		public boolean canCrit(int turnIndex, GameCharacter source, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
+			return false;
+		}
+	},
+	
+	LIGHTNING_SPHERE_OVERCHARGE(false,
+			SpellSchool.ARCANE,
+			SpellType.OFFENSIVE,
+			DamageType.LUST,
+			false,
+			"Lightning overcharge",
+			"arcane_lightning_sphere_overcharge",
+			"By drawing a considerable amount of aura from its wielder, the arcane lightning globe can discharge a huge burst of arousing arcane lightning, hitting everyone, [style.colourBad(including the caster)], in its immediate vicinity.",
+			30,
+			DamageVariance.HIGH,
+			250,
+			null,
+			null,
+			null,
+			Util.newArrayListOfValues(
+					"Affects [style.colourExcellent(all enemies)]",
+					"Affects [style.colourTerrible(the caster)]",
+					"Affects [style.colourTerrible(all allies)]")) {
+
+		@Override
+		public int getAPCost() {
+			return 3;
+		}
+
+		@Override
+		public int getCooldown() {
+			return 10;
+		}
+		
+		@Override
+		public boolean isSpellBook() {
+			return false;
+		}
+		
+		@Override
+		public String getBasicEffectsString(GameCharacter caster, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
+			return "Deals [style.colourDmgLust("
+					+Attack.getMinimumSpellDamage(caster, target, getDamageType(), this.getDamage(caster), this.getDamageVariance())
+					+"-"
+					+Attack.getMaximumSpellDamage(caster, target, getDamageType(), this.getDamage(caster), this.getDamageVariance())
+					+ " " +damageType.getName()
+					+ ")]"
+					+ " damage to [style.colourExcellent(all enemies)] <i>and</i> [style.colourTerrible(all allies, including the caster)].";
+		}
+		
+		public String applyEffect(GameCharacter caster, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies, boolean isHit, boolean isCritical) {
+			descriptionSB.setLength(0);
+
+			float cost = getModifiedCost(caster);
+			
+			descriptionSB.append(getCastDescription(caster, target,
+											Util.newArrayListOfValues(
+													"Sealed away for countless millennia, this infinite cosmic power shall now be unleashed! Witness the arcane maelstrom I call forth, then submit to your fate as my lust-crazed puppet!"),
+										"Channelling your aura into the arcane lightning globe, you force it to unleash its power in the form of an almighty lightning discharge!",
+										"Channelling your aura into the arcane lightning globe, you force it to unleash its power in the form of an almighty lightning discharge!",
+										"Channelling [npc.her] aura into the arcane lightning globe, [npc.name] [npc.verb(force)] it to unleash its power in the form of an almighty lightning discharge!",
+										"Channelling [npc.her] aura into the arcane lightning globe, [npc.name] [npc.verb(force)] it to unleash its power in the form of an almighty lightning discharge!",
+										"Channelling [npc.her] aura into the arcane lightning globe, [npc.name] [npc.verb(force)] it to unleash its power in the form of an almighty lightning discharge!"));
+			
+			// If attack hits, apply damage. Status effect always applies.:
+			if (isHit) {
+
+				for(GameCharacter combatant : Combat.getAllCombatants(true)) {
+					float damage = Attack.calculateSpellDamage(caster, combatant, damageType, this.getDamage(caster), damageVariance, isCritical);
+					descriptionSB.append(getDamageDescription(caster, combatant, damage, isHit, isCritical));
+					if(damage>0) {
+						descriptionSB.append(applyDamage(caster, combatant, damage));
+					}
+					applyStatusEffects(caster, combatant, isCritical);
+					descriptionSB.append(getStatusEffectApplication(caster, combatant, isHit, isCritical));
+				}
+				
+			}
+			
+			descriptionSB.append(getCostDescription(caster, cost));
+			caster.incrementMana(-cost);
+			
+			return descriptionSB.toString();
+		}
+		
+		@Override
+	    public List<String> getCritRequirements(GameCharacter source, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
+	    	return Util.newArrayListOfValues("Cannot crit.");
+	    }
+
+		@Override
+		public boolean canCrit(int turnIndex, GameCharacter source, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
+			return false;
+		}
 	};
 	
 	private static Map<SpellSchool, List<Spell>> spellsFromSchoolMap = new HashMap<>();
@@ -2621,7 +2823,7 @@ public enum Spell {
 		return name;
 	}
 	
-	public String getDescription() {
+	public String getDescription(GameCharacter source) {
 		return description;
 	}
 
@@ -2679,7 +2881,7 @@ public enum Spell {
 	
 	protected void applyStatusEffects(GameCharacter caster, GameCharacter target, boolean isCritical) {
 		for (Entry<StatusEffect, Integer> se : getStatusEffects(caster, target, isCritical).entrySet()) {
-			target.addStatusEffect(se.getKey(), se.getValue() * (caster.isPlayer() && caster.hasTrait(Perk.JOB_MUSICIAN, true)?2:1) * (isCritical?2:1));
+			Combat.addStatusEffectToApply(target, se.getKey(), se.getValue() * (caster.isPlayer() && caster.hasTrait(Perk.JOB_MUSICIAN, true)?2:1) * (isCritical?2:1));
 		}
 	}
 
@@ -2745,7 +2947,8 @@ public enum Spell {
 	}
 	
 	protected String applyDamage(GameCharacter caster, GameCharacter target, float damage) {
-		return target.incrementHealth(caster, -damage);
+		return this.getDamageType().damageTarget(caster, target, (int)damage).getKey();
+//		return target.incrementHealth(caster, -damage);
 	}
 	
 	protected String getStatusEffectApplication(GameCharacter caster, GameCharacter target, boolean isHit, boolean isCritical) {
@@ -3100,7 +3303,17 @@ public enum Spell {
 		if(isCanTargetAllies() && allies.isEmpty()) {
 			return 0.0f;
 		}
-		return (float)(Math.random()) - 0.2f * source.getSelectedMovesByType(CombatMoveType.SPELL);
+		int behaviourMultiplier = 1;
+		if(source.getCombatBehaviour()==CombatBehaviour.ATTACK && !this.isBeneficial()) {
+			behaviourMultiplier = 2;
+		}
+		if(source.getCombatBehaviour()==CombatBehaviour.SUPPORT && this.isBeneficial()) {
+			behaviourMultiplier = 10;
+		}
+		if(source.getCombatBehaviour()==CombatBehaviour.SPELLS) {
+			behaviourMultiplier = 10;
+		}
+		return (0.2f*behaviourMultiplier) - 0.2f * source.getSelectedMovesByType(CombatMoveType.SPELL);
 	}
 
 	public GameCharacter getPreferredTarget(GameCharacter source, List<GameCharacter> enemies, List<GameCharacter> allies) {
@@ -3187,13 +3400,14 @@ public enum Spell {
 		return sb.toString();
 	}
 
-	// Applies mana cost effects here. If overriden, don't forget to call it unless it's a free spell.
+	// Applies mana cost effects here. If overriden, don't forget to super call it unless it's a free spell.
 	public void performOnSelection(int turnIndex, GameCharacter source, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
 		if(getSpellSchool() == SpellSchool.FIRE && source.hasStatusEffect(StatusEffect.FIRE_MANA_BURN)) {
 			if(!Main.game.isInCombat()) {
 				Combat.setupManaBurnStackForOutOfCombat(Main.game.getPlayer());
 			}
 			Combat.getManaBurnStack().get(source).push(source.burnMana(getModifiedCost(source)));
+			
 		} else {
 			source.incrementMana(-getModifiedCost(source));
 		}
@@ -3216,6 +3430,8 @@ public enum Spell {
 		// Override. Note that disrupted spells don't disrupt their mana.
 	}
 
+	//TODO combine these two methods:
+	
     public List<String> getCritRequirements(GameCharacter source, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
     	List<String> critReqs = new ArrayList<>();
 
@@ -3230,8 +3446,8 @@ public enum Spell {
 	
 	//Differs from normal version; spells have special crit requirements.
 	public boolean canCrit(int turnIndex, GameCharacter source, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {
-		if(this.getSpellSchool() == SpellSchool.FIRE && source.getHealthPercentage()<=0.25f) { // Fire school spells crit when below 25% health.
-			return true;
+		if(this.getSpellSchool() == SpellSchool.FIRE) {
+			return source.getHealthPercentage()<=0.25f; // Fire school spells crit when below 25% health.
 		} else {
 			return source.getSelectedMoves().size()<=1;
 		}

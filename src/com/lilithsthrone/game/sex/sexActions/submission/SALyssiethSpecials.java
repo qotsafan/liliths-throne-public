@@ -2,7 +2,9 @@ package com.lilithsthrone.game.sex.sexActions.submission;
 
 import com.lilithsthrone.game.character.PlayerCharacter;
 import com.lilithsthrone.game.character.attributes.CorruptionLevel;
+import com.lilithsthrone.game.character.body.Covering;
 import com.lilithsthrone.game.character.body.types.AssType;
+import com.lilithsthrone.game.character.body.types.BodyCoveringType;
 import com.lilithsthrone.game.character.body.types.BreastType;
 import com.lilithsthrone.game.character.body.types.PenisType;
 import com.lilithsthrone.game.character.body.types.VaginaType;
@@ -39,7 +41,7 @@ import com.lilithsthrone.game.sex.SexAreaPenetration;
 import com.lilithsthrone.game.sex.SexParticipantType;
 import com.lilithsthrone.game.sex.SexType;
 import com.lilithsthrone.game.sex.managers.submission.SMLyssiethDemonTF;
-import com.lilithsthrone.game.sex.positions.SexPositionOther;
+import com.lilithsthrone.game.sex.positions.SexPosition;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotAllFours;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotDesk;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotLyingDown;
@@ -68,6 +70,8 @@ public class SALyssiethSpecials {
 		Main.game.getPlayer().setVaginaCapacity(Capacity.ONE_EXTREMELY_TIGHT.getMinimumValue(), true);
 		Main.game.getPlayer().setVaginaElasticity(OrificeElasticity.FOUR_LIMBER.getValue());
 		Main.game.getPlayer().setVaginaPlasticity(OrificePlasticity.THREE_RESILIENT.getValue());
+
+		Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.VAGINA, Colour.SKIN_RED_DARK), false);
 	}
 
 	public static final void playerGrowDemonicPenis() {
@@ -78,6 +82,8 @@ public class SALyssiethSpecials {
 		Main.game.getPlayer().setPenisCumStorage(750);
 		Main.game.getPlayer().setPenisCumExpulsion(FluidExpulsion.FOUR_HUGE.getMedianValue());
 		Main.game.getPlayer().fillCumToMaxStorage();
+		
+		Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.PENIS, Colour.SKIN_RED), false);
 	}
 
 	public static final void playerGrowDemonicBreasts(CupSize breastCup, CupSize crotchBreastCup) {
@@ -92,6 +98,9 @@ public class SALyssiethSpecials {
 		if (breastCup != null) {
 			player.setMinimumBreastSize(breastCup);
 		}
+		
+		Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.NIPPLES, Colour.SKIN_RED_DARK), false);
+		Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.NIPPLES_CROTCH, Colour.SKIN_RED_DARK), false);
 	}
 
 	public static final void playerGrowDemonicBreasts(CupSize breastCup) {
@@ -114,7 +123,7 @@ public class SALyssiethSpecials {
 		public boolean isBaseRequirementsMet() {
 			return Sex.getSexManager() instanceof SMLyssiethDemonTF
 					&& Sex.getNumberOfOrgasms(Main.game.getNpc(Lyssieth.class))==1
-					&& Sex.getPosition()==SexPositionOther.STANDING
+					&& Sex.getPosition()==SexPosition.STANDING
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
 		
@@ -159,13 +168,14 @@ public class SALyssiethSpecials {
 			Main.game.getPlayer().setBodySize(BodySize.TWO_AVERAGE.getMedianValue());
 			Main.game.getPlayer().setHeight(168);
 			Main.game.getPlayer().setAssType(AssType.DEMON_COMMON);
+			Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.ANUS, Colour.SKIN_RED_DARK), false);
 			playerGrowDemonicBreasts(CupSize.DD);
 			Main.game.getPlayer().setPenisType(PenisType.NONE);
 			playerGrowDemonicVagina();
 			
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.OVER_DESK,
+							SexPosition.OVER_DESK,
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotDesk.BETWEEN_LEGS)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotDesk.OVER_DESK_ON_BACK))));
 			
@@ -185,7 +195,7 @@ public class SALyssiethSpecials {
 		public boolean isBaseRequirementsMet() {
 			return Sex.getSexManager() instanceof SMLyssiethDemonTF
 					&& Sex.getNumberOfOrgasms(Main.game.getNpc(Lyssieth.class))==1
-					&& Sex.getPosition()==SexPositionOther.STANDING
+					&& Sex.getPosition()==SexPosition.STANDING
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
 		
@@ -227,6 +237,7 @@ public class SALyssiethSpecials {
 				Main.game.getPlayer().setBodySize(BodySize.TWO_AVERAGE.getMedianValue());
 				Main.game.getPlayer().setHeight(168);
 				Main.game.getPlayer().setAssType(AssType.DEMON_COMMON);
+				Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.ANUS, Colour.SKIN_RED_DARK), false);
 				playerGrowDemonicBreasts(CupSize.AA);
 			} else {
 				Main.game.getPlayer().incrementFemininity(15);
@@ -237,11 +248,13 @@ public class SALyssiethSpecials {
 				Main.game.getPlayer().setBodySize(BodySize.TWO_AVERAGE.getMedianValue());
 				Main.game.getPlayer().setHeight(168);
 				Main.game.getPlayer().setAssType(AssType.DEMON_COMMON);
+				Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.ANUS, Colour.SKIN_RED_DARK), false);
 				playerGrowDemonicBreasts(CupSize.DD);
 			}
 			
 			if(Main.game.getPlayer().hasPenis()) {
 				Main.game.getPlayer().setPenisType(PenisType.DEMON_COMMON);
+				Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.PENIS, Colour.SKIN_RED), false);
 				Main.game.getPlayer().setPenisSize(8);
 				Main.game.getPlayer().setTesticleSize(TesticleSize.ONE_TINY);
 				Main.game.getPlayer().fillCumToMaxStorage();
@@ -252,7 +265,7 @@ public class SALyssiethSpecials {
 			
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.OVER_DESK,
+							SexPosition.OVER_DESK,
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotDesk.BETWEEN_LEGS)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotDesk.OVER_DESK_ON_BACK))));
 			
@@ -272,7 +285,7 @@ public class SALyssiethSpecials {
 		public boolean isBaseRequirementsMet() {
 			return Sex.getSexManager() instanceof SMLyssiethDemonTF
 					&& Sex.getNumberOfOrgasms(Main.game.getNpc(Lyssieth.class))==1
-					&& Sex.getPosition()==SexPositionOther.STANDING
+					&& Sex.getPosition()==SexPosition.STANDING
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
 		
@@ -309,6 +322,7 @@ public class SALyssiethSpecials {
 			
 			playerGrowDemonicPenis();
 			Main.game.getPlayer().setAssType(AssType.DEMON_COMMON);
+			Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.ANUS, Colour.SKIN_RED_DARK), false);
 			playerGrowDemonicBreasts();
 			
 			if(!Main.game.getPlayer().isFeminine()) {
@@ -338,7 +352,7 @@ public class SALyssiethSpecials {
 			
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.OVER_DESK,
+							SexPosition.OVER_DESK,
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotDesk.BETWEEN_LEGS)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotDesk.OVER_DESK_ON_BACK))));
 
@@ -406,7 +420,7 @@ public class SALyssiethSpecials {
 
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.ALL_FOURS,
+							SexPosition.ALL_FOURS,
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotAllFours.BEHIND)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotAllFours.ALL_FOURS))));
 
@@ -468,7 +482,7 @@ public class SALyssiethSpecials {
 			
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.SITTING,
+							SexPosition.SITTING,
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotSitting.PERFORMING_ORAL)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotSitting.SITTING))));
 			
@@ -544,6 +558,7 @@ public class SALyssiethSpecials {
 			if(Main.game.getNpc(Lyssieth.class).getForeplayPreference(Main.game.getPlayer()).getTargetedSexArea()==SexAreaOrifice.ANUS) {
 				if(Main.game.getPlayer().hasPenis()) {
 					Main.game.getPlayer().setPenisType(PenisType.DEMON_COMMON);
+					Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.PENIS, Colour.SKIN_RED), false);
 					Main.game.getPlayer().setPenisSize(3);
 					Main.game.getPlayer().setTesticleSize(TesticleSize.ZERO_VESTIGIAL);
 					Main.game.getPlayer().fillCumToMaxStorage();
@@ -580,7 +595,7 @@ public class SALyssiethSpecials {
 			
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.ALL_FOURS,
+							SexPosition.ALL_FOURS,
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotAllFours.BEHIND)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotAllFours.ALL_FOURS))));
 			
@@ -645,12 +660,13 @@ public class SALyssiethSpecials {
 			Main.game.getPlayer().setBodySize(BodySize.TWO_AVERAGE.getMedianValue());
 			Main.game.getPlayer().setHeight(168);
 			Main.game.getPlayer().setAssType(AssType.DEMON_COMMON);
+			Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.ANUS, Colour.SKIN_RED_DARK), false);
 			playerGrowDemonicBreasts(CupSize.F);
 			playerGrowDemonicVagina();
 			
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.OVER_DESK,
+							SexPosition.OVER_DESK,
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotDesk.BETWEEN_LEGS)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotDesk.OVER_DESK_ON_BACK))));
 			
@@ -711,6 +727,7 @@ public class SALyssiethSpecials {
 				Main.game.getPlayer().setBodySize(BodySize.TWO_AVERAGE.getMedianValue());
 				Main.game.getPlayer().setHeight(168);
 				Main.game.getPlayer().setAssType(AssType.DEMON_COMMON);
+				Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.ANUS, Colour.SKIN_RED_DARK), false);
 				playerGrowDemonicBreasts(CupSize.F);
 				
 			} else {
@@ -722,12 +739,13 @@ public class SALyssiethSpecials {
 				Main.game.getPlayer().setBodySize(BodySize.TWO_AVERAGE.getMedianValue());
 				Main.game.getPlayer().setHeight(168);
 				Main.game.getPlayer().setAssType(AssType.DEMON_COMMON);
+				Main.game.getPlayer().setSkinCovering(new Covering(BodyCoveringType.ANUS, Colour.SKIN_RED_DARK), false);
 				playerGrowDemonicBreasts(CupSize.AA);
 			}
 			
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.OVER_DESK,
+							SexPosition.OVER_DESK,
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotDesk.BETWEEN_LEGS)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotDesk.OVER_DESK_ON_BACK))));
 			
@@ -801,7 +819,7 @@ public class SALyssiethSpecials {
 			
 			Sex.setSexManager(
 					new SMLyssiethDemonTF(
-							SexPositionOther.LYING_DOWN,
+							SexPosition.LYING_DOWN,
 							Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(), SexSlotLyingDown.MATING_PRESS)),
 							Util.newHashMapOfValues(new Value<>(Main.game.getNpc(Lyssieth.class), SexSlotLyingDown.LYING_DOWN))));
 			

@@ -17,14 +17,12 @@ import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.sex.ArousalIncrease;
 import com.lilithsthrone.game.sex.Sex;
 import com.lilithsthrone.game.sex.SexAreaOrifice;
-import com.lilithsthrone.game.sex.SexAreaPenetration;
 import com.lilithsthrone.game.sex.SexControl;
 import com.lilithsthrone.game.sex.SexPace;
 import com.lilithsthrone.game.sex.SexParticipantType;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotGeneric;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotTag;
 import com.lilithsthrone.game.sex.sexActions.SexAction;
-import com.lilithsthrone.game.sex.sexActions.SexActionCategory;
 import com.lilithsthrone.game.sex.sexActions.SexActionPriority;
 import com.lilithsthrone.game.sex.sexActions.SexActionType;
 import com.lilithsthrone.main.Main;
@@ -38,177 +36,6 @@ import com.lilithsthrone.utils.Util;
  */
 public class GenericActions {
 	
-	public static final SexAction SLAP_FACE = new SexAction(
-			SexActionType.ONGOING,
-			ArousalIncrease.TWO_LOW,
-			ArousalIncrease.ONE_MINIMUM,
-			CorruptionLevel.THREE_DIRTY,
-			null,
-			SexParticipantType.NORMAL,
-			SexPace.DOM_ROUGH) {
-		
-		@Override
-		public boolean isBaseRequirementsMet() {
-			boolean mouthFinger = false;
-			boolean mouthFingerReversed = false;
-			try {
-				mouthFinger = Sex.getPosition().getSlotTargets().get(Sex.getSexPositionSlot(Sex.getCharacterPerformingAction())).get(Sex.getSexPositionSlot(Sex.getCharacterTargetedForSexAction(this)))
-						.getInteractions().get(SexAreaPenetration.FINGER).contains(SexAreaOrifice.MOUTH);
-			} catch(Exception ex) {
-				// No available finger-mouth actions, so can't reach face
-			}
-			try {
-				mouthFingerReversed = Sex.getPosition().getSlotTargets().get(Sex.getSexPositionSlot(Sex.getCharacterTargetedForSexAction(this))).get(Sex.getSexPositionSlot(Sex.getCharacterPerformingAction()))
-						.getInteractions().get(SexAreaOrifice.MOUTH).contains(SexAreaPenetration.FINGER);
-			} catch(Exception ex) {
-				// No available finger-mouth actions, so can't reach face
-			}
-			return Sex.isPenetrationTypeFree(Sex.getCharacterPerformingAction(), SexAreaPenetration.FINGER)
-					&& !Sex.isDom(Sex.getCharacterTargetedForSexAction(this))
-					&& (mouthFinger || mouthFingerReversed)
-					&& (Sex.getCharacterPerformingAction().isPlayer() || Sex.getCharacterPerformingAction().hasFetish(Fetish.FETISH_SADIST));
-			
-		}
-		
-		@Override
-		public String getActionTitle() {
-			return "Slap face";
-		}
-
-		@Override
-		public String getActionDescription() {
-			return "Slap [npc2.namePos] face to put [npc2.herHim] in [npc2.her] place.";
-		}
-		
-		@Override
-		public SexActionCategory getCategory() {
-			return SexActionCategory.SEX;
-		}
-
-		@Override
-		public String getDescription() {
-			StringBuilder sb = new StringBuilder();
-
-			sb.append(UtilText.returnStringAtRandom(
-					"Wanting to put [npc2.name] in [npc2.her] place, [npc.name] [npc.verb(lift)] [npc.her] [npc.hand], before swinging down to deliver a sharp, stinging slap to [npc2.her] face.",
-					"Lifting [npc.her] [npc.hand], [npc.name] [npc.verb(swing)] down, delivering a sharp slap to [npc2.namePos] face in order to put [npc2.herHim] in [npc2.her] place.",
-					"Seeking to remind [npc2.name] who's in charge, [npc.name] [npc.verb(raise)] [npc.her] [npc.hand], before swiping down and delivering a sharp slap to [npc2.her] face."));
-			
-			if(Sex.getCharacterTargetedForSexAction(this).getFetishDesire(Fetish.FETISH_MASOCHIST).isPositive() && Sex.getSexPace(Sex.getCharacterTargetedForSexAction(this))!=SexPace.SUB_RESISTING) {
-				sb.append(UtilText.returnStringAtRandom(
-						" A clearly aroused yelp escapes from [npc2.namePos] mouth at the moment of contact, letting [npc.name] know that [npc2.sheIs] deriving masochistic pleasure from being abused in such a fashion.",
-						" The horny squeal that escapes [npc2.namePos] mouth is enough to let anyone realise that [npc2.sheIs] getting turned on from being treated in such a degrading manner.",
-						" Instead of a painful cry, [npc2.name] [npc2.verb(let)] out a horny moan, letting [npc.name] know that [npc2.sheIs] a masochist, who's getting turned on by being abused like this."));
-			} else {
-				sb.append(UtilText.returnStringAtRandom(
-						" A protesting yelp escapes from [npc2.namePos] mouth at the moment of contact,"
-								+ (Sex.getCharacterPerformingAction().isPlayer()
-										?" which is precisely the reaction you were looking for."
-										:" and from the wicked grin that settles on [npc.namePos] face, this was just the reaction [npc.she] [npc.was] looking for."),
-						" The pained squeal which immediately escapes from [npc2.namePos] mouth is exactly what [npc.name] [npc.was] looking for, and [npc.she] can't help but grin as [npc.she] [npc.verb(see)] tears well up in"
-								+ (Sex.getCharacterTargetedForSexAction(this).isPlayer()
-										?" your [npc2.eyes+]."
-										:" [npc.her] submissive bitch's [npc2.eyes+]."),
-						" After letting out a shocked cry, tears start to well up in [npc2.namePos] [npc2.eyes], letting [npc.name] know that [npc.her] abuse is having the exact effect [npc.she] [npc.was] looking for."));
-			}
-			
-			return sb.toString();
-		}
-	};
-	
-	public static final SexAction CHOKE = new SexAction(
-			SexActionType.ONGOING,
-			ArousalIncrease.TWO_LOW,
-			ArousalIncrease.ONE_MINIMUM,
-			CorruptionLevel.THREE_DIRTY,
-			null,
-			SexParticipantType.NORMAL,
-			SexPace.DOM_ROUGH) {
-		
-		@Override
-		public boolean isBaseRequirementsMet() {
-			boolean mouthFinger = false;
-			boolean mouthFingerReversed = false;
-			try {
-				mouthFinger = Sex.getPosition().getSlotTargets().get(Sex.getSexPositionSlot(Sex.getCharacterPerformingAction())).get(Sex.getSexPositionSlot(Sex.getCharacterTargetedForSexAction(this)))
-						.getInteractions().get(SexAreaPenetration.FINGER).contains(SexAreaOrifice.MOUTH);
-			} catch(Exception ex) {
-				// No available finger-mouth actions, so can't reach face
-			}
-			try {
-				mouthFingerReversed = Sex.getPosition().getSlotTargets().get(Sex.getSexPositionSlot(Sex.getCharacterTargetedForSexAction(this))).get(Sex.getSexPositionSlot(Sex.getCharacterPerformingAction()))
-						.getInteractions().get(SexAreaOrifice.MOUTH).contains(SexAreaPenetration.FINGER);
-			} catch(Exception ex) {
-				// No available finger-mouth actions, so can't reach face
-			}
-			
-			return Sex.isPenetrationTypeFree(Sex.getCharacterPerformingAction(), SexAreaPenetration.FINGER)
-					&& !Sex.isDom(Sex.getCharacterTargetedForSexAction(this))
-					&& (mouthFinger || mouthFingerReversed)
-					&& (Sex.getCharacterPerformingAction().isPlayer() || Sex.getCharacterPerformingAction().hasFetish(Fetish.FETISH_SADIST));
-		}
-		
-		@Override
-		public String getActionTitle() {
-			return "Choke";
-		}
-
-		@Override
-		public String getActionDescription() {
-			return "Grab and squeeze [npc2.namePos] neck in order to choke [npc2.herHim].";
-		}
-		
-		@Override
-		public SexActionCategory getCategory() {
-			return SexActionCategory.SEX;
-		}
-
-		@Override
-		public String getDescription() {
-			StringBuilder sb = new StringBuilder();
-
-			if(Sex.getAllContactingSexAreas(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.VAGINA).contains(SexAreaPenetration.PENIS)) {
-				sb.append(UtilText.returnStringAtRandom(
-						"Continuing to ram [npc.her] [npc.cock+] in and out of [npc2.namePos] [npc2.pussy+], [npc.name] [npc.verb(reach)] up to grab [npc2.her] neck, before squeezing down and choking [npc2.herHim].",
-						"[npc.Name] [npc.verb(reach)] up to grab [npc2.namePos] neck, and, while still forcefully pounding [npc2.her] [npc2.pussy+], [npc.she] roughly [npc.verb(squeeze)] down in order to choke [npc2.herHim].",
-						"Slamming [npc.her] [npc.cock+] deep into [npc2.namePos] [npc2.pussy+], [npc.name] [npc.verb(reach)] up and [npc.verb(grab)] [npc2.her] neck,"
-								+ " squeezing down and choking [npc2.herHim] as [npc.she] [npc.verb(pull)] back and [npc.verb(continue)] roughly fucking [npc2.herHim]."));
-				
-			} else if(Sex.getAllContactingSexAreas(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.ANUS).contains(SexAreaPenetration.PENIS)) {
-				sb.append(UtilText.returnStringAtRandom(
-						"Continuing to ram [npc.her] [npc.cock+] in and out of [npc2.namePos] [npc2.asshole+], [npc.name] [npc.verb(reach)] up to grab [npc2.her] neck, before squeezing down and choking [npc2.herHim].",
-						"[npc.Name] [npc.verb(reach)] up to grab [npc2.namePos] neck, and, while still forcefully pounding [npc2.her] [npc2.asshole+], [npc.she] roughly [npc.verb(squeeze)] down in order to choke [npc2.herHim].",
-						"Slamming [npc.her] [npc.cock+] deep into [npc2.namePos] [npc2.asshole+], [npc.name] [npc.verb(reach)] up and [npc.verb(grab)] [npc2.her] neck,"
-								+ " squeezing down and choking [npc2.herHim] as [npc.she] [npc.verb(pull)] back and [npc.verb(continue)] roughly fucking [npc2.herHim]."));
-				
-			} else {
-				sb.append(UtilText.returnStringAtRandom(
-						"With a sadistic grin on [npc.her] face, [npc.name] [npc.verb(reach)] up to grab [npc2.name] by [npc2.her] neck, before squeezing down and choking [npc2.herHim].",
-						"[npc.Name] [npc.verb(reach)] up to grab [npc2.namePos] neck, and, letting out a sadistic laugh, [npc.she] roughly [npc.verb(squeeze)] down in order to choke [npc2.herHim].",
-						"With a cruel laugh, [npc.name] [npc.verb(reach)] up and [npc.verb(grab)] [npc2.name] by [npc2.her] neck, before sadistically squeezing down and choking [npc2.herHim]."));
-			}
-			
-			if(Sex.getCharacterTargetedForSexAction(this).getFetishDesire(Fetish.FETISH_MASOCHIST).isPositive() && Sex.getSexPace(Sex.getCharacterTargetedForSexAction(this))!=SexPace.SUB_RESISTING) {
-				sb.append(UtilText.returnStringAtRandom(
-						" The gargled spluttering sounds which [npc2.name] [npc2.verb(start)] to make in response have a distinctly lewd quality to them, letting [npc.name] know that [npc2.sheIs] being turned on by this abuse.",
-						" The horny, gargled [npc2.moans] which [npc2.name] immediately [npc2.verb(start)] to produce are more than enough to let anyone realise that [npc2.sheIs] a masochist, and is getting aroused by this poor treatment.",
-						" The spluttering gasps which [npc2.name] [npc2.verb(begin)] to emit are intermingled with several horny [npc2.moans], letting [npc.name] know that [npc2.sheIs] deriving masochistic pleasure from being abused in such a fashion."));
-			} else {
-				sb.append(UtilText.returnStringAtRandom(
-						" A series of gargled spluttering noises escape from [npc2.namePos] mouth,"
-								+ (Sex.getCharacterPerformingAction().isPlayer()
-										?" which is precisely the reaction you were looking for."
-										:" and from the wicked grin that settles on [npc.namePos] face, this was just the reaction [npc.she] [npc.was] looking for."),
-						" The distressed, gargled cries which [npc2.name] [npc2.verb(start)] to make are exactly what [npc.name] [npc.was] looking for, and [npc.she] can't help but grin as [npc.she] [npc.verb(see)] tears well up in"
-								+ (Sex.getCharacterTargetedForSexAction(this).isPlayer()
-										?" your [npc2.eyes+]."
-										:" [npc.her] submissive bitch's [npc2.eyes+]."),
-						" Letting out a series of spluttering gasps, tears quickly start to well up in [npc2.namePos] [npc2.eyes], letting [npc.name] know that [npc.her] abuse is having the exact effect [npc.she] [npc.was] looking for."));
-			}
-			
-			return sb.toString();
-		}
-	};
 	
 	public static final SexAction GENERIC_RESIST = new SexAction(
 			SexActionType.ONGOING,
@@ -373,6 +200,17 @@ public class GenericActions {
 			if(Main.game.getPlayer().getPenisRawSizeValue() < 20) {
 				sb.append(Main.game.getPlayer().setPenisSize(20));
 			}
+			
+			for(GameCharacter character : Sex.getAllParticipants()) {
+				if(character instanceof NPC) {
+					for(GameCharacter target : Sex.getAllParticipants()) {
+						if(!target.equals(character) && Sex.getSexPositionSlot(target)!=SexSlotGeneric.MISC_WATCHING) {
+							((NPC)character).generateSexChoices(false, target, null);
+						}
+					}
+				}
+			}
+			
 			return sb.toString();
 		}
 	};
@@ -392,7 +230,11 @@ public class GenericActions {
 
 		@Override
 		public String getActionDescription() {
-			return "Get [npc2.name] to grow a demonic cock.";
+			if(Sex.getCharacterTargetedForSexAction(this).getRace()==Race.DEMON) {
+				return "Get [npc2.name] to use [npc.her] demonic self-transformative powers to grow [npc.herself] a demonic cock.";
+			} else {
+				return "Get [npc2.name] to use [npc.her] slimy body's self-transformative powers to grow [npc.herself] a slimy cock.";
+			}
 		}
 
 		@Override
@@ -427,25 +269,44 @@ public class GenericActions {
 									+ " Before you have any time to change your mind, [npc2.she] lets out [npc2.a_moan+], and you realise that [npc2.sheHas] now got a huge slimy cock hiding beneath [npc2.her] clothing.");
 			}
 		}
-
+		
 		@Override
-		public void applyEffects() {
+		public String applyEffectsString() {
 			Sex.getCharactersGrewCock().add(Sex.getCharacterTargetedForSexAction(this));
 			
+			StringBuilder sb = new StringBuilder();
 			if(Sex.getCharacterTargetedForSexAction(this).getRace()==Race.DEMON) {
-				Sex.getCharacterTargetedForSexAction(this).setPenisType(PenisType.DEMON_COMMON);
+				sb.append(Sex.getCharacterTargetedForSexAction(this).setPenisType(PenisType.DEMON_COMMON));
 			} else {
-				Sex.getCharacterTargetedForSexAction(this).setPenisType(RacialBody.valueOfRace(Subspecies.getFleshSubspecies(Sex.getCharacterTargetedForSexAction(this)).getRace()).getPenisType());
+				sb.append(Sex.getCharacterTargetedForSexAction(this).setPenisType(RacialBody.valueOfRace(Subspecies.getFleshSubspecies(Sex.getCharacterTargetedForSexAction(this)).getRace()).getPenisType()));
 			}
-			Sex.getCharacterTargetedForSexAction(this).setPenisCumStorage(150);
+			if(Sex.getCharacterTargetedForSexAction(this).getPenisRawCumStorageValue() < 150) {
+				Sex.getCharacterTargetedForSexAction(this).setPenisCumStorage(150);
+			}
 			Sex.getCharacterTargetedForSexAction(this).fillCumToMaxStorage();
 			if(Sex.getCharacterTargetedForSexAction(this).hasVagina()) {
 				Sex.getCharacterTargetedForSexAction(this).setTesticleSize(TesticleSize.ZERO_VESTIGIAL);
 			} else {
 				Sex.getCharacterTargetedForSexAction(this).setTesticleSize(TesticleSize.THREE_LARGE);
 			}
-			Sex.getCharacterTargetedForSexAction(this).setPenisGirth(PenisGirth.THREE_THICK);
-			Sex.getCharacterTargetedForSexAction(this).setPenisSize(20);
+			if(Sex.getCharacterTargetedForSexAction(this).getPenisGirth().getValue() < PenisGirth.THREE_THICK.getValue()) {
+				sb.append(Sex.getCharacterTargetedForSexAction(this).setPenisGirth(PenisGirth.THREE_THICK));
+			}
+			if(Sex.getCharacterTargetedForSexAction(this).getPenisRawSizeValue() < 20) {
+				sb.append(Sex.getCharacterTargetedForSexAction(this).setPenisSize(20));
+			}
+			
+			for(GameCharacter character : Sex.getAllParticipants()) {
+				if(character instanceof NPC) {
+					for(GameCharacter target : Sex.getAllParticipants()) {
+						if(!target.equals(character) && Sex.getSexPositionSlot(target)!=SexSlotGeneric.MISC_WATCHING) {
+							((NPC)character).generateSexChoices(false, target, null);
+						}
+					}
+				}
+			}
+			
+			return sb.toString();
 		}
 	};
 
@@ -1010,30 +871,30 @@ public class GenericActions {
 		public String getDescription() {
 			UtilText.nodeContentSB.setLength(0);
 			
-			if (Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.VAGINA)!=null) {
-				if(Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.VAGINA).contains(Sex.getActivePartner())) {
+			if (Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.VAGINA)!=null) {
+				if(Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.VAGINA).contains(Sex.getCharacterTargetedForSexAction(this))) {
 					UtilText.nodeContentSB.append("[npc2.Name] lets out a disappointed [npc.moan] as you force [npc2.herHim] to stop stimulating [npc2.her] [npc2.pussy+].");
 				}
 			}
 			
-			if (Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.ANUS)!=null) {
-				if(Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.ANUS).contains(Sex.getActivePartner())) {
+			if (Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.ANUS)!=null) {
+				if(Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.ANUS).contains(Sex.getCharacterTargetedForSexAction(this))) {
 					if(UtilText.nodeContentSB.length()!=0)
 						UtilText.nodeContentSB.append("<br/>");
 					UtilText.nodeContentSB.append("As you put an end to [npc2.namePos] self-stimulation of [npc2.her] [npc2.asshole], [npc2.she] lets out a pathetic whine.");
 				}
 			}
 			
-			if (Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.NIPPLE)!=null) {
-				if(Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.NIPPLE).contains(Sex.getActivePartner())) {
+			if (Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.NIPPLE)!=null) {
+				if(Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.NIPPLE).contains(Sex.getCharacterTargetedForSexAction(this))) {
 					if(UtilText.nodeContentSB.length()!=0)
 						UtilText.nodeContentSB.append("<br/>");
 					UtilText.nodeContentSB.append("[npc2.Name] pouts at you as you force [npc2.herHim] to stop stimulating [npc2.her] [npc2.nipples+].");
 				}
 			}
 			
-			if (Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.MOUTH)!=null) {
-				if(Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.MOUTH).contains(Sex.getActivePartner())) {
+			if (Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.MOUTH)!=null) {
+				if(Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.MOUTH).contains(Sex.getCharacterTargetedForSexAction(this))) {
 					if(UtilText.nodeContentSB.length()!=0)
 						UtilText.nodeContentSB.append("<br/>");
 					UtilText.nodeContentSB.append("[npc2.Name] lets out a disappointed [npc.moan] as you force [npc2.herHim] to stop using [npc2.her] mouth.");
@@ -1313,7 +1174,7 @@ public class GenericActions {
 			return Sex.getSexControl(Sex.getCharacterPerformingAction())==SexControl.FULL
 					&& (Sex.getSexControl(Sex.getCharacterTargetedForSexAction(this))!=SexControl.FULL || !Sex.isDom(Sex.getCharacterTargetedForSexAction(this)))
 					&& !Sex.isMasturbation()
-					&& Sex.isCanRemoveOthersClothing(Sex.getActivePartner(), null)
+					&& Sex.isCanRemoveOthersClothing(Sex.getCharacterTargetedForSexAction(this), null)
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
 
@@ -1325,7 +1186,7 @@ public class GenericActions {
 
 		@Override
 		public void applyEffects() {
-			Sex.setCanRemoveOthersClothing(Sex.getActivePartner(), false);
+			Sex.setCanRemoveOthersClothing(Sex.getCharacterTargetedForSexAction(this), false);
 		}
 	};
 	
@@ -1352,7 +1213,7 @@ public class GenericActions {
 			return Sex.getSexControl(Sex.getCharacterPerformingAction())==SexControl.FULL
 					&& (Sex.getSexControl(Sex.getCharacterTargetedForSexAction(this))!=SexControl.FULL || !Sex.isDom(Sex.getCharacterTargetedForSexAction(this)))
 					&& !Sex.isMasturbation()
-					&& !Sex.isCanRemoveOthersClothing(Sex.getActivePartner(), null)
+					&& !Sex.isCanRemoveOthersClothing(Sex.getCharacterTargetedForSexAction(this), null)
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
 
@@ -1364,7 +1225,7 @@ public class GenericActions {
 
 		@Override
 		public void applyEffects() {
-			Sex.setCanRemoveOthersClothing(Sex.getActivePartner(), true);
+			Sex.setCanRemoveOthersClothing(Sex.getCharacterTargetedForSexAction(this), true);
 		}
 	};
 	
@@ -1391,7 +1252,7 @@ public class GenericActions {
 			return Sex.getSexControl(Sex.getCharacterPerformingAction())==SexControl.FULL
 					&& (Sex.getSexControl(Sex.getCharacterTargetedForSexAction(this))!=SexControl.FULL || !Sex.isDom(Sex.getCharacterTargetedForSexAction(this)))
 					&& !Sex.isMasturbation()
-					&& Sex.isCanRemoveSelfClothing(Sex.getActivePartner())
+					&& Sex.isCanRemoveSelfClothing(Sex.getCharacterTargetedForSexAction(this))
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
 
@@ -1403,7 +1264,7 @@ public class GenericActions {
 
 		@Override
 		public void applyEffects() {
-			Sex.setCanRemoveSelfClothing(Sex.getActivePartner(), false);
+			Sex.setCanRemoveSelfClothing(Sex.getCharacterTargetedForSexAction(this), false);
 		}
 	};
 	
@@ -1430,7 +1291,7 @@ public class GenericActions {
 			return Sex.getSexControl(Sex.getCharacterPerformingAction())==SexControl.FULL
 					&& (Sex.getSexControl(Sex.getCharacterTargetedForSexAction(this))!=SexControl.FULL || !Sex.isDom(Sex.getCharacterTargetedForSexAction(this)))
 					&& !Sex.isMasturbation()
-					&& !Sex.isCanRemoveSelfClothing(Sex.getActivePartner())
+					&& !Sex.isCanRemoveSelfClothing(Sex.getCharacterTargetedForSexAction(this))
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
 
@@ -1442,7 +1303,7 @@ public class GenericActions {
 
 		@Override
 		public void applyEffects() {
-			Sex.setCanRemoveSelfClothing(Sex.getActivePartner(), true);
+			Sex.setCanRemoveSelfClothing(Sex.getCharacterTargetedForSexAction(this), true);
 		}
 	};
 	
@@ -1468,7 +1329,7 @@ public class GenericActions {
 		@Override
 		public boolean isBaseRequirementsMet() {
 			return !Sex.isMasturbation()
-					&& Sex.isCharacterSelfOngoingActionHappening(Sex.getActivePartner())
+					&& Sex.isCharacterSelfOngoingActionHappening(Sex.getCharacterTargetedForSexAction(this))
 					&& Sex.getSexControl(Sex.getCharacterPerformingAction())==SexControl.FULL
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
@@ -1477,30 +1338,30 @@ public class GenericActions {
 		public String getDescription() {
 			UtilText.nodeContentSB.setLength(0);
 			
-			if (Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.VAGINA)!=null) {
-				if(Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.VAGINA).contains(Sex.getActivePartner())) {
+			if (Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.VAGINA)!=null) {
+				if(Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.VAGINA).contains(Sex.getCharacterTargetedForSexAction(this))) {
 					UtilText.nodeContentSB.append("[npc2.Name] lets out a disappointed [npc.moan] as you force [npc2.herHim] to stop stimulating [npc2.her] [npc2.pussy+].");
 				}
 			}
 			
-			if (Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.ANUS)!=null) {
-				if(Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.ANUS).contains(Sex.getActivePartner())) {
+			if (Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.ANUS)!=null) {
+				if(Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.ANUS).contains(Sex.getCharacterTargetedForSexAction(this))) {
 					if(UtilText.nodeContentSB.length()!=0)
 						UtilText.nodeContentSB.append("<br/>");
 					UtilText.nodeContentSB.append("As you put an end to [npc2.namePos] self-stimulation of [npc2.her] [npc2.asshole], [npc2.she] lets out a pathetic whine.");
 				}
 			}
 			
-			if (Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.NIPPLE)!=null) {
-				if(Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.NIPPLE).contains(Sex.getActivePartner())) {
+			if (Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.NIPPLE)!=null) {
+				if(Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.NIPPLE).contains(Sex.getCharacterTargetedForSexAction(this))) {
 					if(UtilText.nodeContentSB.length()!=0)
 						UtilText.nodeContentSB.append("<br/>");
 					UtilText.nodeContentSB.append("[npc2.Name] pouts at you as you force [npc2.herHim] to stop stimulating [npc2.her] [npc2.nipples+].");
 				}
 			}
 			
-			if (Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.MOUTH)!=null) {
-				if(Sex.getCharacterContactingSexArea(Sex.getActivePartner(), SexAreaOrifice.MOUTH).contains(Sex.getActivePartner())) {
+			if (Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.MOUTH)!=null) {
+				if(Sex.getCharacterContactingSexArea(Sex.getCharacterTargetedForSexAction(this), SexAreaOrifice.MOUTH).contains(Sex.getCharacterTargetedForSexAction(this))) {
 					if(UtilText.nodeContentSB.length()!=0)
 						UtilText.nodeContentSB.append("<br/>");
 					UtilText.nodeContentSB.append("[npc2.Name] lets out a disappointed [npc.moan] as you force [npc2.herHim] to stop using [npc2.her] mouth.");
@@ -1612,7 +1473,7 @@ public class GenericActions {
 					&& (!Sex.getCharacterPerformingAction().isSlave() || !Sex.getAllParticipants().contains(Sex.getCharacterPerformingAction().getOwner()))
 					&& Sex.getSexControl(Sex.getCharacterPerformingAction())==SexControl.FULL
 					&& Sex.getSexPace(Sex.getCharacterPerformingAction())==SexPace.SUB_RESISTING
-					&& !Sex.getActivePartner().hasFetish(Fetish.FETISH_NON_CON_SUB);
+					&& !Sex.getCharacterPerformingAction().hasFetish(Fetish.FETISH_NON_CON_SUB);
 			
 		}
 		
@@ -1654,6 +1515,7 @@ public class GenericActions {
 		@Override
 		public boolean isBaseRequirementsMet() {
 			return Sex.getSexManager().isPartnerWantingToStopSex(Sex.getCharacterPerformingAction())
+					&& !Sex.isAnyCharacterReadyToOrgasm(false)
 					&& !Sex.getCharacterPerformingAction().isPlayer();
 		}
 		

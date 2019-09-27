@@ -4286,11 +4286,11 @@ public class ItemType {
 							|| target.getLocationPlace().getPlaceType().getEncounterType()==Encounter.DOMINION_CANAL
 							|| target.getLocationPlace().getPlaceType().getEncounterType()==Encounter.HARPY_NEST_WALKWAYS
 							|| target.getLocationPlace().getPlaceType().getEncounterType()==Encounter.SUBMISSION_TUNNELS)
-					&& Main.game.getCharactersTreatingCellAsHome(Main.game.getPlayerCell()).isEmpty();
+					&& Main.game.getCharactersTreatingCellAsHome(Main.game.getPlayerCell()).size()<=1;
 		}
 		@Override
 		public String getUnableToBeUsedDescription(GameCharacter target) {
-			return "You need to be in one of Dominion's alleyway or canal tiles, a Harpy Nest walkway tile, or a Submission tunnel tile, and with no character already present in that tile, in order to be able to use the map!";
+			return "You need to be in one of Dominion's alleyway or canal tiles, a Harpy Nest walkway tile, or a Submission tunnel tile, and with no more than one character already present in that tile, in order to be able to use the map!";
 		}
 		@Override
 		public String getUseTooltipDescription(GameCharacter user, GameCharacter target) {
@@ -4306,6 +4306,90 @@ public class ItemType {
 		}
 	};
 	
+	public static AbstractItemType CANDI_PERFUMES = new AbstractItemType(500,
+			"",
+			true,
+			"Candi's Perfume",
+			"Candi's Perfumes",
+			"A couple of bottles of perfume which you collected from Kate at Succubi's Secrets. You need to deliver these to Candi back at the Enforcer Headquarters.",
+			"candiPerfumes",
+			Colour.BASE_ROSE,
+			Colour.BASE_PURPLE_LIGHT,
+			null,
+			Rarity.QUEST,
+			null,
+			null,
+			null) {
+		@Override
+		public String getUseName() {
+			return "inspect";
+		}
+		@Override
+		public String getUseDescription(GameCharacter user, GameCharacter target) {
+			return "There's nothing really out of the ordinary about these bottles of perfume. It would be best to deliver them to Candi as soon as possible.";
+		}
+		@Override
+		public boolean isConsumedOnUse() {
+			return false;
+		}
+	};
+
+	public static AbstractItemType CANDI_CONTRABAND = new AbstractItemType(1000,
+			"",
+			false,
+			"Box of Contraband Lollipops",
+			"Boxes of Contraband Lollipops",
+			"A box full of contraband lollipops, seized by the Enforcers up in the Harpy Nests, and very much desired by Candi.",
+			"contrabandBox",
+			Colour.BASE_PINK_DEEP,
+			null,
+			null,
+			Rarity.QUEST,
+			null,
+			null,
+			null) {
+		@Override
+		public String getUseName() {
+			return "inspect";
+		}
+		@Override
+		public String getUseDescription(GameCharacter user, GameCharacter target) {
+			return "This box has been marked with several large red crosses, making it clear that the contents are in some way dangerous."
+					+ " The Enforcer who handed this box over to you said that the lollipops contained within are some form of permanent aphrodisiac, and that the box should be immediately locked away in safe storage.";
+		}
+		@Override
+		public boolean isConsumedOnUse() {
+			return false;
+		}
+	};
+
+	public static AbstractItemType CANDI_HUNDRED_KISSES = new AbstractItemType(50000,
+			"",
+			false,
+			"'A Hundred Kisses'",
+			"'A Hundred Kisses'",
+			"A limited-edition box containing a hundred differently-coloured lipsticks, produced by one of the most exclusive and upmarket cosmetics companies in all of Dominion.",
+			"candiHundredKisses",
+			Colour.BASE_PINK_DEEP,
+			null,
+			null,
+			Rarity.QUEST,
+			null,
+			null,
+			null) {
+		@Override
+		public String getUseName() {
+			return "inspect";
+		}
+		@Override
+		public String getUseDescription(GameCharacter user, GameCharacter target) {
+			return "It's obvious from even a casual glance at this stylish box that it contains nothing other than the best lipsticks money can buy.";
+		}
+		@Override
+		public boolean isConsumedOnUse() {
+			return false;
+		}
+	};
 	
 	// Standard non-racial transformatives:
 	
@@ -4714,7 +4798,7 @@ public class ItemType {
 				subspecies = Subspecies.ELEMENTAL_FIRE;
 			}
 			effectsString.add("Adds "+subspecies.getName(null)+" encyclopedia entry.");
-			effectsString.add("[style.boldExcellent(+10)] <b style='color:"+s.getSpellSchool().getColour()+";'>"+subspecies.getDamageMultiplier().getName()+"</b>");
+//			effectsString.add("[style.boldExcellent(+5 "+Attribute.DAMAGE_ELEMENTAL.getName()+")]");
 			
 			
 			AbstractItemEffectType effectType = new AbstractItemEffectType(effectsString, s.getSpellSchool().getColour()) {
@@ -4747,7 +4831,7 @@ public class ItemType {
 					if(hasSpell) {
 						if(target.isPlayer()) {
 							return "<p style='text-align:center'>"
-										+"<i><b style='color:"+s.getSpellSchool().getColour().toWebHexString()+";'>"+s.getName()+":</b> "+s.getDescription()+"</i>"
+										+"<i><b style='color:"+s.getSpellSchool().getColour().toWebHexString()+";'>"+s.getName()+":</b> "+s.getDescription(target)+"</i>"
 									+"</p>"
 									+ "<p>"
 										+"Reading through the spell book again, you quickly discover that you've already learned all there is to know about the spell '"+s.getName()+"'."
@@ -4757,7 +4841,7 @@ public class ItemType {
 									+raceKnowledgeGained;
 						} else {
 							return "<p style='text-align:center'>"
-										+"<i><b style='color:"+s.getSpellSchool().getColour().toWebHexString()+";'>"+s.getName()+":</b> "+s.getDescription()+"</i>"
+										+"<i><b style='color:"+s.getSpellSchool().getColour().toWebHexString()+";'>"+s.getName()+":</b> "+s.getDescription(target)+"</i>"
 									+"</p>"
 									+ "<p>"
 										+ UtilText.parse(target,
@@ -4770,7 +4854,7 @@ public class ItemType {
 					} else {
 						if(target.isPlayer()) {
 							return "<p style='text-align:center'>"
-										+"<i><b style='color:"+s.getSpellSchool().getColour().toWebHexString()+";'>"+s.getName()+":</b> "+s.getDescription()+"</i>"
+										+"<i><b style='color:"+s.getSpellSchool().getColour().toWebHexString()+";'>"+s.getName()+":</b> "+s.getDescription(target)+"</i>"
 									+"</p>"
 									+ "<p>"
 										+ "As you read through the spell book, you discover that most of the pages are dedicated to helping the reader build up their arcane aura to the point where they'd be able to learn this spell."
@@ -4787,7 +4871,7 @@ public class ItemType {
 							
 						} else {
 							return "<p style='text-align:center'>"
-									+"<i><b style='color:"+s.getSpellSchool().getColour().toWebHexString()+";'>"+s.getName()+":</b> "+s.getDescription()+"</i>"
+									+"<i><b style='color:"+s.getSpellSchool().getColour().toWebHexString()+";'>"+s.getName()+":</b> "+s.getDescription(target)+"</i>"
 								+"</p>"
 								+ "<p>"
 									+ UtilText.parse(target,
@@ -4856,6 +4940,8 @@ public class ItemType {
 				case WITCH_CHARM:
 				case WITCH_SEAL:
 				case DARK_SIREN_SIRENS_CALL:
+				case LIGHTNING_SPHERE_DISCHARGE:
+				case LIGHTNING_SPHERE_OVERCHARGE:
 					break;
 			}
 			

@@ -94,7 +94,6 @@ import com.lilithsthrone.game.character.markings.TattooType;
 import com.lilithsthrone.game.character.markings.TattooWriting;
 import com.lilithsthrone.game.character.markings.TattooWritingStyle;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
-import com.lilithsthrone.game.character.persona.PersonalityWeight;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.race.Race;
 import com.lilithsthrone.game.character.race.RacialBody;
@@ -115,7 +114,7 @@ import com.lilithsthrone.utils.Util;
 
 /**
  * @since 0.1.7?
- * @version 0.3.4
+ * @version 0.3.5
  * @author Innoxia
  */
 public class CharacterModificationUtils {
@@ -299,6 +298,7 @@ public class CharacterModificationUtils {
 		
 		contentSB.append(
 				"<div class='container-full-width'>"
+				+ "<div class='cosmetics-inner-container full'>"
 						+ "<h5 style='text-align:center;'>"
 							+"Personality"
 						+"</h5>"
@@ -307,44 +307,36 @@ public class CharacterModificationUtils {
 							+ " It will not lock out any options during the game, and is more for roleplaying purposes."
 						+ "</p>");
 		
-		int i=0;
 		for(PersonalityTrait trait : PersonalityTrait.values()) {
-			contentSB.append("<div class='container-full-width' style='"+(i==4?"width:50%; margin:0 25%;":"width:calc(50% - 16px);")+" text-align:center; padding:0;'>"
-					+ getInformationDiv("PERSONALITY_INFO_"+trait, new TooltipInformationEventListener().setInformation(trait.getName(), trait.getDescription()))
-					+ "<p style='text-align:center; margin-bottom:0; padding-bottom:0;'>"
-						+ "<span style='color:"+trait.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(trait.getName())+"</span><br/>"
-						+ "<i>"+trait.getNameFromWeight(BodyChanging.getTarget(), BodyChanging.getTarget().getPersonality().get(trait))+"</i>"
-					+ "</p>");
-
-			for(PersonalityWeight weight : PersonalityWeight.values()) {
-				if(BodyChanging.getTarget().getPersonality().get(trait) == weight) {
-					contentSB.append(
-							"<div class='cosmetics-button active'>"
-								+ "<span style='color:"+trait.getColour().getShades()[2]+";'>"+Util.capitaliseSentence(weight.getName())+"</span>"
-							+ "</div>");
-					
-				} else {
-					contentSB.append(
-							"<div id='PERSONALITY_"+trait+"_"+weight+"' class='cosmetics-button'>"
-									+ "[style.colourDisabled("+Util.capitaliseSentence(weight.getName())+")]"
-							+ "</div>");
-				}
+			if(BodyChanging.getTarget().hasPersonalityTrait(trait)) {
+				contentSB.append(
+						"<div id='PERSONALITY_TRAIT_"+trait+"' class='cosmetics-button active'>"
+							+ "<span style='color:"+trait.getColour().getShades()[2]+";'>"+Util.capitaliseSentence(trait.getName())+"</span>"
+						+ "</div>");
+				
+			} else {
+				contentSB.append(
+						"<div id='PERSONALITY_TRAIT_"+trait+"' class='cosmetics-button'>"
+								+ "[style.colourDisabled("+Util.capitaliseSentence(trait.getName())+")]"
+						+ "</div>");
 			}
-			
-			contentSB.append("</div>");
-			i++;
 		}
 		
-		contentSB.append("</div>");
+		contentSB.append("</div></div>");
 		
 		return contentSB.toString();
 	}
 	
 	public static void performPlayerAgeCheck(int ageTarget) {
-		if(Main.game.getPlayer().getAgeValue()>ageTarget) {
-			Main.game.getPlayer().setBirthday(Main.game.getPlayer().getBirthday().plusYears(1));
-		} else if(Main.game.getPlayer().getAgeValue()<ageTarget) {
-			Main.game.getPlayer().setBirthday(Main.game.getPlayer().getBirthday().minusYears(1));
+		int ageDiff = Math.abs(Main.game.getPlayer().getAgeValue()-ageTarget);
+		
+		if(ageDiff>0) {
+			if(Main.game.getPlayer().getAgeValue()>ageTarget) {
+				Main.game.getPlayer().setBirthday(Main.game.getPlayer().getBirthday().plusYears(ageDiff));
+				
+			} else if(Main.game.getPlayer().getAgeValue()<ageTarget) {
+				Main.game.getPlayer().setBirthday(Main.game.getPlayer().getBirthday().minusYears(ageDiff));
+			}
 		}
 	}
 	
@@ -411,13 +403,13 @@ public class CharacterModificationUtils {
 		contentSB.append(
 				"<div class='container-full-width'>"
 						+"<div class='cosmetics-inner-container full'>"
-						+ "<h5 style='text-align:center;'>"
-							+"Sexual Orientation"
-						+"</h5>"
-						+ "<p style='text-align:center;'>"
-							+ "Sexual orientation in Lilith's Throne is determined by your attraction towards femininity or masculinity."
-							+ " Each orientation has a related status effect (hover over the icon in the left-hand panel to see the effects)."
-						+ "</p>");
+							+ "<h5 style='text-align:center;'>"
+								+"Sexual Orientation"
+							+"</h5>"
+							+ "<p style='text-align:center;'>"
+								+ "Sexual orientation in Lilith's Throne is determined by your attraction towards femininity or masculinity."
+								+ " Each orientation has a related status effect (hover over the icon in the left-hand panel to see the effects)."
+							+ "</p>");
 		
 		for(SexualOrientation orientation : SexualOrientation.values()) {
 			if(BodyChanging.getTarget().getSexualOrientation() == orientation) {
@@ -745,7 +737,7 @@ public class CharacterModificationUtils {
 				BodyChanging.getTarget().getAppearsAsAgeValue()>=(BodyChanging.getTarget().getAgeValue()+10))
 				
 				+ applyWrapper("Birthday",
-						UtilText.parse(BodyChanging.getTarget(), "[npc.NamePos] birthday can not ever be changed, but by transforming [npc.her] body, [npc.she] may appear to be younger or older than [npc.she] really is."),
+						UtilText.parse(BodyChanging.getTarget(), "[npc.NamePos] birthday can not ever be changed, but by transforming [npc.her] body, [npc.she] may appear to be younger or older than [npc.she] really [npc.is]."),
 						"BIRTHDAY",
 						"<p style='text-align:center; margin:0; padding:0;'>"
 							+ BodyChanging.getTarget().getBirthdayString()
@@ -795,13 +787,13 @@ public class CharacterModificationUtils {
 				if(BodyChanging.getTarget().getTailType() == tail) {
 					contentSB.append(
 							"<div class='cosmetics-button active'>"
-								+ "<span style='color:"+c.toWebHexString()+";'>"+Util.capitaliseSentence(tail.getRace()==null? "None": tail.getTransformName())+(tail.isPrehensile()?"*":"")+"</span>"
+								+ "<span style='color:"+c.toWebHexString()+";'>"+Util.capitaliseSentence(tail.getTransformName())+(tail.isPrehensile()?"*":"")+"</span>"
 							+ "</div>");
 					
 				} else {
 					contentSB.append(
 							"<div id='CHANGE_TAIL_"+tail+"' class='cosmetics-button'>"
-								+ "<span style='color:"+c.getShades()[0]+";'>"+Util.capitaliseSentence(tail.getRace()==null? "None": tail.getTransformName())+(tail.isPrehensile()?"*":"")+"</span>"
+								+ "<span style='color:"+c.getShades()[0]+";'>"+Util.capitaliseSentence(tail.getTransformName())+(tail.isPrehensile()?"*":"")+"</span>"
 							+ "</div>");
 				}
 			}
@@ -887,13 +879,13 @@ public class CharacterModificationUtils {
 				if(BodyChanging.getTarget().getWingType() == wing) {
 					contentSB.append(
 							"<div class='cosmetics-button active'>"
-								+ "<span style='color:"+c.toWebHexString()+";'>"+Util.capitaliseSentence(wing.getRace()==null? "None": wing.getTransformName())+"</span>"
+								+ "<span style='color:"+c.toWebHexString()+";'>"+Util.capitaliseSentence(wing.getTransformName())+"</span>"
 							+ "</div>");
 					
 				} else {
 					contentSB.append(
 							"<div id='CHANGE_WING_"+wing+"' class='cosmetics-button'>"
-								+ "<span style='color:"+c.getShades()[0]+";'>"+Util.capitaliseSentence(wing.getRace()==null? "None": wing.getTransformName())+"</span>"
+								+ "<span style='color:"+c.getShades()[0]+";'>"+Util.capitaliseSentence(wing.getTransformName())+"</span>"
 							+ "</div>");
 				}
 			}
@@ -2353,11 +2345,11 @@ public class CharacterModificationUtils {
 				UtilText.parse(BodyChanging.getTarget(), "Alter the rate at which milk is produced in <b>each</b> of [npc.namePos] [npc.crotchBoobs]. The more [npc.crotchBoobs] [npc.sheHasFull], the more milk [npc.she] produces per second."
 						+ "<br/><i>Once drained, [npc.namePos] [npc.crotchBoobs] fill with milk up to their maximum storage value at this rate.</i>"),
 				"MILK_CROTCH_REGENERATION",
-				Units.fluid(BodyChanging.getTarget().getBreastRawLactationRegenerationValue(), ValueType.PRECISE)+"/day"
+				Units.fluid(BodyChanging.getTarget().getBreastCrotchRawLactationRegenerationValue(), ValueType.PRECISE)+"/day"
 						+"<br/>("+Units.fluid(BodyChanging.getTarget().getCrotchLactationRegenerationPerSecond(false)*60, ValueType.PRECISE)+"/minute)"
 						+"<br/><i>"+Util.capitaliseSentence(BodyChanging.getTarget().getBreastCrotchLactationRegeneration().getName())+"</i>",
-				BodyChanging.getTarget().getBreastRawLactationRegenerationValue()<=0,
-				BodyChanging.getTarget().getBreastRawLactationRegenerationValue()>=FluidRegeneration.FOUR_VERY_RAPID.getMaximumRegenerationValuePerDay(),
+				BodyChanging.getTarget().getBreastCrotchRawLactationRegenerationValue()<=0,
+				BodyChanging.getTarget().getBreastCrotchRawLactationRegenerationValue()>=FluidRegeneration.FOUR_VERY_RAPID.getMaximumRegenerationValuePerDay(),
 				FLUID_REGEN_INCREMENT_SMALL,
 				FLUID_REGEN_INCREMENT_AVERAGE,
 				FLUID_REGEN_INCREMENT_LARGE);
@@ -2588,14 +2580,14 @@ public class CharacterModificationUtils {
 				if(BodyChanging.getTarget().getVaginaType() == vagina) {
 					contentSB.append(
 							"<div class='cosmetics-button active'>"
-								+ "<span style='color:"+c.toWebHexString()+";'>"+Util.capitaliseSentence(vagina.getRace()==null?"None":vagina.getTransformName())+"</span>"
+								+ "<span style='color:"+c.toWebHexString()+";'>"+Util.capitaliseSentence(vagina.getTransformName())+"</span>"
 							+ "</div>");
 					
 				} else {
 					contentSB.append(
 							"<div "+(BodyChanging.getTarget().isPregnant()?"":"id='CHANGE_VAGINA_"+vagina+"'")+" class='cosmetics-button"+(BodyChanging.getTarget().isPregnant()?" disabled":"")+"'>"
 								+ "<span style='color:"+(BodyChanging.getTarget().isPregnant()?Colour.TEXT_GREY.toWebHexString():c.getShades()[0])+";'>"
-									+Util.capitaliseSentence(vagina.getRace()==null?"None":vagina.getTransformName())
+									+Util.capitaliseSentence(vagina.getTransformName())
 								+"</span>"
 							+ "</div>");
 				}
@@ -2944,13 +2936,13 @@ public class CharacterModificationUtils {
 				if(BodyChanging.getTarget().getPenisType() == penis) {
 					contentSB.append(
 							"<div class='cosmetics-button active'>"
-								+ "<span style='color:"+c.toWebHexString()+";'>"+Util.capitaliseSentence(penis.getRace()==null?"None":penis.getTransformName())+"</span>"
+								+ "<span style='color:"+c.toWebHexString()+";'>"+Util.capitaliseSentence(penis.getTransformName())+"</span>"
 							+ "</div>");
 					
 				} else {
 					contentSB.append(
 							"<div id='CHANGE_PENIS_"+penis+"' class='cosmetics-button'>"
-								+ "<span style='color:"+c.getShades()[0]+";'>"+Util.capitaliseSentence(penis.getRace()==null?"None":penis.getTransformName())+"</span>"
+								+ "<span style='color:"+c.getShades()[0]+";'>"+Util.capitaliseSentence(penis.getTransformName())+"</span>"
 							+ "</div>");
 				}
 			}
@@ -3134,7 +3126,7 @@ public class CharacterModificationUtils {
 	
 	public static String getSelfTransformCumRegenerationDiv() {
 		return applyVariableWrapperFluids("Cum Regeneration",
-				UtilText.parse(BodyChanging.getTarget(), "Alter the rate at which [npc.name] [npc.ver(produce)] cum."
+				UtilText.parse(BodyChanging.getTarget(), "Alter the rate at which [npc.name] [npc.verb(produce)] cum."
 						+ "<br/><i>Once drained, [npc.namePos] balls fill with cum up to their maximum storage value at this rate.</i>"),
 				"CUM_REGENERATION",
 				Units.fluid(BodyChanging.getTarget().getPenisRawCumProductionRegenerationValue(), ValueType.PRECISE)+"/day"

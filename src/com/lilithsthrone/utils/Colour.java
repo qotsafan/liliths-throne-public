@@ -69,7 +69,7 @@ public enum Colour {
 	BACKGROUND(false, Util.newColour(0x222222), Util.newColour(0xcccccc), "grey"),
 	BACKGROUND_ALT(false, Util.newColour(0x292929), Util.newColour(0xbbbbbb), "grey"),
 	
-	MAP_BACKGROUND_UNEXPLORED(false, Util.newColour(0x111), Util.newColour(0x111), "black"),
+	MAP_BACKGROUND_UNEXPLORED(false, Util.newColour(0x121212), Util.newColour(0x121212), "black"),
 	MAP_BACKGROUND_PINK(false, Util.newColour(0xb2a4bb), Util.newColour(0xb2a4bb), "pink"),
 	MAP_BACKGROUND(false, Util.newColour(0xbbbbbb), Util.newColour(0xbbbbbb), "grey"),
 	MAP_BACKGROUND_DARK(false, Util.newColour(0x888888), Util.newColour(0x8f8f8f), "dark grey"),
@@ -143,9 +143,9 @@ public enum Colour {
 	RACE_BAT_MORPH(false, BaseColour.BLACK, "black", Util.newArrayListOfValues("batMorph", "bat")),
 	RACE_ALLIGATOR_MORPH(false, BaseColour.GREEN_DARK, "dark green", Util.newArrayListOfValues("alligatorMorph", "alligator", "gatorMorph", "gator")),
 	
-	QUEST_MAIN(false, BaseColour.PINK, "pink"),
-	QUEST_SIDE(false, BaseColour.BLUE, "blue"),
-	QUEST_RELATIONSHIP(false, BaseColour.PINK_LIGHT, "pink"),
+	QUEST_MAIN(false, BaseColour.PINK, "pink", Util.newArrayListOfValues("questMain", "mainQuest")),
+	QUEST_SIDE(false, BaseColour.BLUE, "blue", Util.newArrayListOfValues("questSide", "sideQuest")),
+	QUEST_RELATIONSHIP(false, BaseColour.PINK_LIGHT, "pink", Util.newArrayListOfValues("questRelationship", "relationshipQuest")),
 
 	MAP_MARKER(false, Util.newColour(0x6163DB), Util.newColour(0x6163DB), "blue"),
 
@@ -322,9 +322,9 @@ public enum Colour {
 	RARITY_QUEST(false, BaseColour.TEAL, "teal", Util.newArrayListOfValues("teal")),
 
 	// Inventory colours:
-	CURRENCY_GOLD(true, BaseColour.GOLD, "gold"),
-	CURRENCY_SILVER(true, BaseColour.SILVER, "gold"),
-	CURRENCY_COPPER(true, BaseColour.COPPER, "gold"),
+	CURRENCY_GOLD(true, BaseColour.GOLD, "gold", Util.newArrayListOfValues("currency", "currencyGold")),
+	CURRENCY_SILVER(true, BaseColour.SILVER, "silver", Util.newArrayListOfValues("currencySilver")),
+	CURRENCY_COPPER(true, BaseColour.COPPER, "copper", Util.newArrayListOfValues("currencyCopper")),
 
 	MILK(false, BaseColour.YELLOW_LIGHT,  "light yellow", Util.newArrayListOfValues("milk", "lactation")),
 	CUM(false, BaseColour.BLUE_LIGHT,  "light blue", Util.newArrayListOfValues("cum", "cummed", "dirty")),
@@ -639,8 +639,9 @@ public enum Colour {
 	EYE_ORANGE(false, BaseColour.ORANGE, "orange"),
 	EYE_BLACK(false, BaseColour.BLACK, "black");
 	
-	
 
+	public static final Colour[] ACTION_POINT_COLOURS = new Colour[] {Colour.GENERIC_EXCELLENT, Colour.GENERIC_GOOD, Colour.GENERIC_MINOR_GOOD, Colour.GENERIC_MINOR_BAD, Colour.GENERIC_BAD, Colour.GENERIC_TERRIBLE};
+	
 	// Skin/fur/body part groups:
 	
 	public static List<Colour> humanSkinColours = Util.newArrayListOfValues(

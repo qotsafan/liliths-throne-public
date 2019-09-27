@@ -33,7 +33,6 @@ import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.persona.NameTriplet;
 import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
-import com.lilithsthrone.game.character.persona.PersonalityWeight;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.quests.Quest;
 import com.lilithsthrone.game.character.quests.QuestLine;
@@ -100,6 +99,10 @@ public class Zaranix extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.3.6")) {
 			this.resetPerksMap(true);
 		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.4.9")) {
+			this.setPersonalityTraits(
+					PersonalityTrait.SELFISH);
+		}
 	}
 
 	@Override
@@ -118,12 +121,8 @@ public class Zaranix extends NPC {
 		// Persona:
 
 		if(setPersona) {
-			this.setPersonality(Util.newHashMapOfValues(
-					new Value<>(PersonalityTrait.AGREEABLENESS, PersonalityWeight.HIGH),
-					new Value<>(PersonalityTrait.CONSCIENTIOUSNESS, PersonalityWeight.HIGH),
-					new Value<>(PersonalityTrait.EXTROVERSION, PersonalityWeight.AVERAGE),
-					new Value<>(PersonalityTrait.NEUROTICISM, PersonalityWeight.LOW),
-					new Value<>(PersonalityTrait.ADVENTUROUSNESS, PersonalityWeight.HIGH)));
+			this.setPersonalityTraits(
+					PersonalityTrait.SELFISH);
 			
 			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
 			
@@ -249,13 +248,13 @@ public class Zaranix extends NPC {
 	// Combat:
 
 	@Override
-	public String getMainAttackDescription(GameCharacter target, boolean isHit) {
+	public String getMainAttackDescription(int armRow, GameCharacter target, boolean isHit) {
 		return "<p>"
 				+ UtilText.parse(target,
 						UtilText.returnStringAtRandom(
-						"With a booming shout, Zaranix delivers a solid kick to [npc.namePos] torso!",
-						"With an angry roar, Zaranix punches [npc.name] square in the chest!",
-						"Zaranix lets out a furious shout as he punches [npc.name] in the [npc.arm]!")) 
+						"With a booming shout, [zaranix.name] delivers a solid kick to [npc.namePos] torso!",
+						"With an angry roar, [zaranix.name] punches [npc.name] square in the chest!",
+						"[Zaranix.name] lets out a furious shout as he punches [npc.name] in the [npc.arm]!")) 
 			+ "</p>";
 	}
 
@@ -679,20 +678,22 @@ public class Zaranix extends NPC {
 	// Misc.:
 	
 	public void generateNewTile() {
-		Vector2i towerLoc = new Vector2i(Main.game.getWorlds().get(WorldType.DOMINION).getCell(PlaceType.DOMINION_LILITHS_TOWER).getLocation());
-		towerLoc.setX(towerLoc.getX()+1);
-		towerLoc.setY(towerLoc.getY()-2);
-		if(!Main.game.getWorlds().get(WorldType.DOMINION).getCell(towerLoc).getPlace().getPlaceType().equals(PlaceType.DOMINION_DEMON_HOME)) {
-			towerLoc = new Vector2i(Main.game.getWorlds().get(WorldType.DOMINION).getRandomCell(PlaceType.DOMINION_DEMON_HOME).getLocation());
+		if(Main.game.getWorlds().get(WorldType.DOMINION).getCell(PlaceType.DOMINION_DEMON_HOME_ZARANIX)==null) {
+			Vector2i towerLoc = new Vector2i(Main.game.getWorlds().get(WorldType.DOMINION).getCell(PlaceType.DOMINION_LILITHS_TOWER).getLocation());
+			towerLoc.setX(towerLoc.getX()+1);
+			towerLoc.setY(towerLoc.getY()-2);
+			if(!Main.game.getWorlds().get(WorldType.DOMINION).getCell(towerLoc).getPlace().getPlaceType().equals(PlaceType.DOMINION_DEMON_HOME)) {
+				towerLoc = new Vector2i(Main.game.getWorlds().get(WorldType.DOMINION).getRandomCell(PlaceType.DOMINION_DEMON_HOME).getLocation());
+			}
+			Main.game.getWorlds().get(WorldType.DOMINION).getCell(towerLoc).setPlace(
+					new GenericPlace(PlaceType.DOMINION_DEMON_HOME_ZARANIX) {
+						@Override
+						public String getName() {
+							return PlaceType.DOMINION_DEMON_HOME_ZARANIX.getName();
+						}
+					},
+					false);
 		}
-		Main.game.getWorlds().get(WorldType.DOMINION).getCell(towerLoc).setPlace(
-				new GenericPlace(PlaceType.DOMINION_DEMON_HOME_ZARANIX) {
-					@Override
-					public String getName() {
-						return PlaceType.DOMINION_DEMON_HOME_ZARANIX.getName();
-					}
-				},
-				false);
 	}
 
 }
