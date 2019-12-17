@@ -78,7 +78,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.1.0
- * @version 0.3.1
+ * @version 0.3.5.5
  * @author Innoxia
  */
 public class Lilaya extends NPC {
@@ -146,6 +146,8 @@ public class Lilaya extends NPC {
 				this.setSkinCovering(new Covering(BodyCoveringType.PENIS, Colour.SKIN_RED, Colour.SKIN_RED_DARK), false);
 				this.setSkinCovering(new Covering(BodyCoveringType.MOUTH, Colour.SKIN_RED, Colour.SKIN_RED_DARK), false);
 			}
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
 			this.setPersonalityTraits(
 					PersonalityTrait.KIND,
 					PersonalityTrait.SHY);
@@ -386,6 +388,17 @@ public class Lilaya extends NPC {
 	
 	@Override
 	public void changeFurryLevel(){
+	}
+
+	@Override
+	public void turnUpdate() {
+		if(!Main.game.getCharactersPresent().contains(this) && !Main.game.getCurrentDialogueNode().isTravelDisabled()) {
+			if(Main.game.isExtendedWorkTime()) {
+				this.setLocation(WorldType.LILAYAS_HOUSE_GROUND_FLOOR, PlaceType.LILAYA_HOME_LAB);
+			} else {
+				this.setLocation(WorldType.LILAYAS_HOUSE_FIRST_FLOOR, PlaceType.LILAYA_HOME_ROOM_ROSE);
+			}
+		}
 	}
 	
 	@Override

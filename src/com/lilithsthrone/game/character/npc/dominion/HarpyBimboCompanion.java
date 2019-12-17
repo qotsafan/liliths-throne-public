@@ -87,7 +87,7 @@ public class HarpyBimboCompanion extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.3.6")) {
 			this.resetPerksMap(true);
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.4.9")) {
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
 			this.setPersonalityTraits(
 					PersonalityTrait.LEWD);
 		}
@@ -231,6 +231,17 @@ public class HarpyBimboCompanion extends NPC {
 	
 	@Override
 	public void changeFurryLevel(){
+	}
+	
+	@Override
+	public void turnUpdate() {
+		if(!Main.game.getCharactersPresent().contains(this)) {
+			if(Main.game.isExtendedWorkTime()) {
+				this.returnToHome();
+			} else {
+				this.setLocation(WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL, false);
+			}
+		}
 	}
 	
 	@Override

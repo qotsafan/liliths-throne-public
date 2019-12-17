@@ -95,7 +95,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Inspector' in the enforcer's Frontline Patrol division, and has received a moderate amount of combat training.");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Inspector' in the Enforcer's Frontline Patrol division, and has received a moderate amount of combat training.");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -122,7 +122,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Sergeant' in the enforcer's Frontline Patrol division, and has received a limited amount of combat training.");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Sergeant' in the Enforcer's Frontline Patrol division, and has received a limited amount of combat training.");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -149,7 +149,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Constable' in the enforcer's Frontline Patrol division, and has received a very limited amount of combat training.");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Constable' in the Enforcer's Frontline Patrol division, and has received a very limited amount of combat training.");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -177,7 +177,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Inspector' in the enforcer's 'Special Weapons and Operations Response Department', and has received an extensive amount of combat training.");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Inspector' in the Enforcer's 'Special Weapons and Operations Response Department', and has received an extensive amount of combat training.");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -205,7 +205,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Sergeant' in the enforcer's 'Special Weapons and Operations Response Department', and has received a significant amount of combat training.");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Sergeant' in the Enforcer's 'Special Weapons and Operations Response Department', and has received a significant amount of combat training.");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -233,7 +233,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Constable' in the enforcer's 'Special Weapons and Operations Response Department', and has received a good amount of combat training.");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Constable' in the Enforcer's 'Special Weapons and Operations Response Department', and has received a good amount of combat training.");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -263,7 +263,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Inspector' in the enforcer's 'Office of Realm Intelligence, Counter-Espionage, and Logistics', and knows many ways in which to get someone to talk...");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Inspector' in the Enforcer's 'Office of Realm Intelligence, Counter-Espionage, and Logistics', and knows many ways in which to get someone to talk...");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -293,7 +293,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Sergeant' in the enforcer's 'Office of Realm Intelligence, Counter-Espionage, and Logistics', and knows many ways in which to get someone to talk...");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Sergeant' in the Enforcer's 'Office of Realm Intelligence, Counter-Espionage, and Logistics', and knows many ways in which to get someone to talk...");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -323,7 +323,7 @@ public class Perk {
 			null) {
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Constable' in the enforcer's 'Office of Realm Intelligence, Counter-Espionage, and Logistics', and knows many ways in which to get someone to talk...");
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Constable' in the Enforcer's 'Office of Realm Intelligence, Counter-Espionage, and Logistics', and knows many ways in which to get someone to talk...");
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -564,6 +564,115 @@ public class Perk {
 					"[npc.NameIsFull] one of the slime queen's personal guardians, and is well trained in how to handle a sword.");
 		}
 	};
+
+	public static AbstractPerk JOB_EPONA = new AbstractPerk(20,
+			true,
+			"fertility queen",
+			PerkCategory.JOB,
+			"perks/jobs/npc_epona",
+			Colour.BASE_PINK,
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.FERTILITY, 100),
+					new Value<Attribute, Integer>(Attribute.VIRILITY, 100)),
+			null) {
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner,
+					"[npc.NameHasFull] dedicated [npc.her] entire life to helping others become mothers and fathers, and is currently achieving this noble goal by running the game 'pregnancy roulette' in Submission's Gambling Den.");
+		}
+	};
+	
+	public static AbstractPerk JOB_GANG_LEADER = new AbstractPerk(20,
+			true,
+			"ruthless leadership",
+			PerkCategory.JOB,
+			"perks/jobs/npc_rat_gang",
+			Util.newArrayListOfValues(
+					Colour.CLOTHING_BLACK,
+					Colour.CLOTHING_BLACK,
+					Colour.CLOTHING_GOLD),
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.HEALTH_MAXIMUM, 50),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_PHYSICAL, 50),
+					new Value<Attribute, Integer>(Attribute.RESISTANCE_PHYSICAL, 25),
+					new Value<Attribute, Integer>(Attribute.RESISTANCE_POISON, 10)),
+			null,
+			null, null, null) {
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner,
+					"[npc.NameHasFull] all the strength and cunning expected of one who has risen to be the leader of a criminal gang, and [npc.has] furthermore survived countless attempts to challenge [npc.her] position of authority.");
+		}
+	};
+	
+	public static AbstractPerk JOB_GANG_BODY_GUARD = new AbstractPerk(20,
+			true,
+			"proven loyalty",
+			PerkCategory.JOB,
+			"perks/jobs/npc_rat_gang",
+			Util.newArrayListOfValues(
+					Colour.CLOTHING_BLACK,
+					Colour.CLOTHING_BLACK,
+					Colour.CLOTHING_SILVER),
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.HEALTH_MAXIMUM, 25),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_PHYSICAL, 25),
+					new Value<Attribute, Integer>(Attribute.RESISTANCE_PHYSICAL, 10),
+					new Value<Attribute, Integer>(Attribute.RESISTANCE_POISON, 10)),
+			null,
+			null, null, null) {
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner,
+					"[npc.NameHasFull] proven [npc.herself] to be unquestionably loyal to [npc.her] gang, and as such, has earned the position of bodyguard of [npc.her] leader.");
+		}
+	};
+	
+	public static AbstractPerk JOB_GANG_MEMBER = new AbstractPerk(20,
+			true,
+			"one of us",
+			PerkCategory.JOB,
+			"perks/jobs/npc_rat_gang",
+			Util.newArrayListOfValues(
+					Colour.CLOTHING_BLACK,
+					Colour.CLOTHING_BLACK,
+					Colour.CLOTHING_COPPER),
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.HEALTH_MAXIMUM, 10),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_PHYSICAL, 10),
+					new Value<Attribute, Integer>(Attribute.RESISTANCE_PHYSICAL, 5),
+					new Value<Attribute, Integer>(Attribute.RESISTANCE_POISON, 5)),
+			null,
+			null, null, null) {
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner,
+					"[npc.NameIsFull] a member of a criminal gang, and as such, has seen [npc.her] fair share of fights.");
+		}
+	};
+	
+	public static AbstractPerk JOB_LYSSIETH_GUARD = new AbstractPerk(20,
+			true,
+			"dutiful daughter",
+			PerkCategory.JOB,
+			"perks/jobs/npc_lyssieth_guard",
+			Util.newArrayListOfValues(
+					Colour.DAMAGE_TYPE_PHYSICAL,
+					Colour.CLOTHING_STEEL,
+					Colour.CLOTHING_BLACK),
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.MAJOR_PHYSIQUE, 25),
+					new Value<Attribute, Integer>(Attribute.MAJOR_ARCANE, 25),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_PHYSICAL, 25),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_RANGED_WEAPON, 50)),
+			null,
+			null, null, null) {
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner,
+					"[npc.NameIsFull] an unrecognised daughter of the elder lilin, Lyssieth, and has been given the task of defending her mother's palace from unwelcome visitors.");
+		}
+	};
 	
 	
 	
@@ -582,6 +691,22 @@ public class Perk {
 		@Override
 		public String getDescription(GameCharacter owner) {
 			return UtilText.parse(owner, "[npc.NameHasFull] steeled [npc.her] body and mind to help [npc.herHim] deal with the fact that [npc.sheIs] just someone else's property.");
+		}
+	};
+
+	public static AbstractPerk JOB_CAPTIVE = new AbstractPerk(20,
+			true,
+			"Kidnapped",
+			PerkCategory.JOB,
+			"perks/jobs/npc_captive",
+			Colour.BASE_RED,
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.MAJOR_PHYSIQUE, -5),
+					new Value<Attribute, Integer>(Attribute.HEALTH_MAXIMUM, -25)),
+			null) {
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner, "[npc.NameHasFull] been kidnapped and is being illegally held prisoner against [npc.her] will.");
 		}
 	};
 	
@@ -1016,7 +1141,7 @@ public class Perk {
 
 	public static AbstractPerk BESERK = new AbstractPerk(20,
 			false,
-			"beserk",
+			"berserk",
 			PerkCategory.PHYSICAL,
 			"perks/beserk",
 			Colour.DAMAGE_TYPE_PHYSICAL,
@@ -1838,7 +1963,7 @@ public class Perk {
 
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.NameIsFUll] very flirtatious, and although [npc.her] charms work well on both sexes, [npc.she] [npc.verb(find)] that [npc.she] [npc.verb(get)] more opportunities to seduce women than men.");
+			return UtilText.parse(owner, "[npc.NameIsFull] very flirtatious, and although [npc.her] charms work well on both sexes, [npc.she] [npc.verb(find)] that [npc.she] [npc.verb(get)] more opportunities to seduce women than men.");
 		}
 
 	};
@@ -1863,7 +1988,7 @@ public class Perk {
 
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "[npc.NameIsFUll] quite a tease, and although [npc.her] charms work well on both sexes, [npc.she] [npc.verb(find)] that [npc.she] [npc.verb(get)] more opportunities to seduce men than women.");
+			return UtilText.parse(owner, "[npc.NameIsFull] quite a tease, and although [npc.her] charms work well on both sexes, [npc.she] [npc.verb(find)] that [npc.she] [npc.verb(get)] more opportunities to seduce men than women.");
 		}
 	};
 	
@@ -2029,7 +2154,7 @@ public class Perk {
 	
 	public static AbstractPerk FIRING_BLANKS = new AbstractPerk(20,
 			true,
-			"firing blanks",
+			"sterile",
 			PerkCategory.PHYSICAL,
 			"perks/firing_blanks",
 			Colour.GENERIC_SEX,
@@ -2037,11 +2162,7 @@ public class Perk {
 
 		@Override
 		public String getDescription(GameCharacter owner) {
-			if (owner.isPlayer()) {
-				return "Your seed is incredibly weak, and you are highly unlikely to ever get anyone pregnant.";
-			} else {
-				return UtilText.parse(owner, "[npc.NamePos] seed is incredibly weak, and [npc.sheIs] highly unlikely to ever get anyone pregnant.");
-			}
+			return UtilText.parse(owner, "[npc.NamePos] seed is incredibly weak, and [npc.sheIs] highly unlikely to ever get anyone pregnant.");
 		}
 	};
 	
@@ -2257,7 +2378,8 @@ public class Perk {
 			"perks/attIntelligence3",
 			Colour.ATTRIBUTE_ARCANE,
 			Util.newHashMapOfValues(
-					new Value<Attribute, Integer>(Attribute.MAJOR_ARCANE, 10)),
+					new Value<Attribute, Integer>(Attribute.MAJOR_ARCANE, 10),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_SPELLS, 20)),
 			null) {
 
 		@Override
@@ -2274,6 +2396,32 @@ public class Perk {
 		}
 	};
 
+	public static AbstractPerk SPECIAL_ARCANE_LIGHTNING = new AbstractPerk(20,
+			false,
+			"exceptional arcanist",
+			PerkCategory.ARCANE,
+			"perks/special_arcane_lightning",
+			Colour.ATTRIBUTE_ARCANE,
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.MAJOR_ARCANE, 25),
+					new Value<Attribute, Integer>(Attribute.MANA_MAXIMUM, 100),
+					new Value<Attribute, Integer>(Attribute.SPELL_COST_MODIFIER, 25),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_SPELLS, 50)),
+			null) {
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner, "Thanks to an exceptional event in [npc.her] past, [npc.nameHasFull] gained a not only a huge amount of natural arcane power, but also an innate understanding of how best to harness the arcane.");
+		}
+		@Override
+		public boolean isHiddenPerk() {
+			return true;
+		}
+		@Override
+		public boolean isBackgroundPerk() {
+			return true;
+		}
+	};
+	
 	public static AbstractPerk SPECIAL_ARCANE_ALLERGY = new AbstractPerk(20,
 			false,
 			"arcane allergy",
@@ -2335,6 +2483,54 @@ public class Perk {
 		@Override
 		public String getDescription(GameCharacter owner) {
 			return UtilText.parse(owner, "[npc.NameHasFull] spent a lot of time training [npc.her] body for combat, and as a result, [npc.sheIs] far stronger than the average person.");
+		}
+		@Override
+		public boolean isHiddenPerk() {
+			return true;
+		}
+		@Override
+		public boolean isBackgroundPerk() {
+			return true;
+		}
+	};
+	
+	public static AbstractPerk SPECIAL_MELEE_EXPERT = new AbstractPerk(20,
+			false,
+			"melee expert",
+			PerkCategory.PHYSICAL,
+			"perks/melee_damage",
+			Colour.ATTRIBUTE_PHYSIQUE,
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.DAMAGE_MELEE_WEAPON, 50)),
+			null) {
+
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner, "[npc.NameHasFull] a considerable amount of experience with wielding melee weapons, making [npc.her] a fearsome foe to face when armed with a weapon of [npc.her] choice.");
+		}
+		@Override
+		public boolean isHiddenPerk() {
+			return true;
+		}
+		@Override
+		public boolean isBackgroundPerk() {
+			return true;
+		}
+	};
+	
+	public static AbstractPerk SPECIAL_RANGED_EXPERT = new AbstractPerk(20,
+			false,
+			"ranged expert",
+			PerkCategory.PHYSICAL,
+			"perks/ranged_damage",
+			Colour.ATTRIBUTE_PHYSIQUE,
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.DAMAGE_RANGED_WEAPON, 50)),
+			null) {
+
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner, "[npc.NameHasFull] a considerable amount of experience with wielding ranged weapons, making [npc.her] a fearsome foe to face when armed with a weapon of [npc.her] choice.");
 		}
 		@Override
 		public boolean isHiddenPerk() {

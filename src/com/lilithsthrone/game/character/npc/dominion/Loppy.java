@@ -78,7 +78,7 @@ public class Loppy extends NPC {
 				new CharacterInventory(30), WorldType.ANGELS_KISS_FIRST_FLOOR, PlaceType.ANGELS_KISS_BEDROOM_LOPPY, true);
 		
 		if(!isImported) {
-			dailyReset();
+			dailyUpdate();
 		}
 	}
 
@@ -95,7 +95,7 @@ public class Loppy extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.3.6")) {
 			this.resetPerksMap(true);
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.4.9")) {
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
 			this.setPersonalityTraits(
 					PersonalityTrait.LEWD);
 		}
@@ -222,7 +222,7 @@ public class Loppy extends NPC {
 		this.equipClothingFromNowhere(AbstractClothingType.generateClothing(ClothingType.STOMACH_LOWBACK_BODY, Colour.CLOTHING_PURPLE, false), true, this);
 		this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_sock_pantyhose", Colour.CLOTHING_BLACK, false), true, this);
 		this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_foot_stiletto_heels", Colour.CLOTHING_PURPLE, false), true, this);
-		this.equipClothingFromNowhere(AbstractClothingType.generateClothing(ClothingType.NECK_COLLAR_BOWTIE, Colour.CLOTHING_PURPLE, false), true, this);
+		this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_neck_collar_bowtie", Colour.CLOTHING_PURPLE, false), true, this);
 		this.equipClothingFromNowhere(AbstractClothingType.generateClothing(ClothingType.WRIST_SUIT_CUFFS, false), true, this);
 		
 		this.setPiercedEar(true);
@@ -236,7 +236,7 @@ public class Loppy extends NPC {
 	}
 	
 	@Override
-	public void dailyReset() {
+	public void dailyUpdate() {
 		this.useItem(AbstractItemType.generateItem(ItemType.PROMISCUITY_PILL), this, false);
 	}
 	

@@ -24,15 +24,15 @@ import com.lilithsthrone.game.character.race.Subspecies;
 import com.lilithsthrone.game.combat.Spell;
 import com.lilithsthrone.game.combat.SpellUpgrade;
 import com.lilithsthrone.game.dialogue.DialogueNode;
-import com.lilithsthrone.game.dialogue.npcDialogue.SlaveDialogue;
+import com.lilithsthrone.game.dialogue.companions.SlaveDialogue;
 import com.lilithsthrone.game.dialogue.npcDialogue.dominion.AlleywayDemonDialogue;
-import com.lilithsthrone.game.dialogue.npcDialogue.dominion.AlleywayDemonDialogueCompanions;
 import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.CharacterInventory;
 import com.lilithsthrone.game.inventory.InventorySlot;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothingType;
+import com.lilithsthrone.game.inventory.clothing.OutfitType;
 import com.lilithsthrone.game.sex.Sex;
 import com.lilithsthrone.game.sex.SexAreaOrifice;
 import com.lilithsthrone.game.sex.SexAreaPenetration;
@@ -45,7 +45,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.1.69
- * @version 0.3.1
+ * @version 0.3.5.5
  * @author Innoxia
  */
 public class DominionSuccubusAttacker extends NPC {
@@ -64,7 +64,7 @@ public class DominionSuccubusAttacker extends NPC {
 			this.setLocation(Main.game.getPlayer(), true);
 			
 			if(!Gender.getGenderFromUserPreferences(false, false).isFeminine()) {
-				this.setBody(Gender.M_P_MALE, Subspecies.DEMON, RaceStage.GREATER);
+				this.setBody(Gender.M_P_MALE, Subspecies.DEMON, RaceStage.GREATER, true);
 				this.setGenderIdentity(Gender.M_P_MALE);
 			}
 			
@@ -104,6 +104,8 @@ public class DominionSuccubusAttacker extends NPC {
 
 			// Set starting perks based on the character's race
 			initPerkTreeAndBackgroundPerks();
+			this.setStartingCombatMoves();
+			loadImages();
 			
 			initHealthAndManaToMax();
 		}
@@ -129,7 +131,11 @@ public class DominionSuccubusAttacker extends NPC {
 
 	@Override
 	public void equipClothing(List<EquipClothingSetting> settings) {
-		super.equipClothing(settings); //TODO - add unique outfit type
+		this.incrementMoney((int) (this.getInventory().getNonEquippedValue() * 0.5f));
+		this.clearNonEquippedInventory(false);
+		CharacterUtils.generateItemsInInventory(this);
+		
+		CharacterUtils.equipClothingFromOutfitType(this, OutfitType.PROSTITUTE, settings);
 	}
 	
 	@Override
@@ -175,11 +181,7 @@ public class DominionSuccubusAttacker extends NPC {
 	
 	@Override
 	public DialogueNode getEncounterDialogue() {
-		if(Main.game.getPlayer().getCompanions().isEmpty()) {
-			return AlleywayDemonDialogue.ALLEY_DEMON_ATTACK;
-		} else {
-			return AlleywayDemonDialogueCompanions.ALLEY_DEMON_ATTACK;
-		}
+		return AlleywayDemonDialogue.DEMON_ATTACK;
 	}
 
 	// Combat:
@@ -231,6 +233,7 @@ public class DominionSuccubusAttacker extends NPC {
 				AbstractClothing clothing = target.getClothingInSlot(InventorySlot.PENIS);
 				if(clothing!=null && clothing.getClothingType().isCondom(clothing.getClothingType().getEquipSlots().get(0))) {
 					target.unequipClothingIntoVoid(clothing, true, equipper);
+					inventory.resetEquipDescription();
 				}
 				return UtilText.parse(equipper, target,
 						"<p>"

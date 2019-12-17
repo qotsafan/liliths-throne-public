@@ -274,17 +274,23 @@ public class CharacterUtils {
 	}
 	
 	public static Body generateBody(GameCharacter linkedCharacter, Gender startingGender, GameCharacter mother, GameCharacter father) {
-		
-		Body body = Subspecies.getPreGeneratedBody(linkedCharacter, startingGender, mother, father);
+		Body body = null;
+		if(father!=null) {
+			body = Subspecies.getPreGeneratedBody(linkedCharacter, startingGender, mother, father);
+		}
 
 		boolean takesAfterMother = true;
 		GameCharacter parentTakesAfter = mother;
 		boolean raceFromMother = true;
-		AbstractRacialBody motherBody = RacialBody.valueOfRace(Subspecies.getOffspringFromMotherSubspecies(mother, father).getRace());
-		AbstractRacialBody fatherBody = RacialBody.valueOfRace(Subspecies.getOffspringFromFatherSubspecies(mother, father).getRace());
+		AbstractRacialBody motherBody = RacialBody.valueOfRace(body==null?mother.getRace():body.getRace());//RacialBody.valueOfRace(Subspecies.getOffspringFromMotherSubspecies(mother, father).getRace());
+		AbstractRacialBody fatherBody = RacialBody.valueOfRace(body==null?(father==null?mother.getRace():father.getRace()):body.getRace());//RacialBody.valueOfRace(Subspecies.getOffspringFromFatherSubspecies(mother, father).getRace());
 		Subspecies raceTakesAfter = mother.getSubspecies();
 		boolean feminineGender = startingGender.isFeminine();
 		NPC blankNPC = Main.game.getNpc(GenericAndrogynousNPC.class);
+		
+		if(father==null) {
+			father = mother;
+		}
 		
 		if(body==null) {
 			AbstractRacialBody startingBodyType = RacialBody.HUMAN;
@@ -292,12 +298,26 @@ public class CharacterUtils {
 			
 			// Core body type is random:
 			if(Math.random()<=0.5) {
-				startingBodyType = motherBody;
-				stage = mother.getRaceStage();
+				if(mother.isTaur()) {
+					if(mother.getArmRace()!=Race.HUMAN) {
+						startingBodyType = motherBody;
+						stage = mother.getRaceStage();
+					}
+				} else {
+					startingBodyType = motherBody;
+					stage = mother.getRaceStage();
+				}
 				
 			} else {
-				startingBodyType = fatherBody;
-				stage = father.getRaceStage();
+				if(father.isTaur()) {
+					if(father.getArmRace()!=Race.HUMAN) {
+						startingBodyType = fatherBody;
+						stage = father.getRaceStage();
+					}
+				} else {
+					startingBodyType = fatherBody;
+					stage = father.getRaceStage();
+				}
 				raceTakesAfter = father.getSubspecies();
 				takesAfterMother = false;
 				raceFromMother = false;
@@ -331,7 +351,8 @@ public class CharacterUtils {
 			
 			body = generateBody(linkedCharacter, startingGender, startingBodyType, stage);
 		}
-		
+
+		linkedCharacter.setGenderIdentity(startingGender);
 		body.setBodyMaterial(mother.getBodyMaterial());
 		
 		// Genetics! (Sort of...)
@@ -385,12 +406,12 @@ public class CharacterUtils {
 				body.getCoverings().put(body.getEye().getBodyCoveringType(body),
 						new Covering(body.getEye().getBodyCoveringType(body), mother.getCovering(mother.getEyeCovering()).getPattern(),
 								mother.getCovering(mother.getEyeCovering()).getPrimaryColour(), mother.getCovering(mother.getEyeCovering()).isPrimaryGlowing(),
-								mother.getCovering(mother.getEyeCovering()).getPrimaryColour(), mother.getCovering(mother.getEyeCovering()).isPrimaryGlowing()));
+								mother.getCovering(mother.getEyeCovering()).getSecondaryColour(), mother.getCovering(mother.getEyeCovering()).isSecondaryGlowing()));
 			} else {
 				body.getCoverings().put(body.getEye().getBodyCoveringType(body),
 						new Covering(body.getEye().getBodyCoveringType(body), father.getCovering(father.getEyeCovering()).getPattern(),
 								father.getCovering(father.getEyeCovering()).getPrimaryColour(), father.getCovering(father.getEyeCovering()).isPrimaryGlowing(),
-								father.getCovering(father.getEyeCovering()).getPrimaryColour(), father.getCovering(father.getEyeCovering()).isPrimaryGlowing()));
+								father.getCovering(father.getEyeCovering()).getSecondaryColour(), father.getCovering(father.getEyeCovering()).isSecondaryGlowing()));
 			}
 		}
 		// Pupil colour:
@@ -399,12 +420,12 @@ public class CharacterUtils {
 				body.getCoverings().put(BodyCoveringType.EYE_PUPILS,
 						new Covering(body.getEye().getBodyCoveringType(body), mother.getCovering(BodyCoveringType.EYE_PUPILS).getPattern(),
 								mother.getCovering(BodyCoveringType.EYE_PUPILS).getPrimaryColour(), mother.getCovering(BodyCoveringType.EYE_PUPILS).isPrimaryGlowing(),
-								mother.getCovering(BodyCoveringType.EYE_PUPILS).getPrimaryColour(), mother.getCovering(BodyCoveringType.EYE_PUPILS).isPrimaryGlowing()));
+								mother.getCovering(BodyCoveringType.EYE_PUPILS).getSecondaryColour(), mother.getCovering(BodyCoveringType.EYE_PUPILS).isSecondaryGlowing()));
 			} else {
 				body.getCoverings().put(BodyCoveringType.EYE_PUPILS,
 						new Covering(body.getEye().getBodyCoveringType(body), father.getCovering(BodyCoveringType.EYE_PUPILS).getPattern(),
 								father.getCovering(BodyCoveringType.EYE_PUPILS).getPrimaryColour(), father.getCovering(BodyCoveringType.EYE_PUPILS).isPrimaryGlowing(),
-								father.getCovering(BodyCoveringType.EYE_PUPILS).getPrimaryColour(), father.getCovering(BodyCoveringType.EYE_PUPILS).isPrimaryGlowing()));
+								father.getCovering(BodyCoveringType.EYE_PUPILS).getSecondaryColour(), father.getCovering(BodyCoveringType.EYE_PUPILS).isSecondaryGlowing()));
 			}
 		}
 		// Sclera colour:
@@ -413,12 +434,12 @@ public class CharacterUtils {
 				body.getCoverings().put(BodyCoveringType.EYE_SCLERA,
 						new Covering(body.getEye().getBodyCoveringType(body), mother.getCovering(BodyCoveringType.EYE_SCLERA).getPattern(),
 								mother.getCovering(BodyCoveringType.EYE_SCLERA).getPrimaryColour(), mother.getCovering(BodyCoveringType.EYE_SCLERA).isPrimaryGlowing(),
-								mother.getCovering(BodyCoveringType.EYE_SCLERA).getPrimaryColour(), mother.getCovering(BodyCoveringType.EYE_SCLERA).isPrimaryGlowing()));
+								mother.getCovering(BodyCoveringType.EYE_SCLERA).getSecondaryColour(), mother.getCovering(BodyCoveringType.EYE_SCLERA).isSecondaryGlowing()));
 			} else {
 				body.getCoverings().put(BodyCoveringType.EYE_SCLERA,
 						new Covering(body.getEye().getBodyCoveringType(body), father.getCovering(BodyCoveringType.EYE_SCLERA).getPattern(),
 								father.getCovering(BodyCoveringType.EYE_SCLERA).getPrimaryColour(), father.getCovering(BodyCoveringType.EYE_SCLERA).isPrimaryGlowing(),
-								father.getCovering(BodyCoveringType.EYE_SCLERA).getPrimaryColour(), father.getCovering(BodyCoveringType.EYE_SCLERA).isPrimaryGlowing()));
+								father.getCovering(BodyCoveringType.EYE_SCLERA).getSecondaryColour(), father.getCovering(BodyCoveringType.EYE_SCLERA).isSecondaryGlowing()));
 			}
 		}
 		
@@ -793,9 +814,9 @@ public class CharacterUtils {
 		// Tail:
 		if(Math.random()>0.75) {
 			if(Math.random()>=takesAfterMotherChance) {
-				body.getTail().setTailCount(blankNPC, mother.getTailCount());
+				body.getTail().setTailCount(blankNPC, mother.getTailCount(), false);
 			} else {
-				body.getTail().setTailCount(blankNPC, father.getTailCount());
+				body.getTail().setTailCount(blankNPC, father.getTailCount(), false);
 			}
 		}
 		
@@ -990,7 +1011,7 @@ public class CharacterUtils {
 					?demonBody.getBreastCrotchType()
 					:BreastType.NONE,
 				Util.randomItemFrom(demonBody.getBreastCrotchShapes()),
-				demonBody.getBreastCrotchSize(),
+				demonBody.getBreastCrotchSize()+Main.getProperties().udderSizePreference,
 				demonBody.getBreastCrotchLactationRate(),
 				demonBody.getBreastCrotchCount(),
 				demonBody.getBreastCrotchNippleSize(),
@@ -1102,7 +1123,6 @@ public class CharacterUtils {
 	}
 	
 	public static Body generateBody(GameCharacter linkedCharacter, Gender startingGender, AbstractRacialBody startingBodyType, Subspecies species, RaceStage stage) {
-		
 		boolean hasVagina = startingGender.getGenderName().isHasVagina();
 		boolean hasPenis = startingGender.getGenderName().isHasPenis();
 		boolean hasBreasts = startingGender.getGenderName().isHasBreasts();
@@ -1244,7 +1264,7 @@ public class CharacterUtils {
 								?startingBodyType.getBreastCrotchType()
 								:BreastType.NONE,
 							Util.randomItemFrom(startingBodyType.getBreastCrotchShapes()),
-							startingBodyType.getBreastCrotchSize(),
+							startingBodyType.getBreastCrotchSize()+Main.getProperties().udderSizePreference,
 							startingBodyType.getBreastCrotchLactationRate(),
 							startingBodyType.getBreastCrotchCount(),
 							startingBodyType.getBreastCrotchNippleSize(),
@@ -1285,7 +1305,11 @@ public class CharacterUtils {
 		return body;
 	}
 	
-	public static Body reassignBody(GameCharacter linkedCharacter, Body body, Gender startingGender, Subspecies species, RaceStage stage) {
+	public static Body reassignBody(GameCharacter linkedCharacter, Body body, Gender startingGender, Subspecies species, RaceStage stage, boolean removeDemonOverride) {
+		
+		if(removeDemonOverride) {
+			body.setSubspeciesOverride(null);
+		}
 		
 		AbstractRacialBody startingBodyType = RacialBody.valueOfRace(species.getRace());
 		
@@ -1325,7 +1349,7 @@ public class CharacterUtils {
 						?startingBodyType.getBreastCrotchType()
 						:BreastType.NONE,
 					Util.randomItemFrom(startingBodyType.getBreastCrotchShapes()),
-					startingBodyType.getBreastCrotchSize(),
+					startingBodyType.getBreastCrotchSize()+Main.getProperties().udderSizePreference,
 					startingBodyType.getBreastCrotchLactationRate(),
 					startingBodyType.getBreastCrotchCount(),
 					startingBodyType.getBreastCrotchNippleSize(),
@@ -1716,13 +1740,14 @@ public class CharacterUtils {
 		
 		// Penis:
 		if(character.hasPenis() || character.getRace()==Race.DEMON) {
-			character.setPenisVirgin(true);
-			if(Math.random()>0.15f
+			if(Math.random()<0.9f
 					|| character.getHistory()==Occupation.NPC_PROSTITUTE
 					|| character.hasFetish(Fetish.FETISH_CUM_STUD)
 					|| character.hasFetish(Fetish.FETISH_VAGINAL_GIVING)
 					|| character.hasFetish(Fetish.FETISH_ANAL_GIVING)) {
 				character.setPenisVirgin(false);
+			} else {
+				character.setPenisVirgin(true);
 			}
 			if((character.getGender()==Gender.F_P_TRAP || character.getGender()==Gender.N_P_TRAP) && Math.random()>=0.1f) { // Most traps have a small cock:
 				character.setPenisSize(PenisSize.ONE_TINY.getMinimumValue() + Util.random.nextInt(character.getPenisSize().getMaximumValue() - character.getPenisSize().getMinimumValue()) +1);
@@ -1763,7 +1788,7 @@ public class CharacterUtils {
 				character.setVaginaCapacity(capacity, true);
 				
 			} else {
-				if(Math.random()>0.99f || character.getHistory()==Occupation.NPC_PROSTITUTE) {
+				if(Math.random()<0.9f || character.getHistory()==Occupation.NPC_PROSTITUTE) {
 					character.setVaginaVirgin(false);
 					character.setVaginaCapacity(character.getVaginaRawCapacityValue()*1.2f, true);
 					character.setVaginaStretchedCapacity(character.getVaginaRawCapacityValue());

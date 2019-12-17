@@ -41,7 +41,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.1.95
- * @version 0.2.4
+ * @version 0.3.5.5
  * @author Innoxia
  */
 public class ReindeerOverseer extends NPC {
@@ -61,7 +61,8 @@ public class ReindeerOverseer extends NPC {
 	public ReindeerOverseer(Gender gender, boolean isImported) {
 		super(isImported, null, null, "",
 				Util.random.nextInt(28)+18, Util.randomItemFrom(Month.values()), 1+Util.random.nextInt(25),
-				10, gender, Subspecies.REINDEER_MORPH, RaceStage.GREATER,
+				10,
+				null, null, null,
 				new CharacterInventory(10), WorldType.DOMINION, PlaceType.DOMINION_STREET, false);
 
 		if(!isImported) {
@@ -76,11 +77,11 @@ public class ReindeerOverseer extends NPC {
 				
 			if(gender.isFeminine()) {
 				RaceStage stage = CharacterUtils.getRaceStageFromPreferences(Main.getProperties().getSubspeciesFeminineFurryPreferencesMap().get(subspecies), gender, subspecies);
-				setBody(gender, subspecies, stage);
+				setBody(gender, subspecies, stage, true);
 				
 			} else {
 				RaceStage stage = CharacterUtils.getRaceStageFromPreferences(Main.getProperties().getSubspeciesMasculineFurryPreferencesMap().get(subspecies), gender, subspecies);
-				setBody(gender, subspecies, stage);
+				setBody(gender, subspecies, stage, true);
 			}
 
 			setName(Name.getRandomTriplet(subspecies.getRace()));
@@ -106,7 +107,7 @@ public class ReindeerOverseer extends NPC {
 			equipClothing(EquipClothingSetting.getAllClothingSettings());
 			CharacterUtils.applyMakeup(this, true);
 			
-			dailyReset(); // Give items for sale.
+			dailyUpdate(); // Give items for sale.
 
 			initHealthAndManaToMax();
 		}
@@ -154,7 +155,7 @@ public class ReindeerOverseer extends NPC {
 	}
 	
 	@Override
-	public void dailyReset() {
+	public void dailyUpdate() {
 		
 		if(!this.isSlave()) {
 			if(Main.game.getCurrentWeather()!=Weather.SNOW && Main.game.getSeason()!=Season.WINTER) {
@@ -164,7 +165,7 @@ public class ReindeerOverseer extends NPC {
 				}
 			}
 			
-			clearNonEquippedInventory();
+			clearNonEquippedInventory(false);
 			
 			if(this.getLocationPlace().getPlaceType().equals(PlaceType.DOMINION_STREET) && !this.getLocation().equals(Main.game.getPlayer().getLocation())) {
 				this.moveToAdjacentMatchingCellType(true);

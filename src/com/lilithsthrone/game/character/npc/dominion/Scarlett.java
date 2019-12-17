@@ -86,7 +86,7 @@ public class Scarlett extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.3.6")) {
 			this.resetPerksMap(true);
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.4.9")) {
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
 			this.setPersonalityTraits(
 					PersonalityTrait.LEWD,
 					PersonalityTrait.SELFISH);
@@ -245,6 +245,19 @@ public class Scarlett extends NPC {
 	
 	@Override
 	public void changeFurryLevel(){
+	}
+	
+	@Override
+	public void turnUpdate() {
+		if(Main.game.getPlayer().hasQuest(QuestLine.MAIN) && Main.game.getPlayer().isQuestProgressGreaterThan(QuestLine.MAIN, Quest.MAIN_1_G_SLAVERY) && !this.isSlave()) {
+			if(!Main.game.getCharactersPresent().contains(this)) {
+				if(Main.game.isExtendedWorkTime()) {
+					this.returnToHome();
+				} else {
+					this.setLocation(WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL, false);
+				}
+			}
+		}
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package com.lilithsthrone.game.character.quests;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.lilithsthrone.main.Main;
@@ -299,7 +300,8 @@ public enum Quest {
 
 		@Override
 		public String getDescription() {
-			return "[siren.Name] told you that you're going to need the help of the youko if you're to defeat the elder lilin pegataur, Lunette."
+			return "[style.italicsMinorBad(This is where the main quest currently ends, but more main quest content will be coming in v0.3.7!)]<br/>"//TODO
+					+ "[siren.Name] told you that you're going to need the help of the youko if you're to defeat the elder lilin pegataur, Lunette."
 					+ " She said that you should find and enlist the help of her old friend, [youkoGuide.name], who worked in her lab back when she was living in her citadel."
 					+ " [youkoGuide.Name] will have returned to the town of Elis, which is the settlement nearest to the Shinrin Forest, the youko's homeland.";
 		}
@@ -669,7 +671,7 @@ public enum Quest {
 
 		@Override
 		public String getDescription() {
-			return "When you first arrived in Submission, an enforcer informed you of an ongoing situation in the tunnels."
+			return "When you first arrived in Submission, an Enforcer informed you of an ongoing situation in the tunnels."
 					+ " Apparently, there are an increasing number of Slimes who are attacking innocent travellers and transforming them into more Slimes."
 					+ " If you're able to offer any information on where these aggressive Slimes are coming from, you could earn a one-thousand flame reward.";
 		}
@@ -745,7 +747,7 @@ public enum Quest {
 
 		@Override
 		public String getCompletedDescription() {
-			return "You decided to help the Slime Queen with her plans, and agreed to trick the enforcers into believing that she's no longer a threat!";
+			return "You decided to help the Slime Queen with her plans, and agreed to trick the Enforcers into believing that she's no longer a threat!";
 		}
 	},
 	
@@ -763,7 +765,7 @@ public enum Quest {
 		@Override
 		public String getCompletedDescription() {
 			return "You told Claire that the Slime Queen is no longer a threat, and received the twenty-thousand flame reward."
-				+ " With your Queen now safe from enforcer investigation, it's only a matter of time before all of Submission is a Slime paradise!";
+				+ " With your Queen now safe from Enforcer investigation, it's only a matter of time before all of Submission is a Slime paradise!";
 		}
 	},
 	
@@ -846,7 +848,7 @@ public enum Quest {
 
 		@Override
 		public String getDescription() {
-			return "Having accidentally teleported into the 'SWORD' enforcer division's storage warehouse, both you and Claire now need to avoid detection and make good your escape.";
+			return "Having accidentally teleported into the 'SWORD' Enforcer division's storage warehouse, both you and Claire now need to avoid detection and make good your escape.";
 		}
 
 		@Override
@@ -864,18 +866,18 @@ public enum Quest {
 		@Override
 		public String getDescription() {
 			if(Main.game.isNonConEnabled()) {
-				return "Having been defeated by the enforcers inside SWORD's warehouse, you've been sentenced to be locked into the public use stocks at slaver alley. Endure this ordeal until Claire comes to rescue you...";
+				return "Having been defeated by the Enforcers inside SWORD's warehouse, you've been sentenced to be locked into the public use stocks at slaver alley. Endure this ordeal until Claire comes to rescue you...";
 			} else {
-				return "Having been defeated by the enforcers inside SWORD's warehouse, you've been locked into the cells at Enforcer Headquarters. You'll have to wait until Claire comes to rescue you...";
+				return "Having been defeated by the Enforcers inside SWORD's warehouse, you've been locked into the cells at Enforcer Headquarters. You'll have to wait until Claire comes to rescue you...";
 			}
 		}
 
 		@Override
 		public String getCompletedDescription() {
 			if(Main.game.isNonConEnabled()) {
-				return "Having been defeated by the enforcers inside SWORD's warehouse, you had to endure being locked into the public use stocks at slaver alley for several hours before Claire turned up to release you.";
+				return "Having been defeated by the Enforcers inside SWORD's warehouse, you had to endure being locked into the public use stocks at slaver alley for several hours before Claire turned up to release you.";
 			} else {
-				return "Having been defeated by the enforcers inside SWORD's warehouse, you had to endure being locked into the cells at Enforcer Headquarters for a couple of hours before Claire turned up to release you.";
+				return "Having been defeated by the Enforcers inside SWORD's warehouse, you had to endure being locked into the cells at Enforcer Headquarters for a couple of hours before Claire turned up to release you.";
 			}
 		}
 	},
@@ -1092,8 +1094,118 @@ public enum Quest {
 			return "You handed over the box of 'A Hundred Kisses' to Candi, and finally gained your prize; ownership of [brax.name].";
 		}
 	},
+
 	
+	// Vengar:
 	
+	VENGAR_START(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Rat Warrens";
+		}
+		@Override
+		public String getDescription() {
+			return "You agreed to help Axel deal with Vengar, who's apparently the leader of Submission's largest and most dangerous gang. You could head directly to his hideout, the 'Rat Warrens', or first go and ask Claire for help.";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "By using the password Axel gave to you, you were able to gain entry to Vengar's hideout; the Rat Warrens.";
+		}
+	},
+	
+	VENGAR_ONE(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Meeting Vengar";
+		}
+		@Override
+		public String getDescription() {
+			return "In order to find Vengar, you need to locate the main hall and be there between the hours of "+Units.time(LocalDateTime.of(1, 1, 1, 6, 0))+" and "+Units.time(LocalDateTime.of(1, 1, 1, 22, 0))+".";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "You found Vengar sitting on a throne in the main hall, and after approaching him, you were given the choice to either join his gang, or be set upon by his rat-girl bodyguards.";
+		}
+	},
+	
+	VENGAR_TWO_FIGHT(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Conflict";
+		}
+		@Override
+		public String getDescription() {
+			return "Having chosen to refuse Vengar's offer of joining his gang, you now need to fight your way past his bodyguards and then defeat him in combat in order to assert dominance over his gang.";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "You managed to defeat both Vengar and his bodyguards, allowing you to assert your dominance over his gang.";
+		}
+	},
+	
+	VENGAR_TWO_JOIN(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Joining the Gang";
+		}
+		@Override
+		public String getDescription() {
+			return "Having accepted Vengar's offer to join his gang, you now need to suck his cock to show your submission...";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "You decided to join Vengar's gang, and after sucking his cock to show your submission, you were told to deal with Axel's treachery...";
+		}
+	},
+	
+	VENGAR_TWO_ENFORCERS(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Raid";
+		}
+		@Override
+		public String getDescription() {
+			return "Having confirmed that Vengar is in the Rat Warrens, you've activated the resonance stone, signalling to the waiting SWORD Enforcers to start their raid.";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "The SWORD Enforcers successfully raided the Rat Warrens, and were able to apprehend Vengar.";
+		}
+	},
+	
+	VENGAR_THREE_END(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Return to Axel";
+		}
+		@Override
+		public String getDescription() {
+			return "Now that you've dealt with Vengar, you need to return to Axel and let him know what happened.";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "You returned to Axel and told him what the situation will be from now on.";
+		}
+	},
+
+	VENGAR_OPTIONAL_CLAIRE(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Claire's Help";
+		}
+		@Override
+		public String getDescription() {
+			return "Deciding that it would be best to let Claire know of the situation, you asked her if there was anything the Enforcers could do to help."
+					+ " Apparently, a SWORD team is already prepared to raid the Rat Warrens, but they need to know Vengar is inside before launching their assault."
+					+ " Claire gave you a resonance stone to activate if you want them to back you up once inside.";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "Deciding that it would be best to let Claire know of the situation, you asked her if there was anything the Enforcers could do to help."
+					+ " Apparently, a SWORD team is already prepared to raid the Rat Warrens, but they need to know Vengar is inside before launching their assault."
+					+ " Claire gave you a resonance stone to activate if you want them to back you up once inside.";
+		}
+	},
 	
 	;
 

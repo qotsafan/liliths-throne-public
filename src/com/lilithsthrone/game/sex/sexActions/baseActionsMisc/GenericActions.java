@@ -167,7 +167,7 @@ public class GenericActions {
 
 		@Override
 		public boolean isBaseRequirementsMet() {
-			return (Main.game.getPlayer().getRace()==Race.DEMON || Main.game.getPlayer().getRace()==Race.SLIME)
+			return Main.game.getPlayer().isAbleToSelfTransform()
 					&& !Main.game.getPlayer().hasPenis()
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
@@ -231,16 +231,16 @@ public class GenericActions {
 		@Override
 		public String getActionDescription() {
 			if(Sex.getCharacterTargetedForSexAction(this).getRace()==Race.DEMON) {
-				return "Get [npc2.name] to use [npc.her] demonic self-transformative powers to grow [npc.herself] a demonic cock.";
+				return "Get [npc2.name] to use [npc2.her] demonic self-transformative powers to grow [npc2.herself] a demonic cock.";
 			} else {
-				return "Get [npc2.name] to use [npc.her] slimy body's self-transformative powers to grow [npc.herself] a slimy cock.";
+				return "Get [npc2.name] to use [npc2.her] slimy body's self-transformative powers to grow [npc2.herself] a slimy cock.";
 			}
 		}
 
 		@Override
 		public boolean isBaseRequirementsMet() {
 			return !Sex.isMasturbation()
-					&& (Sex.getCharacterTargetedForSexAction(this).getRace()==Race.DEMON || Sex.getCharacterTargetedForSexAction(this).getRace()==Race.SLIME)
+					&& Sex.getCharacterTargetedForSexAction(this).isAbleToSelfTransform()
 					&& !Sex.getCharacterTargetedForSexAction(this).hasPenis()
 					&& Sex.getCharacterPerformingAction().isPlayer();
 		}
@@ -489,7 +489,7 @@ public class GenericActions {
 					UtilText.nodeContentSB.append(
 						UtilText.returnStringAtRandom(
 							"[npc.speech(That's a good [npc2.girl]... We wouldn't want you to climax "+(alreadyOrgasmed?"again already":"just yet")+" now, would we?)]",
-							"[npc.speech(Hush now, my good [npc2.girl], and take a moment to calm down. You didn't think you'd get to orgasm "+(alreadyOrgasmed?"again":"")+" so soon with me, did you?)]",
+							"[npc.speech(Be a good [npc2.girl] now, and take a moment to calm down. You didn't think you'd get to orgasm "+(alreadyOrgasmed?"again":"")+" so soon with me, did you?)]",
 							"[npc.speech(Good [npc2.girl]... You just take a moment to calm down. We wouldn't want you to climax "+(alreadyOrgasmed?"again already":"so soon")+" now, would we?)]"));
 					break;
 				case DOM_NORMAL:
@@ -526,16 +526,16 @@ public class GenericActions {
 				case SUB_EAGER:
 					UtilText.nodeContentSB.append(
 						UtilText.returnStringAtRandom(
-								"[npc2.speech(No, [npc.name]...)] [npc2.name] [npc2.verb(reply)], trying to contain the excitement in [npc2.her] voice, [npc2.speech(I-I'll try to endure...)]",
+								"[npc2.speech(No, [npc.name]...)] [npc2.name] [npc2.verb(reply)], trying to contain the excitement in [npc2.her] voice, [npc2.speech(I'll try to endure...)]",
 								"[npc2.speech(No, [npc.name],)] [npc2.name] [npc2.moansVerb], failing to subdue the intense arousal in [npc2.her] voice, [npc2.speech(I'll do my best to hold back...)]",
-								"[npc2.speech(No...)] [npc2.name] [npc2.verb(answer)], before trying to stifle a desperate [npc2.moan], [npc2.speechNoEffects(~Mmm!~ I-I'll try to hold back!)]"));
+								"[npc2.speech(No...)] [npc2.name] [npc2.verb(answer)], before trying to stifle a desperate [npc2.moan], [npc2.speechNoEffects(~Mmm!~ I'll try to hold back!)]"));
 					break;
 				case SUB_NORMAL:
 					UtilText.nodeContentSB.append(
 							UtilText.returnStringAtRandom(
-									"[npc2.speech(No, [npc.name]...)] [npc2.name] [npc2.verb(reply)], [npc2.speech(I-I'll try to endure...)]",
+									"[npc2.speech(No, [npc.name]...)] [npc2.name] [npc2.verb(reply)], [npc2.speech(I'll try to endure...)]",
 									"[npc2.speech(No, [npc.name],)] [npc2.name] [npc2.moansVerb], [npc2.speech(I'll do my best to hold back...)]",
-									"[npc2.speech(No...)] [npc2.name] [npc2.verb(answer)], [npc2.speechNoEffects(I-I'll try to hold back!)]"));
+									"[npc2.speech(No...)] [npc2.name] [npc2.verb(answer)], [npc2.speechNoEffects(I'll try to hold back!)]"));
 					break;
 				case SUB_RESISTING:
 					UtilText.nodeContentSB.append(
@@ -1504,7 +1504,9 @@ public class GenericActions {
 		
 		@Override
 		public String getActionTitle() {
-			return "";
+			return Sex.isMasturbation()
+					?"Stop masturbating"
+					:"Stop sex";
 		}
 
 		@Override

@@ -137,8 +137,8 @@ public enum SpellUpgrade {
 			"The summoner assumes complete dominance over the school of Fire, and while their elemental is bound to this form, they are forced to share all of their secrets.",
 			null, Util.newArrayListOfValues(
 					"While summoned:",
-					"[style.colourArcane(Caster)]: +25 [style.boldFire("+Attribute.DAMAGE_FIRE+")]",
-					"[style.colourArcane(Caster)]: +10 [style.boldFire("+Attribute.RESISTANCE_FIRE+")]")) {
+					"[style.colourArcane(Caster)]: +25 "+Attribute.DAMAGE_FIRE.getColouredName("b"),
+					"[style.colourArcane(Caster)]: +10 "+Attribute.RESISTANCE_FIRE.getColouredName("b"))) {
 
 		public boolean isAvailable(GameCharacter caster) {
 			return !caster.hasSpellUpgrade(ELEMENTAL_FIRE_3A);
@@ -268,8 +268,8 @@ public enum SpellUpgrade {
 			"The summoner assumes complete dominance over the school of Water, and while their elemental is bound to this form, they are forced to share all of their secrets.",
 			null, Util.newArrayListOfValues(
 					"While summoned:",
-					"[style.colourArcane(Caster)]: +25 [style.boldIce(Ice Damage)]",
-					"[style.colourArcane(Caster)]: +10 [style.boldIce(Ice Resistance)]")) {
+					"[style.colourArcane(Caster)]: +25 "+Attribute.DAMAGE_ICE.getColouredName("b"),
+					"[style.colourArcane(Caster)]: +10 "+Attribute.RESISTANCE_ICE.getColouredName("b"))) {
 
 		public boolean isAvailable(GameCharacter caster) {
 			return !caster.hasSpellUpgrade(ELEMENTAL_WATER_3A);
@@ -315,10 +315,10 @@ public enum SpellUpgrade {
 			SpellSchool.AIR,
 			"vacuum_secondary_voids",
 			"Secondary Voids",
-			"The target of Vacuum additionally suffers -25 critical power, and -20 to "+Attribute.ENERGY_SHIELDING.getName()+" shielding.",
+			"The target of Vacuum additionally suffers -15 critical power, and -5 to "+Attribute.ENERGY_SHIELDING.getName()+" shielding.",
 			null, Util.newArrayListOfValues(
-					"Vacuum additionally applies <b>-25</b> "+Attribute.CRITICAL_DAMAGE.getColouredName("b"),
-					"Vacuum debuff increased to <b>-20</b> "+Attribute.ENERGY_SHIELDING.getColouredName("b"))),
+					"Vacuum additionally applies <b>-15</b> "+Attribute.CRITICAL_DAMAGE.getColouredName("b"),
+					"Vacuum debuff increased to <b>-5</b> "+Attribute.ENERGY_SHIELDING.getColouredName("b"))),
 	VACUUM_2(2,
 			SpellSchool.AIR,
 			"vacuum_suction",

@@ -86,7 +86,7 @@ public class Pix extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.3.6")) {
 			this.resetPerksMap(true);
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.4.9")) {
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
 			this.setPersonalityTraits(
 					PersonalityTrait.CONFIDENT);
 		}
@@ -234,6 +234,17 @@ public class Pix extends NPC {
 	@Override
 	public DialogueNode getEncounterDialogue() {
 		return null;
+	}
+	
+	@Override
+	public void turnUpdate() {
+		if(!Main.game.getCharactersPresent().contains(this)) {
+			if(Main.game.isExtendedWorkTime()) {
+				this.returnToHome();
+			} else {
+				this.setLocation(WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL, false);
+			}
+		}
 	}
 
 

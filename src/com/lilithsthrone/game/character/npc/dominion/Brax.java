@@ -82,7 +82,7 @@ public class Brax extends NPC {
 	
 	public Brax(boolean isImported) {
 		super(isImported, new NameTriplet("Brax", "Bree", "Brandi"), "Volkov",
-				"Holding the rank of Inspector, Brax is a high-ranking enforcer. Muscular, handsome, and with an incredibly dominant personality, he's the focus of every female enforcer's attention.",
+				"Holding the rank of Inspector, Brax is a high-ranking Enforcer. Muscular, handsome, and with an incredibly dominant personality, he's the focus of every female Enforcer's attention.",
 				30, Month.NOVEMBER, 27,
 				10, Gender.M_P_MALE,
 				Subspecies.WOLF_MORPH, RaceStage.GREATER, new CharacterInventory(10), WorldType.ENFORCER_HQ, PlaceType.ENFORCER_HQ_BRAXS_OFFICE, true);
@@ -107,6 +107,8 @@ public class Brax extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.4.9")) {
 			this.equipClothing(EquipClothingSetting.getAllClothingSettings());
 			this.addSpecialPerk(Perk.SPECIAL_DIRTY_MINDED);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
 			this.setPersonalityTraits(
 					PersonalityTrait.CONFIDENT,
 					PersonalityTrait.BRAVE);
@@ -242,7 +244,7 @@ public class Brax extends NPC {
 				this.equipClothingFromNowhere(AbstractClothingType.generateClothing(ClothingType.LEG_MICRO_SKIRT_PLEATED, Colour.CLOTHING_PINK, false), true, this);
 				this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_sock_fishnets", Colour.CLOTHING_WHITE, false), true, this);
 				this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_hand_fishnet_gloves", Colour.CLOTHING_WHITE, false), true, this);
-				this.equipClothingFromNowhere(AbstractClothingType.generateClothing(ClothingType.FINGER_RING, Colour.CLOTHING_GOLD, false), true, this);
+				this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_finger_ring", Colour.CLOTHING_GOLD, false), true, this);
 				this.equipClothingFromNowhere(AbstractClothingType.generateClothing(ClothingType.WRIST_BANGLE, Colour.CLOTHING_GOLD, false), true, this);
 
 				this.setPiercedEar(true);
@@ -259,7 +261,7 @@ public class Brax extends NPC {
 
 				this.equipClothingFromNowhere(AbstractClothingType.generateClothing("dsg_eep_servequipset_enfskirt", Colour.CLOTHING_BLACK, false), true, this);
 				this.equipClothingFromNowhere(AbstractClothingType.generateClothing("dsg_eep_ptrlequipset_flsldshirt", Colour.CLOTHING_PINK, false), true, this);
-				this.equipClothingFromNowhere(AbstractClothingType.generateClothing(ClothingType.NECK_TIE, Colour.CLOTHING_BLACK, false), true, this);
+				this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_neck_tie", Colour.CLOTHING_BLACK, false), true, this);
 			}
 			
 		} else {
@@ -273,7 +275,7 @@ public class Brax extends NPC {
 
 			this.equipClothingFromNowhere(AbstractClothingType.generateClothing("dsg_eep_servequipset_enfdslacks", Colour.CLOTHING_BLACK, false), true, this);
 			this.equipClothingFromNowhere(AbstractClothingType.generateClothing("dsg_eep_ptrlequipset_ssldshirt", Colour.CLOTHING_BLUE, false), true, this);
-			this.equipClothingFromNowhere(AbstractClothingType.generateClothing(ClothingType.NECK_TIE, Colour.CLOTHING_BLACK, false), true, this);
+			this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_neck_tie", Colour.CLOTHING_BLACK, false), true, this);
 			
 			if(Main.game.getPlayer().hasQuest(QuestLine.MAIN) && !Main.game.getPlayer().isQuestProgressGreaterThan(QuestLine.MAIN, Quest.MAIN_1_C_WOLFS_DEN)) {
 				if(settings.contains(EquipClothingSetting.ADD_WEAPONS)) {
@@ -298,32 +300,43 @@ public class Brax extends NPC {
 	@Override
 	public String getDescription() {
 		if(this.isSlave() && this.getOwner().isPlayer()) {
-			if(Main.game.getDialogueFlags().values.contains(DialogueFlagValue.bimbofiedBrax)) {
-				return "At one time being an enforcer holding the rank of Inspector, [brax.name] ended up becoming Candi's slave, and under her ownership, [brax.she] was transformed into a sex-obsessed bimbo wolf-girl."
+			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.bimbofiedBrax)) {
+				return "At one time being an Enforcer holding the rank of Inspector, [brax.name] ended up becoming Candi's slave, and under her ownership, [brax.she] was transformed into a sex-obsessed bimbo wolf-girl."
 				+ " Eventually, after performing several tasks for the bimbo cat-girl Enforcer, you became [brax.namePos] new owner.";
 				
-			} else if(Main.game.getDialogueFlags().values.contains(DialogueFlagValue.feminisedBrax)) {
-				return "At one time being an enforcer holding the rank of Inspector, [brax.name] ended up becoming Candi's slave, and under her ownership, [brax.she] was transformed into a wolf-girl."
+			} else if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.feminisedBrax)) {
+				return "At one time being an Enforcer holding the rank of Inspector, [brax.name] ended up becoming Candi's slave, and under her ownership, [brax.she] was transformed into a wolf-girl."
 						+ " Eventually, after performing several tasks for the bimbo cat-girl Enforcer, you became [brax.namePos] new owner.";
 				
 			} else {
-				return "At one time being an enforcer holding the rank of Inspector, [brax.name] ended up becoming Candi's slave, and after you performed several tasks for the bimbo cat-girl Enforcer, you became [brax.namePos] new owner.";
+				return "At one time being an Enforcer holding the rank of Inspector, [brax.name] ended up becoming Candi's slave, and after you performed several tasks for the bimbo cat-girl Enforcer, you became [brax.namePos] new owner.";
 			}
 		}
 		
-		if(Main.game.getDialogueFlags().values.contains(DialogueFlagValue.bimbofiedBrax)) {
-			return "At one time being an enforcer holding the rank of Inspector, [brax.name] is now completely unrecognisable from [brax.her] former self."
+		if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.bimbofiedBrax)) {
+			return "At one time being an Enforcer holding the rank of Inspector, [brax.name] is now completely unrecognisable from [brax.her] former self."
 					+ " With some help from Candi, she's been transformed into a brain-dead bimbo, who can only think about where the next cock is coming from.";
 			
-		} else if(Main.game.getDialogueFlags().values.contains(DialogueFlagValue.feminisedBrax)) {
-			return "At one time being an enforcer holding the rank of Inspector, [brax.name] is almost unrecognisable from [brax.her] former self."
+		} else if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.feminisedBrax)) {
+			return "At one time being an Enforcer holding the rank of Inspector, [brax.name] is almost unrecognisable from [brax.her] former self."
 					+ " With some help from Candi, you've transformed [brax.herHim] into a wolf-girl."
 					+ " Where once [brax.she] was muscular and dominant, [brax.sheIs] now feminine and submissive, and meekly agrees to do anything that's asked of [brax.herHim].";
 			
 		} else {
-			return "Holding the rank of Inspector, Brax is a high-ranking enforcer. Muscular, handsome, and with an incredibly dominant personality, he's the focus of every female enforcer's attention.";
+			return "Holding the rank of Inspector, Brax is a high-ranking Enforcer. Muscular, handsome, and with an incredibly dominant personality, he's the focus of every female Enforcer's attention.";
 		}
 		
+	}
+	
+	@Override
+	public void turnUpdate() {
+		if(this.isSlave() && !this.getOwner().isPlayer() && !Main.game.getCharactersPresent().contains(this)) {
+			if(Main.game.isWorkTime()) {
+				this.returnToHome();
+			} else {
+				this.setLocation(WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL, false);
+			}
+		}
 	}
 	
 	@Override

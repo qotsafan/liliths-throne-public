@@ -53,8 +53,8 @@ import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.race.Race;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
-import com.lilithsthrone.game.combat.Attack;
 import com.lilithsthrone.game.combat.Combat;
+import com.lilithsthrone.game.combat.CombatBehaviour;
 import com.lilithsthrone.game.combat.DamageType;
 import com.lilithsthrone.game.combat.Spell;
 import com.lilithsthrone.game.combat.SpellUpgrade;
@@ -77,7 +77,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.2.11
- * @version 0.3.1
+ * @version 0.3.5.5
  * @author Innoxia
  */
 public class DarkSiren extends NPC {
@@ -135,7 +135,7 @@ public class DarkSiren extends NPC {
 		this.setGenericName("dark siren");
 		
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.2.12.5")) {
-			this.setBody(Gender.F_V_B_FEMALE, Subspecies.DEMON, RaceStage.PARTIAL_FULL);
+			this.setBody(Gender.F_V_B_FEMALE, Subspecies.DEMON, RaceStage.PARTIAL_FULL, false);
 			setStartingBody(true);
 			equipClothing(EquipClothingSetting.getAllClothingSettings());
 			this.setLocation(WorldType.IMP_FORTRESS_DEMON, PlaceType.FORTRESS_DEMON_KEEP, true);
@@ -192,6 +192,9 @@ public class DarkSiren extends NPC {
 				this.setSkinCovering(new Covering(BodyCoveringType.PENIS, Colour.SKIN_RED, Colour.SKIN_RED_DARK), false);
 				this.setSkinCovering(new Covering(BodyCoveringType.MOUTH, Colour.SKIN_RED, Colour.SKIN_RED_DARK), false);
 			}
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
+			this.setHistory(Occupation.NPC_ARCANE_RESEARCHER);
 			this.setPersonalityTraits(
 					PersonalityTrait.CONFIDENT,
 					PersonalityTrait.BRAVE,
@@ -227,7 +230,7 @@ public class DarkSiren extends NPC {
 			
 			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
 			
-			this.setHistory(Occupation.NPC_MUGGER);
+			this.setHistory(Occupation.NPC_ARCANE_RESEARCHER);
 			
 			this.clearFetishes();
 			
@@ -363,8 +366,6 @@ public class DarkSiren extends NPC {
 		return "#D397C5";//C374B1";
 	}
 	
-	
-	
 	@Override
 	public boolean isUnique() {
 		return true;
@@ -413,13 +414,13 @@ public class DarkSiren extends NPC {
 	public int getEscapeChance() {
 		return 0;
 	}
-	
-	public Attack attackType() {
-		if(!getWeightedSpellsAvailable(Combat.getTargetedCombatant(this)).isEmpty() && Math.random()<0.75f) {
-			return Attack.SPELL;
-		}
 
-		return Attack.MAIN;
+	@Override
+	public CombatBehaviour getCombatBehaviour() {
+		if(Main.game.isInCombat() && !getWeightedSpellsAvailable(Combat.getTargetedCombatant(this)).isEmpty() && Math.random()<0.75f) {
+			return CombatBehaviour.SPELLS;
+		}
+		return CombatBehaviour.ATTACK;
 	}
 	
 	@Override

@@ -96,7 +96,7 @@ public class Alexa extends NPC {
 			this.addSpell(Spell.SLAM);
 			this.addSpell(Spell.ARCANE_AROUSAL);
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.4.9")) {
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
 			this.setPersonalityTraits(
 					PersonalityTrait.SELFISH,
 					PersonalityTrait.INNOCENT);
@@ -241,7 +241,7 @@ public class Alexa extends NPC {
 	}
 	
 	@Override
-	public void dailyReset() {
+	public void dailyUpdate() {
 		if(Main.game.getPlayer().isQuestProgressGreaterThan(QuestLine.MAIN, Quest.MAIN_1_G_SLAVERY)) {
 			for(String id : this.getSlavesOwned()) {
 				if(Main.game.isCharacterExisting(id)) {
@@ -270,6 +270,19 @@ public class Alexa extends NPC {
 	
 	@Override
 	public void changeFurryLevel(){
+	}
+	
+	@Override
+	public void turnUpdate() {
+		if(Main.game.getPlayer().hasQuest(QuestLine.MAIN) && !Main.game.getPlayer().isQuestProgressGreaterThan(QuestLine.MAIN, Quest.MAIN_1_G_SLAVERY)) {
+			if(!Main.game.getCharactersPresent().contains(this)) {
+				if(Main.game.isExtendedWorkTime()) {
+					this.returnToHome();
+				} else {
+					this.setLocation(WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL, false);
+				}
+			}
+		}
 	}
 	
 	@Override

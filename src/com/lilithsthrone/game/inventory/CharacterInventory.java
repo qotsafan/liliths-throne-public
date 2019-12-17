@@ -297,7 +297,10 @@ public class CharacterInventory implements XMLSaving {
 				
 				int count = Integer.parseInt(e.getAttribute("count"));
 				String id = e.getAttribute("id");
-				if(id.equals(ItemType.getItemToIdMap().get(ItemType.CONDOM_USED))) {
+				if(id.equals("GIFT_ROSE")) { // Changed the rose to a clothing item in v0.3.5.5
+					inventory.addClothing(AbstractClothingType.generateClothing("innoxia_hair_rose", Colour.CLOTHING_RED_DARK, Colour.CLOTHING_GREEN_DARK, null, false), count);
+					
+				} else if(id.equals(ItemType.getItemToIdMap().get(ItemType.CONDOM_USED))) {
 					itemMapToAdd.put(AbstractFilledCondom.loadFromXML(e, doc), count);
 					
 				} else if(id.equals(ItemType.getItemToIdMap().get(ItemType.MOO_MILKER_FULL))) {
@@ -399,11 +402,13 @@ public class CharacterInventory implements XMLSaving {
 		return RenderingEngine.INVENTORY_PAGES * RenderingEngine.ITEMS_PER_PAGE;
 	}
 	
-	public void clearNonEquippedInventory(){
+	public void clearNonEquippedInventory(boolean clearMoney) {
 		clothingSubInventory.clear();
 		weaponSubInventory.clear();
 		itemSubInventory.clear();
-		money = 0;
+		if(clearMoney) {
+			money = 0;
+		}
 	}
 	
 	public void setMaximumInventorySpace(int maxInventorySpace) {
@@ -457,6 +462,44 @@ public class CharacterInventory implements XMLSaving {
 		sortItemDuplicates();
 		sortWeaponDuplicates();
 		sortClothingDuplicates();
+	}
+	
+	/**
+	 * @return The value of all non-equipped items, clothing, and weapons in this inventory.
+	 */
+	public int getNonEquippedValue() {
+		int value = 0;
+		for(Entry<AbstractItem, Integer> item : this.getAllItemsInInventory().entrySet()) {
+			value += (item.getKey().getValue() * item.getValue());
+		}
+		for(Entry<AbstractClothing, Integer> clothing : this.getAllClothingInInventory().entrySet()) {
+			value += (clothing.getKey().getValue() * clothing.getValue());
+		}
+		for(Entry<AbstractWeapon, Integer> weapon : this.getAllWeaponsInInventory().entrySet()) {
+			value += (weapon.getKey().getValue() * weapon.getValue());
+		}
+		return value;
+	}
+	
+	/**
+	 * @return The value of all equipped clothing and weapons in this inventory.
+	 */
+	public int getEquippedValue() {
+		int value = 0;
+		for(AbstractClothing clothing : this.getClothingCurrentlyEquipped()) {
+			value += clothing.getValue();
+		}
+		for(AbstractWeapon weapon : this.getMainWeaponArray()) {
+			if(weapon!=null) {
+				value += weapon.getValue();
+			}
+		}
+		for(AbstractWeapon weapon : this.getOffhandWeaponArray()) {
+			if(weapon!=null) {
+				value += weapon.getValue();
+			}
+		}
+		return value;
 	}
 	
 	
@@ -572,7 +615,7 @@ public class CharacterInventory implements XMLSaving {
 	
 	
 	public boolean dropItem(AbstractItem item, int count, World world, Vector2i location) {
-		if (hasItem(item)) {
+		if(hasItem(item)) {
 			world.getCell(location).getInventory().addItem(item, count);
 			removeItem(item, count);
 			return true;
@@ -1084,6 +1127,10 @@ public class CharacterInventory implements XMLSaving {
 		return equipTextSB.toString();
 	}
 
+	public void resetEquipDescription() {
+		equipTextSB.setLength(0);
+	}
+	
 	private Set<AbstractClothing> incompatibleUnequippableClothing = new HashSet<>();
 	private Set<AbstractClothing> incompatibleRemovableClothing = new HashSet<>();
 	// Map of clothing that needs to be removed. If value is
@@ -1107,8 +1154,8 @@ public class CharacterInventory implements XMLSaving {
 			return false;
 		}
 		
-		if (!newClothing.getClothingType().isCanBeEquipped(characterClothingOwner, slotToEquipInto)) {
-			equipTextSB.append("[style.colourBad(" + newClothing.getClothingType().getCannotBeEquippedText(characterClothingOwner, slotToEquipInto) + ")]");
+		if (!newClothing.getClothingType().isAbleToBeBeEquipped(characterClothingOwner, slotToEquipInto).getKey()) {
+			equipTextSB.append("[style.colourBad(" + newClothing.getClothingType().isAbleToBeBeEquipped(characterClothingOwner, slotToEquipInto).getValue() + ")]");
 			return false;
 		}
 

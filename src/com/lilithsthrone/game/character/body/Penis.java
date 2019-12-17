@@ -554,9 +554,11 @@ public class Penis implements BodyPartInterface {
 			UtilText.transformationContentSB.append("</p>");
 		}
 		
+		String postTF = owner.postTransformationCalculation(false); // Calculate this before parsing, as it updates covering colours
+		
 		return UtilText.parse(owner, UtilText.transformationContentSB.toString())
 				+ "<p>"
-				+ owner.postTransformationCalculation(false)
+				+ postTF
 				+ "</p>";
 	}
 	
@@ -792,7 +794,7 @@ public class Penis implements BodyPartInterface {
 			return "<p style='text-align:center;'>[style.colourDisabled(Nothing happens...)]</p>";
 		}
 		
-		if(owner==null) {
+		if(owner==null || owner.getBody()==null) {
 			penisModifiers.add(modifier);
 			return "";
 		}
