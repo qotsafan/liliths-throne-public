@@ -69,14 +69,15 @@ import com.lilithsthrone.utils.Util;
 
 /**
  * @since 0.1.69.9
- * @version 0.2.11
+ * @version 0.3.5
  * @author Innoxia
  */
 public enum ParserTarget {
 	
 	STYLE(Util.newArrayListOfValues(
 			"style",
-			"game"),
+			"game",
+			"util"),
 			"Returns the same as 'pc', but should be used for style methods such as style.bold or style.italics or conditional methods such as game.isArcaneStorm.") {
 				@Override
 				public GameCharacter getCharacter(String tag, List<GameCharacter> specialNPCList) {
@@ -86,6 +87,7 @@ public enum ParserTarget {
 
 	UNIT(Util.newArrayListOfValues(
 			"unit",
+			"units",
 			"game"),
 			"Returns the same as 'pc', but should be used for unit methods such as unit.size.") {
 		@Override
@@ -130,7 +132,7 @@ public enum ParserTarget {
 						return Combat.getActiveNPC();
 						
 					} else if (Main.game.isInSex()) {
-						return Sex.getActivePartner();
+						return Sex.getTargetedPartner(Main.game.getPlayer());
 						
 					} else if (Main.game.getCurrentDialogueNode()!=null) {
 						if(Main.game.getCurrentDialogueNode()==CharactersPresentDialogue.MENU

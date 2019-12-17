@@ -4,7 +4,7 @@ import com.lilithsthrone.utils.TreeNode;
 
 /**
  * @since 0.1.99
- * @version 0.3.4
+ * @version 0.3.5
  * @author Innoxia
  */
 public class QuestTree {
@@ -18,8 +18,10 @@ public class QuestTree {
 	public static TreeNode<Quest> nyanTree = new TreeNode<Quest>(Quest.RELATIONSHIP_NYAN_STOCK_ISSUES);
 	public static TreeNode<Quest> angryHarpyTree = new TreeNode<Quest>(Quest.HARPY_PACIFICATION_ONE);
 	public static TreeNode<Quest> slimeQueenTree = new TreeNode<Quest>(Quest.SLIME_QUEEN_ONE);
+	public static TreeNode<Quest> teleportingTree = new TreeNode<Quest>(Quest.TELEPORTING_START);
 	public static TreeNode<Quest> daddyTree = new TreeNode<Quest>(Quest.DADDY_START);
 	public static TreeNode<Quest> buyingBraxTree = new TreeNode<Quest>(Quest.BUYING_BRAX_START);
+	public static TreeNode<Quest> vengarTree = new TreeNode<Quest>(Quest.VENGAR_START);
 	
 	
 	static {
@@ -91,14 +93,15 @@ public class QuestTree {
 		node2 = new TreeNode<Quest>(Quest.SIDE_UTIL_COMPLETE);
 		node1.addChild(node2);
 		
-
+		
+		// Slime queen:
+		
 		node1 = new TreeNode<Quest>(Quest.SLIME_QUEEN_TWO);
 		slimeQueenTree.addChild(node1);
 		node2 = new TreeNode<Quest>(Quest.SLIME_QUEEN_THREE);
 		node1.addChild(node2);
 		node1 = new TreeNode<Quest>(Quest.SLIME_QUEEN_FOUR);
 		node2.addChild(node1);
-		
 		
 		TreeNode<Quest> nodeBranchA = new TreeNode<Quest>(Quest.SLIME_QUEEN_FIVE_FORCE);
 		node1.addChild(nodeBranchA);
@@ -119,7 +122,17 @@ public class QuestTree {
 		nodeBranchC.addChild(node2);
 		node2.addChild(new TreeNode<Quest>(Quest.SIDE_UTIL_COMPLETE));
 		
+		
+		// Teleporting:
 
+		node1 = new TreeNode<Quest>(Quest.SIDE_UTIL_COMPLETE);
+		teleportingTree.addChild(node1);
+		node1 = new TreeNode<Quest>(Quest.TELEPORTING_CAUGHT);
+		teleportingTree.addChild(node1);
+		node2.addChild(new TreeNode<Quest>(Quest.SIDE_UTIL_COMPLETE));
+		node1.addChild(node2);
+		
+		
 		// Daddy:
 		
 		node1 = new TreeNode<Quest>(Quest.DADDY_MEETING);
@@ -153,5 +166,22 @@ public class QuestTree {
 		node2 = new TreeNode<Quest>(Quest.SIDE_UTIL_COMPLETE);
 		node1.addChild(node2);
 		
+		
+		// Dealing with Vengar:
+
+		node1 = new TreeNode<Quest>(Quest.VENGAR_ONE);
+		vengarTree.addChild(node1);
+
+		nodeBranchA = new TreeNode<Quest>(Quest.VENGAR_TWO_FIGHT);
+		node1.addChild(nodeBranchA);
+		nodeBranchB = new TreeNode<Quest>(Quest.VENGAR_TWO_JOIN);
+		nodeBranchB.addChild(nodeBranchB);
+		nodeBranchC = new TreeNode<Quest>(Quest.VENGAR_TWO_ENFORCERS);
+		nodeBranchC.addChild(nodeBranchC);
+
+		node2 = new TreeNode<Quest>(Quest.VENGAR_THREE_END);
+		node1.addChild(node2);
+		node1 = new TreeNode<Quest>(Quest.SIDE_UTIL_COMPLETE);
+		node2.addChild(node1);
 	}
 }

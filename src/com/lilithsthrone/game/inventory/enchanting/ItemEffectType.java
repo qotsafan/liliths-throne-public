@@ -471,6 +471,32 @@ public class ItemEffectType {
 		}
 	};
 	
+	public static AbstractItemEffectType CIGARETTE_PACK = new AbstractItemEffectType(Util.newArrayListOfValues(
+			"Provides 20 Starr Cigarettes."),
+			Colour.BASE_PURPLE) {
+		
+		@Override
+		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
+			return target.addItem(AbstractItemType.generateItem(ItemType.CIGARETTE), 20, false, target.isPlayer());
+		}
+	};
+	
+	public static AbstractItemEffectType CIGARETTE = new AbstractItemEffectType(Util.newArrayListOfValues(
+			"[style.boldGood(+10)] [style.boldAura("+Attribute.MANA_MAXIMUM.getName()+")]",
+			"[style.boldBad(-5)] [style.boldHealth("+Attribute.HEALTH_MAXIMUM.getName()+")]"),
+			Colour.BASE_PURPLE) {
+		@Override
+		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
+			target.removeStatusEffect(StatusEffect.RECENTLY_SMOKED);
+			target.addStatusEffect(StatusEffect.SMOKING, 60*5);
+			return UtilText.parse(target,
+					"<p>"
+						+ "[npc.Name] immediately [npc.verb(feel)] the positive effects of the aura-boosting supplements added to the Starr Cigarette."
+						+ " As the smoke fills [npc.her] lungs, however, [npc.she] also [npc.verb(feel)] slightly less healthy..."
+					+ "</p>");
+		}
+	};
+	
 	// Ingredients and potions:
 	
 	// Strength:
@@ -794,7 +820,7 @@ public class ItemEffectType {
 	public static AbstractItemEffectType COR_LILITHS_GIFT = new AbstractItemEffectType(Util.newArrayListOfValues(
 			"[style.boldGood(Restores)] 5% [style.boldHealth("+Attribute.HEALTH_MAXIMUM.getName()+")]",
 			"[style.boldGood(Restores)] 5% [style.boldAura(aura)]",
-			"[style.boldGood(+1)] [style.boldCorruption(corruption)] to 'potion effects'"),
+			"[style.boldGood(+25)] [style.boldCorruption(corruption)] to 'potion effects'"),
 			Colour.ATTRIBUTE_CORRUPTION) {
 		
 		@Override
@@ -803,17 +829,15 @@ public class ItemEffectType {
 			target.incrementMana(target.getAttributeValue(Attribute.MANA_MAXIMUM)/20);
 
 			return "<p style='text-align:center;'>"
-					+(target.isPlayer()
-						?"A sickly wave of corruptive arcane energy washes over you..."
-						:UtilText.parse(target, "A sickly wave of corruptive arcane energy washes over [npc.name]..."))
+						+UtilText.parse(target, "A sickly wave of corruptive arcane energy washes over [npc.name]...")
 					+ "</p>"
-					+ target.addPotionEffect(Attribute.MAJOR_CORRUPTION, 1);
+					+ target.addPotionEffect(Attribute.MAJOR_CORRUPTION, 25);
 		}
 	};
 
 	public static AbstractItemEffectType COR_IMPISH_BREW = new AbstractItemEffectType(Util.newArrayListOfValues(
 			"[style.boldGood(Restores)] 10% [style.boldAura(aura)]",
-			"[style.boldGood(+5)] [style.boldCorruption(corruption)] to 'potion effects'"),
+			"[style.boldGood(+50)] [style.boldCorruption(corruption)] to 'potion effects'"),
 			Colour.ATTRIBUTE_CORRUPTION) {
 		
 		@Override
@@ -821,11 +845,9 @@ public class ItemEffectType {
 			target.incrementMana(target.getAttributeValue(Attribute.MANA_MAXIMUM)/10);
 
 			return "<p style='text-align:center;'>"
-					+(target.isPlayer()
-						?"A sickly wave of corruptive arcane energy washes over you..."
-						:UtilText.parse(target, "A sickly wave of corruptive arcane energy washes over [npc.name]..."))
+						+UtilText.parse(target, "A sickly wave of corruptive arcane energy washes over [npc.name]...")
 					+ "</p>"
-					+ target.addPotionEffect(Attribute.MAJOR_CORRUPTION, 5);
+					+ target.addPotionEffect(Attribute.MAJOR_CORRUPTION, 50);
 		}
 	};
 	
@@ -1161,7 +1183,7 @@ public class ItemEffectType {
 			Map<AbstractClothingType, Integer> clothingMap = new HashMap<>();
 			// Common clothing (55%):
 			clothingMap.put(ClothingType.HEAD_ANTLER_HEADBAND, 11);
-			clothingMap.put(ClothingType.NECK_SNOWFLAKE_NECKLACE, 11);
+			clothingMap.put(ClothingType.getClothingTypeFromId("innoxia_elemental_snowflake_necklace"), 11);
 			clothingMap.put(ClothingType.PIERCING_EAR_SNOW_FLAKES, 11);
 			clothingMap.put(ClothingType.PIERCING_NOSE_SNOWFLAKE_STUD, 11);
 			clothingMap.put(ClothingType.TORSO_OVER_CHRISTMAS_SWEATER, 11);
@@ -2494,12 +2516,46 @@ public class ItemEffectType {
 			
 			Subspecies sub = Subspecies.getFleshSubspecies(target);
 			if(sub.getRace()!=Race.DEMON) {
-				target.setBody(CharacterUtils.generateHalfDemonBody(target, target.getGender(), sub, true));
+				target.setBody(CharacterUtils.generateHalfDemonBody(target, target.getGender(), sub, true), false);
 				return UtilText.parse(target, "<p style='text-align:center; color:"+Colour.RACE_DEMON.toWebHexString()+";'><i>[npc.Name] is now [npc.a_race]!</i></p>");
 			} else {
-				target.setBody(target.getGender(), Subspecies.DEMON, RaceStage.GREATER);
+				target.setBody(target.getGender(), Subspecies.DEMON, RaceStage.GREATER, false);
 				target.setSubspeciesOverride(Subspecies.DEMON);
 				return UtilText.parse(target, "<p style='text-align:center; color:"+Colour.RACE_DEMON.toWebHexString()+";'><i>[npc.Name] is now [npc.a_race]!</i></p>");
+			}
+		}
+	};
+	
+	public static AbstractItemEffectType DEBUG_YOUKO_POTION_EFFECT = new AbstractItemEffectType(null,
+			Colour.RACE_FOX_MORPH) {
+		
+		@Override
+		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
+			List<String> effectsDescription = new ArrayList<>();
+			
+			effectsDescription.add("[style.boldBad(Does not affect player or unique characters)]");
+			
+			effectsDescription.add("[style.boldTfGeneric(Transforms)] non-youko into [style.boldDemon(youko)]");
+
+			effectsDescription.add("[style.boldTfGeneric(Grants)] youko an extra tail");
+			
+			return effectsDescription;
+		}
+		
+		@Override
+		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
+			if(target.isPlayer()) {
+				return "<p style='text-align:center'>[style.italicsDisabled(This item does not work on you...)]</p>";
+			}
+			if(target.isUnique() && (!target.isSlave() || target.getOwner().isPlayer())) {
+				return "<p style='text-align:center'>[style.italicsDisabled(This item does not work on non-slave unique characters...)]</p>";
+			}
+			
+			if(target.getSubspecies()!=Subspecies.FOX_ASCENDANT && target.getSubspecies()!=Subspecies.FOX_ASCENDANT_FENNEC) {
+				CharacterUtils.reassignBody(target, target.getBody(), target.getGender(), Subspecies.FOX_ASCENDANT, RaceStage.PARTIAL_FULL, true);
+				return UtilText.parse(target, "<p style='text-align:center; color:"+Colour.RACE_FOX_MORPH.toWebHexString()+";'><i>[npc.Name] is now [npc.a_race]!</i></p>");
+			} else {
+				return UtilText.parse(target, target.incrementTailCount(1, true));
 			}
 		}
 	};
@@ -2946,13 +3002,7 @@ public class ItemEffectType {
 
 		@Override
 		public List<TFModifier> getPrimaryModifiers() {
-			if(Main.game.getPlayer().isHasSlaverLicense()) {
-				return TFModifier.getClothingPrimaryList();
-			} else {
-				ArrayList<TFModifier> noEnslavement = new ArrayList<>(TFModifier.getClothingPrimaryList());
-				noEnslavement.remove(TFModifier.CLOTHING_ENSLAVEMENT);
-				return noEnslavement;
-			}
+			return TFModifier.getClothingPrimaryList();
 		}
 
 		@Override
@@ -2969,9 +3019,14 @@ public class ItemEffectType {
 			} else if(primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART) {
 				return TFModifier.getTFBodyPartFetishList();
 				
-			} else if(primaryModifier == TFModifier.CLOTHING_ENSLAVEMENT
-					|| primaryModifier == TFModifier.CLOTHING_SEALING
-					|| primaryModifier == TFModifier.CLOTHING_CONDOM) {
+			} else if(primaryModifier == TFModifier.CLOTHING_SPECIAL) {
+				if(Main.game.getPlayer().isHasSlaverLicense()) {
+					return Util.newArrayListOfValues(TFModifier.CLOTHING_SEALING, TFModifier.CLOTHING_ENSLAVEMENT);
+				} else {
+					return Util.newArrayListOfValues(TFModifier.CLOTHING_SEALING);
+				}
+				
+			} else if(primaryModifier == TFModifier.CLOTHING_CONDOM) {
 				return Util.newArrayListOfValues(TFModifier.ARCANE_BOOST);
 				
 			} else {
@@ -2989,7 +3044,7 @@ public class ItemEffectType {
 					|| !getClothingTFSecondaryModifiers(primaryModifier).isEmpty()) {
 				return TFPotency.getAllPotencies();
 				
-			} else if(primaryModifier == TFModifier.CLOTHING_SEALING) {
+			} else if(secondaryModifier == TFModifier.CLOTHING_SEALING) {
 				return Util.newArrayListOfValues(TFPotency.MINOR_BOOST, TFPotency.MINOR_DRAIN, TFPotency.DRAIN, TFPotency.MAJOR_DRAIN);
 				
 			} else {
@@ -3009,7 +3064,7 @@ public class ItemEffectType {
 								:"[style.boldGood(+"+potency.getClothingBonusValue()+")] ")
 						+ "<b style='color:"+secondaryModifier.getAssociatedAttribute().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(secondaryModifier.getAssociatedAttribute().getName())+"</b>");
 				
-			} else if(primaryModifier == TFModifier.CLOTHING_SEALING) {
+			} else if(secondaryModifier == TFModifier.CLOTHING_SEALING) {
 				if(potency==TFPotency.MINOR_DRAIN) {
 					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Removal cost: [style.boldArcane(25)])</b>");
 					
@@ -3023,7 +3078,7 @@ public class ItemEffectType {
 					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Removal cost: [style.boldArcane(5)])</b>");
 				}
 				
-			} else if(primaryModifier == TFModifier.CLOTHING_ENSLAVEMENT) {
+			} else if(secondaryModifier == TFModifier.CLOTHING_ENSLAVEMENT) {
 					effectsList.add("[style.boldCrimson(Enslaves the wearer)]");
 				
 			} else if(primaryModifier == TFModifier.TF_MOD_FETISH_BEHAVIOUR
@@ -3079,8 +3134,8 @@ public class ItemEffectType {
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
 			if(primaryModifier == TFModifier.CLOTHING_ATTRIBUTE
 					|| primaryModifier == TFModifier.CLOTHING_MAJOR_ATTRIBUTE
-					|| primaryModifier == TFModifier.CLOTHING_ENSLAVEMENT
-					|| primaryModifier == TFModifier.CLOTHING_SEALING
+					|| secondaryModifier == TFModifier.CLOTHING_ENSLAVEMENT
+					|| secondaryModifier == TFModifier.CLOTHING_SEALING
 					|| primaryModifier == TFModifier.TF_MOD_FETISH_BEHAVIOUR
 					|| primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART
 					|| primaryModifier == TFModifier.CLOTHING_CONDOM) {

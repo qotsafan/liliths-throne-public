@@ -45,7 +45,6 @@ import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.persona.NameTriplet;
 import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
-import com.lilithsthrone.game.character.persona.PersonalityWeight;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
@@ -64,7 +63,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.2.5
- * @version 0.3.3.10
+ * @version 0.3.5.5
  * @author Innoxia
  */
 public class RentalMommy extends NPC {
@@ -77,7 +76,8 @@ public class RentalMommy extends NPC {
 		super(isImported, new NameTriplet("Mommy"), "Hathaway",
 				"'Mommy' earns a living by renting herself out to those in need of some motherly love.",
 				45, Month.JULY, 3,
-				15, Gender.F_V_B_FEMALE, Subspecies.COW_MORPH, RaceStage.PARTIAL,
+				15,
+				null, null, null,
 				new CharacterInventory(10), WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL, false);
 
 		if(!isImported) {
@@ -85,11 +85,6 @@ public class RentalMommy extends NPC {
 			
 			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
 			
-			Subspecies subspecies = Subspecies.COW_MORPH;
-			
-			RaceStage stage = CharacterUtils.getRaceStageFromPreferences(Main.getProperties().getSubspeciesFeminineFurryPreferencesMap().get(subspecies), Gender.F_V_B_FEMALE, subspecies);
-			setBody(Gender.F_V_B_FEMALE, subspecies, stage);
-
 			this.setPlayerKnowsName(true);
 
 			resetBodyAfterVersion_2_10_5();
@@ -108,6 +103,10 @@ public class RentalMommy extends NPC {
 			this.resetPerksMap(true);
 			this.equipClothingFromNowhere(AbstractClothingType.generateClothing("innoxia_sock_socks", Colour.CLOTHING_WHITE, false), true, this);
 		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
+			this.setPersonalityTraits(
+					PersonalityTrait.KIND);
+		}
 	}
 
 	@Override
@@ -123,16 +122,17 @@ public class RentalMommy extends NPC {
 
 	@Override
 	public void setStartingBody(boolean setPersona) {
+
+		Subspecies subspecies = Subspecies.COW_MORPH;
+		
+		RaceStage stage = CharacterUtils.getRaceStageFromPreferences(Main.getProperties().getSubspeciesFeminineFurryPreferencesMap().get(subspecies), Gender.F_V_B_FEMALE, subspecies);
+		setBody(Gender.F_V_B_FEMALE, subspecies, stage, false);
 		
 		// Persona:
 
 		if(setPersona) {
-			this.setPersonality(Util.newHashMapOfValues(
-					new Value<>(PersonalityTrait.AGREEABLENESS, PersonalityWeight.HIGH),
-					new Value<>(PersonalityTrait.CONSCIENTIOUSNESS, PersonalityWeight.AVERAGE),
-					new Value<>(PersonalityTrait.EXTROVERSION, PersonalityWeight.HIGH),
-					new Value<>(PersonalityTrait.NEUROTICISM, PersonalityWeight.AVERAGE),
-					new Value<>(PersonalityTrait.ADVENTUROUSNESS, PersonalityWeight.AVERAGE)));
+			this.setPersonalityTraits(
+					PersonalityTrait.KIND);
 			
 			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
 	

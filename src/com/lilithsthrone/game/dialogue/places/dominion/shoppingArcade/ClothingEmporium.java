@@ -7,7 +7,6 @@ import com.lilithsthrone.game.character.quests.QuestLine;
 import com.lilithsthrone.game.dialogue.DialogueFlagValue;
 import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.dialogue.responses.Response;
-import com.lilithsthrone.game.dialogue.responses.ResponseEffectsOnly;
 import com.lilithsthrone.game.dialogue.responses.ResponseSex;
 import com.lilithsthrone.game.dialogue.responses.ResponseTrade;
 import com.lilithsthrone.game.dialogue.utils.GiftDialogue;
@@ -20,12 +19,10 @@ import com.lilithsthrone.game.sex.positions.slots.SexSlotLyingDown;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
-import com.lilithsthrone.world.WorldType;
-import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.1.82
- * @version 0.1.99
+ * @version 0.3.5.5
  * @author Innoxia
  */
 public class ClothingEmporium {
@@ -36,28 +33,28 @@ public class ClothingEmporium {
 		public String getContent() {
 			return UtilText.parseFromXMLFile("places/dominion/shoppingArcade/clothingEmporium", "NYAN_EXTERIOR");
 		}
+
+		@Override
+		public String getResponseTabTitle(int index) {
+			return ShoppingArcadeDialogue.getCoreResponseTab(index);
+		}
 		
 		@Override
 		public Response getResponse(int responseTab, int index) {
-			if (index == 1) {
-				if(Main.game.getDialogueFlags().values.contains(DialogueFlagValue.nyanIntroduced)) {
-					return new Response("Enter", "Step inside Nyan's Clothing Emporium.", SHOP_CLOTHING_REPEAT);
-					
-				} else {
-					return new Response("Enter", "Step inside Nyan's Clothing Emporium.", SHOP_CLOTHING);
-				}
-				
-			} else if (index == 6) {
-				return new ResponseEffectsOnly("Arcade Entrance", "Fast travel to the entrance to the arcade."){
-					@Override
-					public void effects() {
-						Main.game.setActiveWorld(Main.game.getWorlds().get(WorldType.SHOPPING_ARCADE), PlaceType.SHOPPING_ARCADE_ENTRANCE, true);
+			if(responseTab==0) {
+				if (index == 1) {
+					if(!Main.game.isExtendedWorkTime()) {
+						return new Response("Enter", "Nyan's Clothing Emporium is currently closed. You'll have to come back later...", null);
+						
+					} else if(Main.game.getDialogueFlags().values.contains(DialogueFlagValue.nyanIntroduced)) {
+						return new Response("Enter", "Step inside Nyan's Clothing Emporium.", SHOP_CLOTHING_REPEAT);
+						
+					} else {
+						return new Response("Enter", "Step inside Nyan's Clothing Emporium.", SHOP_CLOTHING);
 					}
-				};
-
-			} else {
-				return null;
+				}
 			}
+			return ShoppingArcadeDialogue.getFastTravelResponses(responseTab, index);
 		}
 	};
 	
@@ -371,7 +368,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Female Clothing", "Ask her what female clothing is available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonFemaleClothing()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -386,7 +383,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Female Lingerie", "Ask her what female lingerie is available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonFemaleUnderwear()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -401,7 +398,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Female Accessories", "Ask her what female accessories are available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonFemaleAccessories()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -416,7 +413,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Male Clothing", "Ask her what male clothing is available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonMaleClothing()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -431,7 +428,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Male Underwear", "Ask her what male underwear is available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonMaleLingerie()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -446,7 +443,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Male Accessories", "Ask her what male accessories are is available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonMaleAccessories()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -461,7 +458,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Unisex Clothing", "Ask her what unisex clothing is available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonAndrogynousClothing()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -476,7 +473,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Unisex Underwear", "Ask her what unisex underwear is available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonAndrogynousLingerie()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -491,7 +488,7 @@ public class ClothingEmporium {
 					return new ResponseTrade("Unisex Accessories", "Ask her what unisex accessories are is available.", Main.game.getNpc(Nyan.class)){
 						@Override
 						public void effects() {
-							Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+							Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 	
 							for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getCommonAndrogynousAccessories()) {
 								if(Main.game.getNpc(Nyan.class).isInventoryFull()) {
@@ -507,7 +504,7 @@ public class ClothingEmporium {
 						return new ResponseTrade("Specials", "Ask Nyan about any special items of clothing she might have in stock.", Main.game.getNpc(Nyan.class)){
 							@Override
 							public void effects() {
-								Main.game.getNpc(Nyan.class).clearNonEquippedInventory();
+								Main.game.getNpc(Nyan.class).clearNonEquippedInventory(false);
 		
 								for (AbstractClothing c : ((Nyan) Main.game.getNpc(Nyan.class)).getSpecials()) {
 									if(Main.game.getNpc(Nyan.class).isInventoryFull()) {

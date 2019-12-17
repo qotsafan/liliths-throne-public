@@ -5,7 +5,11 @@
 	
 	<htmlContent tag="LAB"><![CDATA[
 	<p>
-		You find yourself walking towards the door to Lilaya's laboratory, and as you get closer, you see that it's been left wide open. You could walk over to the doorway and enter her lab right now, or continue on your way and choose to come back at another time.
+		#IF(game.isExtendedWorkTime())
+			Lilaya's laboratory is located in this particular corner of the house, and as you approach it, you see that the door has been left wide [style.colourGood(open)]. With no physical barrier blocking your way, you could simply step forwards and enter the lab, or continue on your way and choose to come back at another time.
+		#ELSE
+			Lilaya's laboratory is located in this particular corner of the house, and as you approach it, you see that the door has been firmly [style.colourBad(closed)]. Considering the current hour, it's most likely that your [lilaya.relation(pc)] and and her cat-girl maid have both retired to their rooms in order to get a good night's sleep. If you wanted to discuss something with Lilaya, you'll have to come back later during the day.
+		#ENDIF
 	</p>
 	]]>
 	</htmlContent>
@@ -303,7 +307,7 @@
 	<p>
 	#IF !lilaya.isCharacterReactedToPregnancy(pc) && !lilaya.getBaseFetishDesire(FETISH_PREGNANCY).isNegative() && lilaya.isVisiblyPregnant()
 	#THEN
-		#IF lilaya.isCharacterPossiblyFather(pc.getId())
+		#IF lilaya.getPregnantLitter().isFatherId(pc.getId())
 		#THEN
 			As Lilaya brushes down her skirt, you can't help but notice the visible bulge in her belly. As she sees what it is you're looking at, your [lilaya.relation(pc)] clears her throat and confirms, [lilaya.speech(~Ahem!~ Yes, [pc.name], you got me pregnant. As I'm a full demon now, it's really no big deal... As I'm not going to be birthing any imps, I don't mind it at all. But anyway, it's a good job that you came here to see me, [pc.name]. Rose has already told me all about your little adventure in my room with my underwear. So, what do you have to say for yourself?)]
 		#ELSE
@@ -346,11 +350,12 @@
 	<p>
 	#IF !lilaya.isCharacterReactedToPregnancy(pc) && !lilaya.getBaseFetishDesire(FETISH_PREGNANCY).isNegative() && lilaya.isVisiblyPregnant()
 	#THEN
-		#IF lilaya.isCharacterPossiblyFather(pc.getId())
-		#THEN
+		#IF(lilaya.getPregnantLitter().isFatherId(pc.getId()))
 			As Lilaya brushes down her skirt, you can't help but notice the visible bulge in her belly. As she sees what it is you're looking at, your [lilaya.relation(pc)] clears her throat and confirms, [lilaya.speech(~Ahem!~ Yes, [pc.name], you got me pregnant. As I'm a full demon now, it's really no big deal... As I'm not going to be birthing any imps, I don't mind it at all. So, what is it you want?)]
-		#ELSE
+		#ELSEIF(lilaya.getPregnantLitter().isFatherId(lyssieth.getId()))
 			As Lilaya brushes down her skirt, you can't help but notice the visible bulge in her belly. As she sees what it is you're looking at, your [lilaya.relation(pc)] clears her throat and confirms, [lilaya.speech(~Ahem!~ Yes, [pc.name], mommy got me pregnant. As I'm a full demon now, it's really no big deal... As I'm not going to be birthing any imps, I don't mind it at all. So, what is it you want?)]
+		#ELSE
+			As Lilaya brushes down her skirt, you can't help but notice the visible bulge in her belly. As she sees what it is you're looking at, your [lilaya.relation(pc)] clears her throat and confirms, [lilaya.speech(~Ahem!~ Yes, [pc.name], [daddy.name] got me pregnant. As I'm a full demon now, it's really no big deal... As I'm not going to be birthing any imps, I don't mind it at all. So, what is it you want?)]
 		#ENDIF
 	#ELSE
 		#IF !lilaya.getBaseFetishDesire(FETISH_PREGNANCY).isNegative() && lilaya.isVisiblyPregnant()
@@ -1043,7 +1048,7 @@
 	<p>
 		[lilaya.speech(You have to sort of feel how much essence you want to pour into the enchantment. The more you put in, the better the resulting item!)] Lilaya picks up the little potion and places it off to one side. [lilaya.speech(And that's all there is to it!)]
 	</p>
-	#IF(game.getDialogueFlags().hasFlag(FLAG_jinxedClothingDiscovered) && SPECIAL_PARSE_0!="false") {
+	#IF(game.getDialogueFlags().hasFlag(FLAG_jinxedClothingDiscovered) && SPECIAL_PARSE_0!="false")
 		<p>
 			Just as your about to thank her for explaining about essences, Lilaya suddenly exclaims, [lilaya.speech(Oh, and this is also how items can be identified, as well as how that sealed clothing of yours needs to be removed! All you need to do is channel some of your absorbed essences into an unidentified item to discover the enchantment, or into sealed clothing to allow you to remove it. Sealed clothing is a major problem for people without demonic-strength auras, as they need to pay demons to remove the seal for them, but for you and I, sealed clothing is no more than a minor inconvenience.)]
 		</p>
@@ -1377,7 +1382,7 @@
 		#ELSE
 			 As she does this, she places one hand on your shoulder and pushes her chest out, immediately drawing your attention towards her large breasts.
 		#ENDIF
-		 You can't help but notice that the top few buttons of bother her lab coat and her shirt are undone, giving you a clear display of her impressive cleavage.
+		 You can't help but notice that the top few buttons of both her lab coat and her shirt are undone, giving you a clear display of her impressive cleavage.
 	</p>
 	<p>
 		[lilaya.speech(I hope you aren't looking anywhere naughty...)] Lilaya softly whispers in your ear, before straightening back up and moving around behind you.
@@ -1481,81 +1486,6 @@
 	]]>
 	</htmlContent>
 	
-	
-	<!-- Pregnancy stuff -->
-	
-	<htmlContent tag="DETECT_PREGNANCY_TYPE_SLIME"><![CDATA[
-	<p>
-		[lilaya.speech(Don't worry, I'm here for you,)] she says, pulling you into a loving hug for a moment before stepping back, [lilaya.speech(and anyway, giving birth to slimes is super easy and stress-free. We should do this in the birthing room, follow me!)]
-	</p>
-	]]>
-	</htmlContent>
-	
-	<htmlContent tag="ASSIST_BIRTHING_FIRST_TIME"><![CDATA[
-	<p>
-		Taking your hands in hers, she leads you out of the lab and down the hallway. You soon find yourself standing outside one of the many doors that line the corridor, and Lilaya steps forwards and holds it open for you. Stepping inside, you find yourself in a specially-purposed birthing room. Instead of being carpeted, like most of the other rooms in this house, clean white tiles have been chosen for this room's flooring. A modern-looking birthing bed is sitting against one wall of the room, but apart from that, there isn't much else in the way of medical equipment. A few comfortable chairs have been placed around the edges of the room, but other than those, and a drinks cabinet that's sitting in one corner, the room is devoid of any other furniture.
-	</p>
-	<p>
-		As Lilaya leads you over to the bed, she explains the situation, [lilaya.speech(Ok, so I know you haven't done anything like this before, so I'll quickly explain what's going to happen. In order for you to give birth, I need to focus a special kind of arcane spell into your nice little bump here. Although you won't feel any pain, a lot of the arcane power I'll be using is going to be drawn directly from your aura, and there's a good chance that you're going to pass out from it.)]
-	</p>
-	<p>
-		You glance across worriedly at Lilaya as she says this, but she squeezes your hand in hers and reassures you, [lilaya.speech(Don't worry, you don't need to stay conscious during this. Now, after I've delivered your children, they're going to grow pretty quickly, so don't be alarmed! They're also going to be pretty hungry, but don't worry if you're not producing any milk, we've got everything they'll need in that cabinet there. Oh, and also, they're probably going to want to leave straight away. All children are born with a strong desire to go out and become independent as soon as possible, so don't take it personally if they've already left by the time you wake up.)]
-	</p>
-	<p>
-		#IFplayer.isCoverableAreaExposed(CA_VAGINA)
-		#THEN
-			As she's speaking, Lilaya starts stripping off your clothes, and as she gets access to your vagina, she gently pushes you down onto the bed.
-		#ELSE
-			Your vagina is already exposed, so Lilaya starts by gently pushing you back onto the bed.
-		#ENDIF
-		 After following a few more of her instructions, you find yourself lying back with your legs held up and spread apart by a pair of sturdy metal supports.
-	</p>
-	<p>
-		[lilaya.speech(Ok, all set?)]
-	</p>
-	]]>
-	</htmlContent>
-	
-	<htmlContent tag="ASSIST_BIRTHING_SLIME"><![CDATA[
-	<p>
-		Taking your hands in hers, she leads you out of the lab and down the hallway. You soon find yourself standing outside one of the many doors that line the corridor, and Lilaya steps forwards and holds it open for you. Stepping inside, you find yourself in a specially purposed birthing room. Instead of being carpeted, like most of the other rooms in this house, clean white tiles have been chosen for this room's flooring. A modern-looking birthing bed is sitting against one wall of the room, but apart from that, there isn't much else in the way of medical equipment. A few comfortable chairs have been placed around the edges of the room, but other than those, and a drinks cabinet that's sitting in one corner, the room is devoid of any other furniture.
-	</p>
-	<p>
-		As Lilaya closes the door behind you, she explains the situation, [lilaya.speech(Ok, so I know you haven't done anything like this before, so I'll quickly explain what's going to happen. In order for you to give birth, I need to focus a special kind of arcane spell into your nice little bump here. Slimes, such as yourself, don't give birth like other creatures. Those little cores inside of you don't need a vagina to exit through; instead, they'll simply split off from your body, taking some of your slime with them. Although you won't feel any pain, a lot of the arcane power I'll be using is going to be drawn directly from your aura, and there's a good chance that you're going to pass out from it.)]
-	</p>
-	<p>
-		You glance across worriedly at Lilaya as she says this, but she squeezes your hand in hers and reassures you, [lilaya.speech(Don't worry, you don't need to stay conscious during this, and I'll make sure to keep feeding you fluids to replenish any slime that your children take with them. I'll do the same with the newly birthed slimes, so they'll quickly get all of the fluid they need to mature to adulthood. Oh, and also, they're probably going to want to leave straight away. All children are born with a strong desire to go out and become independent as soon as possible, so don't take it personally if they've already left by the time you wake up.)]
-	</p>
-	<p>
-		Lilaya gets you to lie down on the bed, and, smiling, she asks, [lilaya.speech(You ready?)]
-	</p>
-	]]>
-	</htmlContent>
-	
-	<htmlContent tag="ASSIST_BIRTHING"><![CDATA[
-	<p>
-		Taking your hands in hers, she leads you out of the lab and down the hallway. You soon find yourself standing outside one of the many doors that line the corridor, and Lilaya steps forwards and holds it open for you. Stepping inside, you once again find yourself standing in the specially purposed birthing room. Instead of being carpeted, like most of the other rooms in this house, clean white tiles have been chosen for this room's flooring. A modern-looking birthing bed is sitting against one wall of the room, but apart from that, there isn't much else in the way of medical equipment. A few comfortable chairs have been placed around the edges of the room, but other than those, and a drinks cabinet that's sitting in one corner, the room is devoid of any other furniture.
-	</p>
-	<p>
-		As Lilaya leads you over to the bed, she reminds you of what's about to happen, [lilaya.speech(Ok, so I know you've done this before, but I'll quickly go over what's going to happen. In order for you to give birth, I need to focus a special kind of arcane spell into your nice little bump here. Although you won't feel any pain, a lot of the arcane power I'll be using is going to be drawn directly from your aura, and there's a good chance that you're going to pass out from it.)]
-	</p>
-	<p>
-		You let out a sigh she says this, but she squeezes your hand in hers and reassures you, [lilaya.speech(Don't worry, remember, you don't need to stay conscious during this. Now, just remember that after I've delivered your children, they're going to grow pretty quickly! They're also going to be hungry, but don't worry if you're not producing any milk, we've got everything they'll need in that cabinet there. Oh, and also, they're probably going to want to leave straight away. All children are born with a strong desire to go out and become independent as soon as possible, so don't take it personally if they've already left by the time you wake up.)]
-	</p>
-	<p>
-		#IFplayer.isCoverableAreaExposed(CA_VAGINA)
-		#THEN
-			As she's speaking, Lilaya starts stripping off your clothes, and as she gets access to your vagina, she gently pushes you down onto the bed.
-		#ELSE
-			Your vagina is already exposed, so Lilaya starts by gently pushing you back onto the bed.
-		#ENDIF
-		 After following a few more of her instructions, you find yourself lying back with your legs held up and spread apart by a pair of sturdy metal supports.
-	</p>
-	<p>
-		[lilaya.speech(Ok, all set?)]
-	</p>
-	]]>
-	</htmlContent>
 	
 	<htmlContent tag="LILAYA_FRIEND_ACCOMMODATION"><![CDATA[
 	<p>

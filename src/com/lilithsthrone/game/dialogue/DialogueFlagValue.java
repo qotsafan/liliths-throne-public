@@ -106,7 +106,6 @@ public enum DialogueFlagValue {
 	readBook3,
 	readBook4,
 	
-	arthursRoomInstalled,
 	arthursPackageObtained,
 	
 	givenLilayaPresent1,
@@ -117,7 +116,6 @@ public enum DialogueFlagValue {
 	braxEncountered,
 	accessToEnforcerHQ,
 	braxTransformedPlayer,
-	braxBeaten,
 	seenBraxAfterQuest,
 	feminisedBrax,
 	bimbofiedBrax,
@@ -169,7 +167,8 @@ public enum DialogueFlagValue {
 	slimeQueenForced,
 	
 	// Gambling Den:
-	axelToldAboutVengar,
+	axelMentionedVengar,
+	axelExplainedVengar,
 	roxyAddicted,
 	playedPregnancyRouletteAsMother,
 	playedPregnancyRouletteAsBreeder,
@@ -183,6 +182,13 @@ public enum DialogueFlagValue {
 	krugerIntroduced,
 	
 	// Submission:
+	claireAskedTeleportation,
+	claireWarning,
+	clairePadsInvestigated,
+	claireEnclosureEscaped,
+	claireObtainedLightningGlobe,
+	claireAskedWarehouseEscape,
+	
 	impCitadelEncountered,
 	impCitadelArcanistEncountered,
 	impCitadelArcanistAcceptedTF,
@@ -222,6 +228,15 @@ public enum DialogueFlagValue {
 	lyssiethQuestionAsked5,
 
 	meraxisRepeatDemonTF,
+	
+	// Rat warrens:
+	ratWarrensEntry,
+	ratWarrensEntryWhore,
+	ratWarrensHostile,
+
+	ratWarrensClearedLeft,
+	ratWarrensClearedCentre,
+	ratWarrensClearedRight,
 	
 	;
 }

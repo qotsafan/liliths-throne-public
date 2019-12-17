@@ -33,7 +33,6 @@ import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.persona.NameTriplet;
 import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
-import com.lilithsthrone.game.character.persona.PersonalityWeight;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.quests.Quest;
 import com.lilithsthrone.game.character.quests.QuestLine;
@@ -69,7 +68,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.1.?
- * @version 0.2.11
+ * @version 0.3.5.5
  * @author Innoxia
  */
 public class Zaranix extends NPC {
@@ -83,7 +82,9 @@ public class Zaranix extends NPC {
 				"Zaranix is one of the few demons that feels more comfortable in his incubus, rather than succubus, form."
 						+ " Muscular, tall, and handsome, Zaranix uses both his cunning mind and good looks to get what he wants.",
 				47, Month.JULY, 3,
-				15, Gender.M_P_MALE, Subspecies.DEMON, RaceStage.GREATER, new CharacterInventory(10), WorldType.ZARANIX_HOUSE_FIRST_FLOOR, PlaceType.ZARANIX_FF_OFFICE, true);
+				15,
+				null, null, null,
+				new CharacterInventory(10), WorldType.ZARANIX_HOUSE_FIRST_FLOOR, PlaceType.ZARANIX_FF_OFFICE, true);
 		
 	}
 	
@@ -99,6 +100,10 @@ public class Zaranix extends NPC {
 		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.3.6")) {
 			this.resetPerksMap(true);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
+			this.setPersonalityTraits(
+					PersonalityTrait.SELFISH);
 		}
 	}
 
@@ -118,12 +123,8 @@ public class Zaranix extends NPC {
 		// Persona:
 
 		if(setPersona) {
-			this.setPersonality(Util.newHashMapOfValues(
-					new Value<>(PersonalityTrait.AGREEABLENESS, PersonalityWeight.HIGH),
-					new Value<>(PersonalityTrait.CONSCIENTIOUSNESS, PersonalityWeight.HIGH),
-					new Value<>(PersonalityTrait.EXTROVERSION, PersonalityWeight.AVERAGE),
-					new Value<>(PersonalityTrait.NEUROTICISM, PersonalityWeight.LOW),
-					new Value<>(PersonalityTrait.ADVENTUROUSNESS, PersonalityWeight.HIGH)));
+			this.setPersonalityTraits(
+					PersonalityTrait.SELFISH);
 			
 			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
 			
@@ -136,7 +137,7 @@ public class Zaranix extends NPC {
 		// Body
 		// Add full body reset as this method is called after leaving Zaranix's house:
 		this.setAgeAppearanceDifferenceToAppearAsAge(32);
-		this.setBody(Gender.M_P_MALE, Subspecies.DEMON, RaceStage.GREATER);
+		this.setBody(Gender.M_P_MALE, Subspecies.DEMON, RaceStage.GREATER, false);
 		this.setLegType(LegType.DEMON_COMMON);
 		this.setTailType(TailType.DEMON_COMMON);
 		this.setWingType(WingType.NONE);
@@ -249,13 +250,13 @@ public class Zaranix extends NPC {
 	// Combat:
 
 	@Override
-	public String getMainAttackDescription(GameCharacter target, boolean isHit) {
+	public String getMainAttackDescription(int armRow, GameCharacter target, boolean isHit) {
 		return "<p>"
 				+ UtilText.parse(target,
 						UtilText.returnStringAtRandom(
-						"With a booming shout, Zaranix delivers a solid kick to [npc.namePos] torso!",
-						"With an angry roar, Zaranix punches [npc.name] square in the chest!",
-						"Zaranix lets out a furious shout as he punches [npc.name] in the [npc.arm]!")) 
+						"With a booming shout, [zaranix.name] delivers a solid kick to [npc.namePos] torso!",
+						"With an angry roar, [zaranix.name] punches [npc.name] square in the chest!",
+						"[Zaranix.name] lets out a furious shout as he punches [npc.name] in the [npc.arm]!")) 
 			+ "</p>";
 	}
 

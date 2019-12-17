@@ -43,7 +43,6 @@ import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.persona.NameTriplet;
 import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
-import com.lilithsthrone.game.character.persona.PersonalityWeight;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
@@ -67,7 +66,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.2.6
- * @version 0.2.11
+ * @version 0.3.5.5
  * @author Innoxia
  */
 public class SlimeRoyalGuard extends NPC {
@@ -93,14 +92,18 @@ public class SlimeRoyalGuard extends NPC {
 		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3")) {
 			this.setBodyMaterial(BodyMaterial.FLESH);
-			this.setBody(Gender.M_P_MALE, Subspecies.DEMON, RaceStage.GREATER);
+			this.setBody(Gender.M_P_MALE, Subspecies.DEMON, RaceStage.GREATER, false);
 			setStartingBody(true);
 		}
-		
-		setStartingCombatMoves();
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.3.6")) {
 			this.setLevel(10);
 			this.resetPerksMap(true);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.5.1")) {
+			this.setPersonalityTraits(
+					PersonalityTrait.BRAVE,
+					PersonalityTrait.KIND,
+					PersonalityTrait.CONFIDENT);
 		}
 		setStartingCombatMoves();
 	}
@@ -132,13 +135,11 @@ public class SlimeRoyalGuard extends NPC {
 		if(setPersona) {
 			this.addSpell(Spell.SLAM);
 			this.addSpell(Spell.TELEKENETIC_SHOWER);
-	
-			this.setPersonality(Util.newHashMapOfValues(
-					new Value<>(PersonalityTrait.AGREEABLENESS, PersonalityWeight.AVERAGE),
-					new Value<>(PersonalityTrait.CONSCIENTIOUSNESS, PersonalityWeight.AVERAGE),
-					new Value<>(PersonalityTrait.EXTROVERSION, PersonalityWeight.AVERAGE),
-					new Value<>(PersonalityTrait.NEUROTICISM, PersonalityWeight.AVERAGE),
-					new Value<>(PersonalityTrait.ADVENTUROUSNESS, PersonalityWeight.HIGH)));
+
+			this.setPersonalityTraits(
+					PersonalityTrait.BRAVE,
+					PersonalityTrait.KIND,
+					PersonalityTrait.CONFIDENT);
 			
 			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
 			
