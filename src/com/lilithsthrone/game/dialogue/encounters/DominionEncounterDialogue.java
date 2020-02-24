@@ -28,7 +28,7 @@ public class DominionEncounterDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 1) {
-				return new Response("Take", "Add the " + Encounter.getRandomItem().getName() + " to your inventory.", Main.game.getDefaultDialogueNoEncounter()){
+				return new Response("Take", "Add the " + Encounter.getRandomItem().getName() + " to your inventory.", Main.game.getDefaultDialogue(false)){
 					@Override
 					public void effects() {
 						Main.game.getTextStartStringBuilder().append(Main.game.getPlayer().addItem(Encounter.getRandomItem(), true, true));
@@ -36,7 +36,7 @@ public class DominionEncounterDialogue {
 				};
 				
 			} else if (index == 2) {
-				return new Response("Leave", "Leave the " + Encounter.getRandomItem().getName() + " on the floor.", Main.game.getDefaultDialogueNoEncounter());
+				return new Response("Leave", "Leave the " + Encounter.getRandomItem().getName() + " on the floor.", Main.game.getDefaultDialogue(false));
 				
 			} else {
 				return null;
@@ -55,7 +55,7 @@ public class DominionEncounterDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 1) {
-				return new Response("Take", "Add the " + Encounter.getRandomClothing().getName() + " to your inventory.", Main.game.getDefaultDialogueNoEncounter()){
+				return new Response("Take", "Add the " + Encounter.getRandomClothing().getName() + " to your inventory.", Main.game.getDefaultDialogue(false)){
 					@Override
 					public void effects() {
 						Main.game.getTextStartStringBuilder().append(Main.game.getPlayer().addClothing(Encounter.getRandomClothing(), true));
@@ -63,7 +63,7 @@ public class DominionEncounterDialogue {
 				};
 				
 			} else if (index == 2) {
-				return new Response("Leave", "Leave the " + Encounter.getRandomClothing().getName() + " on the floor.", Main.game.getDefaultDialogueNoEncounter());
+				return new Response("Leave", "Leave the " + Encounter.getRandomClothing().getName() + " on the floor.", Main.game.getDefaultDialogue(false));
 				
 			} else {
 				return null;
@@ -82,7 +82,7 @@ public class DominionEncounterDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 1) {
-				return new Response("Take", "Add the " + Encounter.getRandomWeapon().getName() + " to your inventory.", Main.game.getDefaultDialogueNoEncounter()){
+				return new Response("Take", "Add the " + Encounter.getRandomWeapon().getName() + " to your inventory.", Main.game.getDefaultDialogue(false)){
 					@Override
 					public void effects() {
 						Main.game.getTextStartStringBuilder().append(Main.game.getPlayer().addWeapon(Encounter.getRandomWeapon(), true));
@@ -90,7 +90,7 @@ public class DominionEncounterDialogue {
 				};
 				
 			} else if (index == 2) {
-				return new Response("Leave", "Leave the " + Encounter.getRandomWeapon().getName() + " on the floor.", Main.game.getDefaultDialogueNoEncounter());
+				return new Response("Leave", "Leave the " + Encounter.getRandomWeapon().getName() + " on the floor.", Main.game.getDefaultDialogue(false));
 				
 			} else {
 				return null;
@@ -110,7 +110,7 @@ public class DominionEncounterDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 1) {
-				return new Response("Take", "Add the " + Encounter.getRandomItem().getName() + " to your inventory.", Main.game.getDefaultDialogueNoEncounter()){
+				return new Response("Take", "Add the " + Encounter.getRandomItem().getName() + " to your inventory.", Main.game.getDefaultDialogue(false)){
 					@Override
 					public void effects() {
 						Main.game.getTextStartStringBuilder().append(Main.game.getPlayer().addItem(Encounter.getRandomItem(), true, true));
@@ -118,7 +118,7 @@ public class DominionEncounterDialogue {
 				};
 				
 			} else if (index == 2) {
-				return new Response("Leave", "Leave the " + Encounter.getRandomItem().getName() + " on the floor.", Main.game.getDefaultDialogueNoEncounter());
+				return new Response("Leave", "Leave the " + Encounter.getRandomItem().getName() + " on the floor.", Main.game.getDefaultDialogue(false));
 				
 			} else {
 				return null;
@@ -136,7 +136,7 @@ public class DominionEncounterDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 1) {
-				return new Response("Continue", "Continue on your way.", Main.game.getDefaultDialogueNoEncounter());
+				return new Response("Continue", "Continue on your way.", Main.game.getDefaultDialogue(false));
 				
 			} else {
 				return null;
@@ -151,7 +151,7 @@ public class DominionEncounterDialogue {
 		public String getContent() {
 			
 			if(Main.game.getDateNow().getMonth()==Month.MAY) { // Mother's day:
-				String name = Util.randomItemFrom(Subspecies.getWorldSpecies().get(WorldType.DOMINION).keySet()).getSingularFemaleName(null);
+				String name = Util.randomItemFrom(Subspecies.getWorldSpecies(WorldType.DOMINION, false).keySet()).getSingularFemaleName(null);
 				String litter = Util.randomItemFrom(new String[] {"twins", "triplets", "quadruplets", "quintuplets", "sextuplets"});
 				UtilText.addSpecialParsingString(name, true);
 				UtilText.addSpecialParsingString(litter, false);
@@ -159,7 +159,7 @@ public class DominionEncounterDialogue {
 				return UtilText.parseFromXMLFile("encounters/dominion/generic", "DOMINION_STREET_PILL_HANDOUT_MOTHER");
 				
 			} else { // Father's day:
-				String name = Util.randomItemFrom(Subspecies.getWorldSpecies().get(WorldType.DOMINION).keySet()).getSingularMaleName(null);
+				String name = Util.randomItemFrom(Subspecies.getWorldSpecies(WorldType.DOMINION, false).keySet()).getSingularMaleName(null);
 				UtilText.addSpecialParsingString(name, true);
 
 				return UtilText.parseFromXMLFile("encounters/dominion/generic", "DOMINION_STREET_PILL_HANDOUT_FATHER");
@@ -169,7 +169,7 @@ public class DominionEncounterDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 1) {
-				return new Response("Continue", "Continue on your way.", Main.game.getDefaultDialogueNoEncounter());
+				return new Response("Continue", "Continue on your way.", Main.game.getDefaultDialogue(false));
 				
 			} else {
 				return null;
