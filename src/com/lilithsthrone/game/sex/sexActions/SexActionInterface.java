@@ -12,6 +12,7 @@ import com.lilithsthrone.game.PropertyValue;
 import com.lilithsthrone.game.character.GameCharacter;
 import com.lilithsthrone.game.character.attributes.CorruptionLevel;
 import com.lilithsthrone.game.character.body.CoverableArea;
+import com.lilithsthrone.game.character.body.types.BodyCoveringType;
 import com.lilithsthrone.game.character.body.valueEnums.CumProduction;
 import com.lilithsthrone.game.character.body.valueEnums.FluidModifier;
 import com.lilithsthrone.game.character.fetishes.Fetish;
@@ -36,12 +37,13 @@ import com.lilithsthrone.game.sex.SexType;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotGeneric;
 import com.lilithsthrone.game.sex.sexActions.baseActionsMisc.GenericActions;
 import com.lilithsthrone.main.Main;
-import com.lilithsthrone.utils.Colour;
 import com.lilithsthrone.utils.Util;
+import com.lilithsthrone.utils.colours.Colour;
+import com.lilithsthrone.utils.colours.PresetColour;
 
 /**
  * @since 0.1.0
- * @version 0.3.4.5
+ * @version 0.3.9
  * @author Innoxia
  */
 public interface SexActionInterface {
@@ -61,6 +63,13 @@ public interface SexActionInterface {
 	}
 
 	public default boolean isSadisticAction() {
+		return false;
+	}
+	
+	/**
+	 * @return true if you want this sex action to always be shown in the available list of actions, even if it is unavailable (in which case it will be greyed-out).
+	 */
+	public default boolean isDisplayedAsUnavailable() {
 		return false;
 	}
 	
@@ -199,6 +208,68 @@ public interface SexActionInterface {
 		}
 		return penetrationTakesVirginity && orificeHasVirginity;
 	}
+
+	public default boolean isTakesPerformerVirginity(boolean includeForeplayOrifices, GameCharacter performer, GameCharacter target) {
+		if(!isTakesVirginity(includeForeplayOrifices)) {
+			return false;
+		}
+		if(performer.isAssVirgin() && this.getPerformingCharacterAreas().contains(SexAreaOrifice.ANUS)) {
+			return true;
+		}
+		if(includeForeplayOrifices && performer.isFaceVirgin() && this.getPerformingCharacterAreas().contains(SexAreaOrifice.MOUTH)) {
+			return true;
+		}
+		if(performer.isNippleCrotchVirgin() && this.getPerformingCharacterAreas().contains(SexAreaOrifice.NIPPLE_CROTCH)) {
+			return true;
+		}
+		if(performer.isNippleVirgin() && this.getPerformingCharacterAreas().contains(SexAreaOrifice.NIPPLE)) {
+			return true;
+		}
+		if(performer.isPenisVirgin() && this.getPerformingCharacterAreas().contains(SexAreaPenetration.PENIS)) {
+			return true;
+		}
+		if(performer.isUrethraVirgin() && this.getPerformingCharacterAreas().contains(SexAreaOrifice.URETHRA_PENIS)) {
+			return true;
+		}
+		if(performer.isVaginaUrethraVirgin() && this.getPerformingCharacterAreas().contains(SexAreaOrifice.URETHRA_VAGINA)) {
+			return true;
+		}
+		if(performer.isVaginaVirgin() && this.getPerformingCharacterAreas().contains(SexAreaOrifice.VAGINA)) {
+			return true;
+		}
+		return false;
+	}
+
+	public default boolean isTakesTargetVirginity(boolean includeForeplayOrifices, GameCharacter performer, GameCharacter target) {
+		if(!isTakesVirginity(includeForeplayOrifices)) {
+			return false;
+		}
+		if(target.isAssVirgin() && this.getTargetedCharacterAreas().contains(SexAreaOrifice.ANUS)) {
+			return true;
+		}
+		if(includeForeplayOrifices && target.isFaceVirgin() && this.getTargetedCharacterAreas().contains(SexAreaOrifice.MOUTH)) {
+			return true;
+		}
+		if(target.isNippleCrotchVirgin() && this.getTargetedCharacterAreas().contains(SexAreaOrifice.NIPPLE_CROTCH)) {
+			return true;
+		}
+		if(target.isNippleVirgin() && this.getTargetedCharacterAreas().contains(SexAreaOrifice.NIPPLE)) {
+			return true;
+		}
+		if(target.isPenisVirgin() && this.getTargetedCharacterAreas().contains(SexAreaPenetration.PENIS)) {
+			return true;
+		}
+		if(target.isUrethraVirgin() && this.getTargetedCharacterAreas().contains(SexAreaOrifice.URETHRA_PENIS)) {
+			return true;
+		}
+		if(target.isVaginaUrethraVirgin() && this.getTargetedCharacterAreas().contains(SexAreaOrifice.URETHRA_VAGINA)) {
+			return true;
+		}
+		if(target.isVaginaVirgin() && this.getTargetedCharacterAreas().contains(SexAreaOrifice.VAGINA)) {
+			return true;
+		}
+		return false;
+	}
 	
 	public abstract SexParticipantType getParticipantType();
 	
@@ -217,12 +288,25 @@ public interface SexActionInterface {
 	public ArousalIncrease getArousalGainSelf();
 
 	public ArousalIncrease getArousalGainTarget();
-	
+
+	/**
+	 * Effects to be applied before this SexAction's description is parsed. The returned String is appended before anything else (including penetration stops if this action is a SexActionType.START_ONGOING).
+	 * @return A description of the effects. Return an empty String if you don't want anything appended.
+	 */
+	public default String applyPreParsingEffects() {
+		return "";
+	}
+		
 	/**
 	 * @return A String to be appended and displayed immediately before the sex action's description.
 	 */
 	public default String preDescriptionBaseEffects() {
 		StringBuilder stopSB = new StringBuilder();
+		
+		String s = applyPreParsingEffects();
+		if(s!=null) {
+			stopSB.append(s);
+		}
 		
 		if(getActionType()==SexActionType.START_ONGOING) {
 			for(Entry<SexAreaInterface, SexAreaInterface> entry : getSexAreaInteractions().entrySet()) {
@@ -256,6 +340,7 @@ public interface SexActionInterface {
 				}
 			}
 		}
+		
 		return stopSB.toString();
 	}
 	
@@ -334,6 +419,25 @@ public interface SexActionInterface {
 			}
 		}
 		
+		if(Main.game.isLipstickMarkingEnabled()) {
+			if(Main.sex.getCharacterPerformingAction().isWearingLipstick()
+					&& Main.sex.getCharacterPerformingAction().isHeavyMakeup(BodyCoveringType.MAKEUP_LIPSTICK)
+					&& (this.getPerformingCharacterAreas().contains(SexAreaOrifice.MOUTH) || this.getPerformingCharacterAreas().contains(SexAreaPenetration.TONGUE))) {
+				for(SexAreaInterface areaTargeted : this.getTargetedCharacterAreas()) {
+					sb.append(Main.sex.getCharacterTargetedForSexAction(this).addLipstickMarking(Main.sex.getCharacterPerformingAction(), areaTargeted.getRelatedInventorySlot(), Main.sex.getCharacterPerformingAction().getLipstick()));
+				}
+				Main.sex.addHeavyLipstickUsedCharacter(Main.sex.getCharacterPerformingAction());
+			}
+			if(Main.sex.getCharacterTargetedForSexAction(this).isWearingLipstick()
+					&& Main.sex.getCharacterTargetedForSexAction(this).isHeavyMakeup(BodyCoveringType.MAKEUP_LIPSTICK)
+					&& (this.getTargetedCharacterAreas().contains(SexAreaOrifice.MOUTH) || this.getTargetedCharacterAreas().contains(SexAreaPenetration.TONGUE))) {
+				for(SexAreaInterface areaTargeted : this.getPerformingCharacterAreas()) {
+					sb.append(Main.sex.getCharacterPerformingAction().addLipstickMarking(Main.sex.getCharacterTargetedForSexAction(this), areaTargeted.getRelatedInventorySlot(), Main.sex.getCharacterTargetedForSexAction(this).getLipstick()));
+				}
+				Main.sex.addHeavyLipstickUsedCharacter(Main.sex.getCharacterTargetedForSexAction(this));
+			}
+		}
+		
 		sb.append(applyEffectsString());
 		
 		return sb.toString();
@@ -363,13 +467,7 @@ public interface SexActionInterface {
 			return false;
 		}
 		
-		boolean analAllowed = true;
-		try { // Wrap in try/catch block as some sex actions may make calls to ongoing actions that aren't ongoing yet
-			analAllowed = Main.game.isAnalContentEnabled()
-					|| Collections.disjoint(Util.mergeLists(this.getFetishes(Main.sex.getCharacterPerformingAction()), this.getFetishesForTargetedPartner(Main.sex.getCharacterPerformingAction())),
-						Util.newArrayListOfValues(Fetish.FETISH_ANAL_GIVING, Fetish.FETISH_ANAL_RECEIVING));
-		} catch(Exception ex) {
-		}
+		boolean analAllowed = Main.game.isAnalContentEnabled() || (!this.getPerformingCharacterOrifices().contains(SexAreaOrifice.ANUS) && !this.getTargetedCharacterOrifices().contains(SexAreaOrifice.ANUS));
 		
 		boolean footAllowed = true;
 		try { // Wrap in try/catch block as some sex actions may make calls to ongoing actions that aren't ongoing yet
@@ -929,7 +1027,7 @@ public interface SexActionInterface {
 				
 				return convertToResponse();
 				
-			} else {
+			} else { // ONGOING (and others?):
 				if(!this.getSexAreaInteractions().isEmpty()) {
 					boolean ongoingFound = false;
 					// TODO check
@@ -949,6 +1047,9 @@ public interface SexActionInterface {
 			}
 			
 		} else {
+			if(this.isDisplayedAsUnavailable()) {
+				return convertToNullResponse();
+			}
 			return null;
 		}
 	}
@@ -1007,6 +1108,13 @@ public interface SexActionInterface {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * @return A higher number means that this action will be displayed closer to action 1. Default value is 0.
+	 */
+	public default int getActionRenderingPriority() {
+		return 0;
 	}
 	
 	public default SexActionCategory getCategory() {
@@ -1074,7 +1182,7 @@ public interface SexActionInterface {
 				}
 				@Override
 				public boolean isSexPenetrationHighlight() {
-					return getActionType()==SexActionType.START_ONGOING || getActionType()==SexActionType.START_ADDITIONAL_ONGOING || getActionType()==SexActionType.STOP_ONGOING;
+					return getActionType()==SexActionType.START_ONGOING || getActionType()==SexActionType.START_ADDITIONAL_ONGOING;
 				}
 				@Override
 				public boolean isSexPositioningHighlight() {
@@ -1086,20 +1194,23 @@ public interface SexActionInterface {
 						return SexActionInterface.this.getHighlightColour();
 					}
 					if(SexActionInterface.this.getActionType()==SexActionType.POSITIONING_MENU) {
-						return Colour.BASE_LILAC;
+						return PresetColour.BASE_INDIGO;
 					}
 					if(SexActionInterface.this.isPositionSwap() || getCategory()==SexActionCategory.CHARACTER_SWITCH) {
-						return Colour.BASE_PURPLE_LIGHT;
+						return PresetColour.BASE_PURPLE_LIGHT;
 					}
 					if(isSadisticAction()) {
-						return Colour.BASE_CRIMSON;
+						return PresetColour.BASE_CRIMSON;
 					}
 					if(isSexPenetrationHighlight()) {
 						if(SexActionInterface.this.getPerformingCharacterAreas().stream().anyMatch((area) -> area.isPenetration())) {
-							return Colour.GENERIC_SEX_AS_DOM;
+							return PresetColour.GENERIC_SEX_AS_DOM;
 						} else {
-							return Colour.GENERIC_SEX;
+							return PresetColour.GENERIC_SEX;
 						}
+					}
+					if(getActionType()==SexActionType.STOP_ONGOING) {
+						return PresetColour.BASE_RED;
 					}
 					return super.getHighlightColour();
 				}
@@ -1133,7 +1244,7 @@ public interface SexActionInterface {
 				}
 				@Override
 				public boolean isAbleToBypass() {
-					if(!Main.game.isBypassSexActions()) {
+					if(!Main.game.isBypassSexActionsEnabled()) {
 						return false;
 					}
 					return super.isAbleToBypass();
@@ -1164,13 +1275,13 @@ public interface SexActionInterface {
 						return SexActionInterface.this.getHighlightColour();
 					}
 					if(SexActionInterface.this.getActionType()==SexActionType.POSITIONING_MENU) {
-						return Colour.BASE_LILAC;
+						return PresetColour.BASE_INDIGO;
 					}
 					if(SexActionInterface.this.isPositionSwap() || getCategory()==SexActionCategory.CHARACTER_SWITCH) {
-						return Colour.BASE_PURPLE_LIGHT;
+						return PresetColour.BASE_PURPLE_LIGHT;
 					}
 					if(isSadisticAction()) {
-						return Colour.BASE_CRIMSON;
+						return PresetColour.BASE_CRIMSON;
 					}
 					return super.getHighlightColour();
 				}
@@ -1285,14 +1396,14 @@ public interface SexActionInterface {
 						for(Fetish f : fetishesRequired){
 							if(Main.game.getPlayer().hasFetish(f)) {
 								SB.append("<br/>"
-										+"<span style='color:"+Colour.GENERIC_SEX.toWebHexString()+";'>Associated Fetish</span>"
-										+ " (<span style='color:"+Colour.GENERIC_GOOD.toWebHexString()+";'>owned</span>): "
+										+"<span style='color:"+PresetColour.GENERIC_SEX.toWebHexString()+";'>Associated Fetish</span>"
+										+ " (<span style='color:"+PresetColour.GENERIC_GOOD.toWebHexString()+";'>owned</span>): "
 										+ Util.capitaliseSentence(f.getName(Main.game.getPlayer())));
 								
 							} else {
 								SB.append("<br/>"
-										+"<span style='color:"+Colour.GENERIC_SEX.toWebHexString()+";'>Associated Fetish</span>"
-										+ " (<span style='color:"+Colour.GENERIC_BAD.toWebHexString()+";'>not owned</span>): "
+										+"<span style='color:"+PresetColour.GENERIC_SEX.toWebHexString()+";'>Associated Fetish</span>"
+										+ " (<span style='color:"+PresetColour.GENERIC_BAD.toWebHexString()+";'>not owned</span>): "
 										+ Util.capitaliseSentence(f.getName(Main.game.getPlayer())));
 							}
 						}
@@ -1301,13 +1412,13 @@ public interface SexActionInterface {
 					if(corruptionBypass!=null) {
 						if(isCorruptionWithinRange()) {
 							SB.append("<br/>"
-									+"<span style='color:"+Colour.GENERIC_ARCANE.toWebHexString()+";'>Associated Corruption</span>"
-									+ " (<span style='color:"+Colour.GENERIC_GOOD.toWebHexString()+";'>within range</span>): "
+									+"<span style='color:"+PresetColour.GENERIC_ARCANE.toWebHexString()+";'>Associated Corruption</span>"
+									+ " (<span style='color:"+PresetColour.GENERIC_GOOD.toWebHexString()+";'>within range</span>): "
 									+ Util.capitaliseSentence(corruptionBypass.getName()));
 						} else {
 							SB.append("<br/>"
-									+"<span style='color:"+Colour.GENERIC_ARCANE.toWebHexString()+";'>Associated Corruption</span>"
-									+ " (<span style='color:"+Colour.GENERIC_BAD.toWebHexString()+";'>out of range</span>): "
+									+"<span style='color:"+PresetColour.GENERIC_ARCANE.toWebHexString()+";'>Associated Corruption</span>"
+									+ " (<span style='color:"+PresetColour.GENERIC_BAD.toWebHexString()+";'>out of range</span>): "
 									+ Util.capitaliseSentence(corruptionBypass.getName()));
 						}
 					}
@@ -1316,12 +1427,12 @@ public interface SexActionInterface {
 						if(Main.sex.getCharacterTargetedForSexAction(SexActionInterface.this).isSizeDifferenceShorterThan(Main.sex.getCharacterPerformingAction())
 								|| Main.sex.getCharacterTargetedForSexAction(SexActionInterface.this).isSizeDifferenceTallerThan(Main.sex.getCharacterPerformingAction())) {
 							SB.append("<br/>"
-									+"<span style='color:"+Colour.GENERIC_BAD.toWebHexString()+";'>Size-difference is blocking swap!</span>");
+									+"<span style='color:"+PresetColour.GENERIC_BAD.toWebHexString()+";'>Size-difference is blocking swap!</span>");
 						}
 					}
 					
 //					SB.append("<br/>"
-//							+"<span style='color:"+Colour.GENERIC_BAD.toWebHexString()+";'>Requires no penetration</span>");
+//							+"<span style='color:"+PresetColour.GENERIC_BAD.toWebHexString()+";'>Requires no penetration</span>");
 					
 					return SB.toString();
 				}
@@ -1366,6 +1477,20 @@ public interface SexActionInterface {
 			public SexActionType getSexActionType() {
 				return getActionType();
 			}
+
+//			@Override
+//			public boolean hasRequirements() {
+//				return true;
+//			}
+			@Override
+			public boolean isAvailable(){
+				return false;
+			}
+//			@Override
+//			public boolean isAbleToBypass(){
+//				return false;
+//			}
+			
 			@Override
 			public boolean isSexActionSwitch() {
 				if(getActionType()==SexActionType.START_ONGOING) {
@@ -1405,6 +1530,20 @@ public interface SexActionInterface {
 					return true;
 				}
 			}
+		}
+
+		List<SexType> sexTypesBanned = new ArrayList<>();
+		if(Main.sex.getInitialSexManager().getSexTypesBannedMap().get(Main.sex.getCharacterPerformingAction())!=null) {
+			sexTypesBanned.addAll(Main.sex.getInitialSexManager().getSexTypesBannedMap().get(Main.sex.getCharacterPerformingAction()));
+		}
+		if(Main.sex.getInitialSexManager().getSexTypesBannedMap().get(Main.sex.getCharacterTargetedForSexAction(this))!=null) {
+			for(SexType st : Main.sex.getInitialSexManager().getSexTypesBannedMap().get(Main.sex.getCharacterTargetedForSexAction(this))) {
+				sexTypesBanned.add(st.getReversedSexType());
+			}
+		}
+		
+		if(sexTypesBanned.contains(this.getAsSexType())) {
+			return true;
 		}
 		
 		return false;
@@ -1506,7 +1645,7 @@ public interface SexActionInterface {
 				case BREAST:
 					break;
 				case NIPPLE_CROTCH:
-					if(!performingCharacter.hasBreastsCrotch() || (this.getActionType()==SexActionType.START_ONGOING && !performingCharacter.isBreastCrotchFuckableNipplePenetration())) {
+					if(!performingCharacter.hasBreastsCrotch() || (interactingWithArea!=SexAreaPenetration.TONGUE && this.getActionType()==SexActionType.START_ONGOING && !performingCharacter.isBreastCrotchFuckableNipplePenetration())) {
 						return false;
 					}
 					break;

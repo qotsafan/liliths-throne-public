@@ -12,6 +12,7 @@ import com.lilithsthrone.game.character.npc.dominion.Brax;
 import com.lilithsthrone.game.character.npc.dominion.Bunny;
 import com.lilithsthrone.game.character.npc.dominion.CandiReceptionist;
 import com.lilithsthrone.game.character.npc.dominion.Daddy;
+import com.lilithsthrone.game.character.npc.dominion.Elle;
 import com.lilithsthrone.game.character.npc.dominion.Finch;
 import com.lilithsthrone.game.character.npc.dominion.HarpyBimbo;
 import com.lilithsthrone.game.character.npc.dominion.HarpyBimboCompanion;
@@ -20,7 +21,6 @@ import com.lilithsthrone.game.character.npc.dominion.HarpyDominantCompanion;
 import com.lilithsthrone.game.character.npc.dominion.HarpyNympho;
 import com.lilithsthrone.game.character.npc.dominion.HarpyNymphoCompanion;
 import com.lilithsthrone.game.character.npc.dominion.Helena;
-import com.lilithsthrone.game.character.npc.dominion.Sean;
 import com.lilithsthrone.game.character.npc.dominion.Jules;
 import com.lilithsthrone.game.character.npc.dominion.Kalahari;
 import com.lilithsthrone.game.character.npc.dominion.Kate;
@@ -28,6 +28,7 @@ import com.lilithsthrone.game.character.npc.dominion.Kruger;
 import com.lilithsthrone.game.character.npc.dominion.Lilaya;
 import com.lilithsthrone.game.character.npc.dominion.Loppy;
 import com.lilithsthrone.game.character.npc.dominion.Lumi;
+import com.lilithsthrone.game.character.npc.dominion.Natalya;
 import com.lilithsthrone.game.character.npc.dominion.Nyan;
 import com.lilithsthrone.game.character.npc.dominion.Pazu;
 import com.lilithsthrone.game.character.npc.dominion.Pix;
@@ -35,11 +36,13 @@ import com.lilithsthrone.game.character.npc.dominion.Ralph;
 import com.lilithsthrone.game.character.npc.dominion.RentalMommy;
 import com.lilithsthrone.game.character.npc.dominion.Rose;
 import com.lilithsthrone.game.character.npc.dominion.Scarlett;
+import com.lilithsthrone.game.character.npc.dominion.Sean;
 import com.lilithsthrone.game.character.npc.dominion.SupplierLeader;
 import com.lilithsthrone.game.character.npc.dominion.SupplierPartner;
 import com.lilithsthrone.game.character.npc.dominion.TestNPC;
 import com.lilithsthrone.game.character.npc.dominion.Vanessa;
 import com.lilithsthrone.game.character.npc.dominion.Vicky;
+import com.lilithsthrone.game.character.npc.dominion.Wes;
 import com.lilithsthrone.game.character.npc.dominion.Zaranix;
 import com.lilithsthrone.game.character.npc.dominion.ZaranixMaidKatherine;
 import com.lilithsthrone.game.character.npc.dominion.ZaranixMaidKelly;
@@ -67,7 +70,6 @@ import com.lilithsthrone.game.character.npc.submission.SlimeQueen;
 import com.lilithsthrone.game.character.npc.submission.SlimeRoyalGuard;
 import com.lilithsthrone.game.character.npc.submission.SubmissionCitadelArcanist;
 import com.lilithsthrone.game.character.npc.submission.Vengar;
-import com.lilithsthrone.game.combat.Combat;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
 
@@ -133,7 +135,7 @@ public enum ParserTarget {
 						}
 						
 					} else if(Main.game.isInCombat()) {
-						return Combat.getActiveNPC();
+						return Main.combat.getActiveNPC();
 						
 					} else if (Main.game.isInSex()) {
 						return Main.sex.getTargetedPartner(Main.game.getPlayer());
@@ -191,6 +193,20 @@ public enum ParserTarget {
 					throw new NullPointerException();
 				}
 			},
+
+	ELEMENTAL(Util.newArrayListOfValues(
+			"el",
+			"elemental"),
+			"The player's elemental. <b>Should only ever be used when you know for certain that the player's elemental has been created!</b>") {
+		@Override
+		public GameCharacter getCharacter(String tag, List<GameCharacter> specialNPCList) {
+			if(!Main.game.getPlayer().hasDiscoveredElemental()) {
+//				System.err.println("Warning: Player's elemental not found when accessing ParserTarget.ELEMENTAL!");
+				return Main.game.getNpc(GenericAndrogynousNPC.class);
+			}
+			return Main.game.getPlayer().getElemental();
+		}
+	},
 	
 	PROLOGUE_MALE(Util.newArrayListOfValues("prologueMale"), "") {
 		public String getDescription() {
@@ -923,6 +939,39 @@ public enum ParserTarget {
 		@Override
 		public GameCharacter getCharacter(String tag, List<GameCharacter> specialNPCList) {
 			return Main.game.getNpc(Sean.class);
+		}
+	},
+	
+	NATALYA(Util.newArrayListOfValues("natalya"), "") {
+		public String getDescription() {
+			return Main.game.getNpc(Natalya.class).getDescription();
+		}
+
+		@Override
+		public GameCharacter getCharacter(String tag, List<GameCharacter> specialNPCList) {
+			return Main.game.getNpc(Natalya.class);
+		}
+	},
+	
+	WES(Util.newArrayListOfValues("wes", "wesley"), "") {
+		public String getDescription() {
+			return Main.game.getNpc(Wes.class).getDescription();
+		}
+
+		@Override
+		public GameCharacter getCharacter(String tag, List<GameCharacter> specialNPCList) {
+			return Main.game.getNpc(Wes.class);
+		}
+	},
+	
+	ELLE(Util.newArrayListOfValues("elle", "aellasys"), "") {
+		public String getDescription() {
+			return Main.game.getNpc(Elle.class).getDescription();
+		}
+
+		@Override
+		public GameCharacter getCharacter(String tag, List<GameCharacter> specialNPCList) {
+			return Main.game.getNpc(Elle.class);
 		}
 	},
 	

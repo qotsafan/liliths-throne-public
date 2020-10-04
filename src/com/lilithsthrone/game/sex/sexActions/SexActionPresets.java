@@ -204,7 +204,8 @@ public class SexActionPresets {
 	
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> tentacleToUpperTorso;
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> tentacleToLowerHalf;
-	
+
+	public static HashMap<SexAreaInterface, List<SexAreaInterface>> feetToGroin;
 	
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> appendagesToGroin = new HashMap<>();
 	
@@ -234,9 +235,13 @@ public class SexActionPresets {
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> anusToPenis = new HashMap<>();
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> penisToPenis = new HashMap<>();
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> thighsToPenis = new HashMap<>();
+	
+	public static HashMap<SexAreaInterface, List<SexAreaInterface>> vaginaToAppendages = new HashMap<>();
+	public static HashMap<SexAreaInterface, List<SexAreaInterface>> assToAppendages = new HashMap<>();
 
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> vaginaToMouth = new HashMap<>();
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> assToMouth = new HashMap<>();
+	
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> assToGroin = new HashMap<>();
 
 	public static HashMap<SexAreaInterface, List<SexAreaInterface>> kissing = new HashMap<>();
@@ -270,6 +275,8 @@ public class SexActionPresets {
 		
 		tentacleToUpperTorso = Util.newHashMapOfValues(new Value<>(SexAreaPenetration.TENTACLE, Util.mergeLists(mouthAreas, breastAreas)));
 		tentacleToLowerHalf = Util.newHashMapOfValues(new Value<>(SexAreaPenetration.TENTACLE, Util.mergeLists(groinAreas, lowerHalf, assAreas)));
+
+		feetToGroin = Util.newHashMapOfValues(new Value<>(SexAreaPenetration.FOOT, groinAreas));
 		
 		handHolding = Util.newHashMapOfValues(new Value<>(SexAreaPenetration.FINGER, Util.mergeLists(mouthAreas, Util.newArrayListOfValues(SexAreaPenetration.FINGER))));
 		
@@ -368,11 +375,13 @@ public class SexActionPresets {
 			assToPenis.put(area, penisAreas);
 			assToMouth.put(area, mouthAreas);
 			assToGroin.put(area, groinAreas);
+			assToAppendages.put(area, appendageAreas);
 		}
 		for(SexAreaInterface area : vaginaAreas) {
 			vaginaToPenis.put(area, penisAreas);
 			vaginaToMouth.put(area, mouthAreas);
 			vaginaToVagina.put(area, vaginaAreas);
+			vaginaToAppendages.put(area, appendageAreas);
 		}
 	}
 

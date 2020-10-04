@@ -18,12 +18,15 @@ import com.lilithsthrone.game.character.gender.Gender;
 import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.persona.Name;
 import com.lilithsthrone.game.character.persona.Occupation;
+import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.quests.Quest;
 import com.lilithsthrone.game.character.quests.QuestLine;
 import com.lilithsthrone.game.character.race.Race;
+import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.RacialBody;
 import com.lilithsthrone.game.character.race.Subspecies;
+import com.lilithsthrone.game.character.race.SubspeciesPreference;
 import com.lilithsthrone.game.dialogue.DialogueFlagValue;
 import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.dialogue.companions.SlaveDialogue;
@@ -32,7 +35,7 @@ import com.lilithsthrone.game.dialogue.npcDialogue.submission.TunnelSlimeDialogu
 import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.CharacterInventory;
-import com.lilithsthrone.game.inventory.clothing.OutfitType;
+import com.lilithsthrone.game.inventory.outfit.OutfitType;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.world.WorldType;
@@ -77,20 +80,31 @@ public class SubmissionAttacker extends NPC {
 			Map<Subspecies, Integer> availableRaces = new HashMap<>();
 			for(Subspecies s : Subspecies.values()) {
 				if(s==Subspecies.SLIME) {
-					Subspecies.addToSubspeciesMap(slimeChance, gender, s, availableRaces);
+					Subspecies.addToSubspeciesMap(slimeChance, gender, s, availableRaces, SubspeciesPreference.FOUR_ABUNDANT);
+					
+				} else if(s==Subspecies.IMP || s==Subspecies.IMP_ALPHA) {
+					Subspecies.addToSubspeciesMap((int) (100 * Subspecies.getWorldSpecies(WorldType.SUBMISSION, false).get(s).getChanceMultiplier()), gender, s, availableRaces, SubspeciesPreference.FOUR_ABUNDANT);
 					
 				} else if(Subspecies.getWorldSpecies(WorldType.SUBMISSION, false).containsKey(s)) {
 					Subspecies.addToSubspeciesMap((int) (100 * Subspecies.getWorldSpecies(WorldType.SUBMISSION, false).get(s).getChanceMultiplier()), gender, s, availableRaces);
 				}
 			}
-			
-			this.setBodyFromSubspeciesPreference(gender, availableRaces, true, true);
-			
-			if(Math.random()<0.05 && !this.getRace().equals(Race.DEMON) && this.getSubspecies()!=Subspecies.SLIME) { //5% chance for the NPC to be a half-demon
+
+			Subspecies randomSpecies = Util.getRandomObjectFromWeightedMap(availableRaces);
+			if(randomSpecies==Subspecies.SLIME || randomSpecies==Subspecies.IMP || randomSpecies==Subspecies.IMP_ALPHA) {
+				this.setBody(gender, randomSpecies, RaceStage.GREATER, true);
+				
+			} else {
+				this.setBodyFromSubspeciesPreference(gender, availableRaces, true, true);
+			}
+
+			if(Math.random()<Main.getProperties().halfDemonSpawnRate/100f && !this.getRace().equals(Race.DEMON) && this.getSubspecies()!=Subspecies.SLIME) { // Half-demon spawn rate
 				this.setBody(CharacterUtils.generateHalfDemonBody(this, gender, Subspecies.getFleshSubspecies(this), true), true);
 			}
-			
-			if(Main.getProperties().taurFurryLevel>0 && Math.random()<0.05 && this.isLegConfigurationAvailable(LegConfiguration.TAUR)) { //5% chance for the NPC to be a taur
+
+			if(Math.random()<Main.getProperties().taurSpawnRate/100f
+					&& this.getLegConfiguration()!=LegConfiguration.TAUR // Do not reset this charatcer's taur body if they spawned as a taur (as otherwise subspecies-specific settings get overridden by global taur settings)
+					&& this.isLegConfigurationAvailable(LegConfiguration.TAUR)) { // Taur spawn rate
 				CharacterUtils.applyTaurConversion(this);
 			}
 			
@@ -104,6 +118,11 @@ public class SubmissionAttacker extends NPC {
 			// PERSONALITY & BACKGROUND:
 			
 			CharacterUtils.setHistoryAndPersonality(this, true);
+			if((this.getSubspecies()==Subspecies.IMP || this.getSubspecies()==Subspecies.IMP_ALPHA)
+					&& !this.hasPersonalityTrait(PersonalityTrait.MUTE)
+					&& Math.random()<0.9f) {
+				this.addPersonalityTrait(PersonalityTrait.SLOVENLY);
+			}
 			
 			// ADDING FETISHES:
 			

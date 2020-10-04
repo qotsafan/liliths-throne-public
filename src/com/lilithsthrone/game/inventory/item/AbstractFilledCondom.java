@@ -16,18 +16,18 @@ import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.enchanting.ItemEffect;
 import com.lilithsthrone.game.sex.SexAreaOrifice;
 import com.lilithsthrone.main.Main;
-import com.lilithsthrone.utils.Colour;
 import com.lilithsthrone.utils.SvgUtil;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.XMLSaving;
+import com.lilithsthrone.utils.colours.Colour;
+import com.lilithsthrone.utils.colours.PresetColour;
 
 /**
  * @since 0.1.86
- * @version 0.1.88
+ * @version 0.3.7.7
  * @author Innoxia
  */
 public class AbstractFilledCondom extends AbstractItem implements XMLSaving {
-	
 	
 	private String cumProvider;
 	private FluidCum cum;
@@ -42,7 +42,7 @@ public class AbstractFilledCondom extends AbstractItem implements XMLSaving {
 		for(FluidModifier fm : cum.getFluidModifiers()) {
 			this.cum.addFluidModifier(cumProvider, fm);
 		}
-		this.colourShade = colour;
+		this.setColour(0, colour);
 		SVGString = getSVGString(itemType.getPathName(), colour);
 		this.millilitresStored = millilitresStored;
 	}
@@ -56,7 +56,7 @@ public class AbstractFilledCondom extends AbstractItem implements XMLSaving {
 		for(FluidModifier fm : cum.getFluidModifiers()) {
 			this.cum.addFluidModifier(null, fm);
 		}
-		this.colourShade = colour;
+		this.setColour(0, colour);
 		SVGString = getSVGString(itemType.getPathName(), colour);
 		this.millilitresStored = millilitresStored;
 	}
@@ -86,7 +86,7 @@ public class AbstractFilledCondom extends AbstractItem implements XMLSaving {
 		parentElement.appendChild(element);
 		
 		CharacterUtils.addAttribute(doc, element, "id", this.getItemType().getId());
-		CharacterUtils.addAttribute(doc, element, "colour", String.valueOf(this.getColour()));
+		CharacterUtils.addAttribute(doc, element, "colour", this.getColour(0).getId());
 		CharacterUtils.addAttribute(doc, element, "cumProvider", this.getCumProviderId());
 		CharacterUtils.addAttribute(doc, element, "millilitresStored", String.valueOf(this.getMillilitresStored()));
 		
@@ -111,7 +111,7 @@ public class AbstractFilledCondom extends AbstractItem implements XMLSaving {
 		
 		return new AbstractFilledCondom(
 				ItemType.getIdToItemMap().get(parentElement.getAttribute("id")),
-				Colour.valueOf(parentElement.getAttribute("colour")),
+				PresetColour.getColourFromId(parentElement.getAttribute("colour")),
 				provider,
 				((Element) parentElement.getElementsByTagName("cum").item(0)==null
 					?new FluidCum(FluidType.CUM_HUMAN)

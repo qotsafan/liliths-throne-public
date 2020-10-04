@@ -21,7 +21,7 @@ import com.lilithsthrone.game.character.race.FurryPreference;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
 import com.lilithsthrone.game.combat.DamageType;
-import com.lilithsthrone.game.combat.Spell;
+import com.lilithsthrone.game.combat.spells.Spell;
 import com.lilithsthrone.game.dialogue.DialogueFlagValue;
 import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.dialogue.places.dominion.slaverAlley.SlaverAlleyDialogue;
@@ -51,10 +51,10 @@ import com.lilithsthrone.game.sex.positions.SexPosition;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotAgainstWall;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotStocks;
 import com.lilithsthrone.main.Main;
-import com.lilithsthrone.utils.Colour;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
 import com.lilithsthrone.utils.Vector2i;
+import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.world.Cell;
 import com.lilithsthrone.world.WorldType;
 import com.lilithsthrone.world.places.PlaceType;
@@ -349,7 +349,7 @@ public class EnforcerWarehouse {
 							Cell c = Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation().getX()+1, Main.game.getPlayer().getLocation().getY());
 							c.getPlace().setPlaceType(PlaceType.ENFORCER_WAREHOUSE_CORRIDOR);
 							c.getPlace().setName(PlaceType.ENFORCER_WAREHOUSE_CORRIDOR.getName());
-							Main.game.getPlayerCell().getInventory().addItem(AbstractItemType.generateItem(ItemType.getSpellBookType(Spell.TELEPORT)));
+							Main.game.getPlayerCell().getInventory().addItem(Main.game.getItemGen().generateItem(ItemType.getSpellBookType(Spell.TELEPORT)));
 						}
 					};
 				}
@@ -376,7 +376,7 @@ public class EnforcerWarehouse {
 						Main.game.getTextStartStringBuilder().append(UtilText.parseFromXMLFile("places/dominion/enforcerWarehouse/generic", "ENCLOSURE_SHELVING_DRAG_TELEPORT_LEARNED_START"));
 						Main.game.getTextStartStringBuilder().append(
 								"<span style='border:0; padding:0; text-align:center;'><i>"
-									+Main.game.getPlayer().useItem(AbstractItemType.generateItem(ItemType.getSpellBookType(Spell.TELEPORT)), Main.game.getPlayer(), true)
+									+Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.getSpellBookType(Spell.TELEPORT)), Main.game.getPlayer(), true)
 								+"</i></span>");
 						Main.game.getTextStartStringBuilder().append(UtilText.parseFromXMLFile("places/dominion/enforcerWarehouse/generic", "ENCLOSURE_SHELVING_DRAG_TELEPORT_LEARNED_END"));
 						// Removed as it was just annoying later on when the telepathy spell is meant to be available:
@@ -467,7 +467,7 @@ public class EnforcerWarehouse {
 				
 			} else {
 				if(!dangerousDirections.isEmpty()) {
-					sb.append("<p style='test-align:center; color:"+Colour.GENERIC_BAD.toWebHexString()+";'><i>");
+					sb.append("<p style='test-align:center; color:"+PresetColour.GENERIC_BAD.toWebHexString()+";'><i>");
 						if(dangerousDirections.size()>1) {
 							sb.append("There are manned guard posts to the "+Util.stringsToStringList(dangerousDirections, false)+"! Entering these areas will surely result in a fight!");
 						} else {
@@ -498,7 +498,7 @@ public class EnforcerWarehouse {
 		@Override
 		public String getContent() {
 			if(!Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.claireWarning)) {
-				NPC guard = Main.game.getCharactersPresent(Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation().getX(), Main.game.getPlayer().getLocation().getY()+1)).get(0);
+				NPC guard = Main.game.getCharactersPresent(Main.game.getWorlds().get(WorldType.ENFORCER_WAREHOUSE).getNearestCell(PlaceType.ENFORCER_WAREHOUSE_ENFORCER_GUARD_POST, Main.game.getPlayer().getLocation())).get(0);
 				return UtilText.parseFromXMLFile("places/dominion/enforcerWarehouse/generic", "CLAIRE_WARNING", guard);
 			} else {
 				return CORRIDOR.getContent();
@@ -594,7 +594,7 @@ public class EnforcerWarehouse {
 								List<AbstractClothingType> clothingToGenerate = new ArrayList<>(ClothingType.getAllClothing());
 								clothingToGenerate.removeIf((clothing) -> !clothing.getDefaultItemTags().contains(ItemTag.SOLD_BY_NYAN));
 								
-								AbstractClothing clothing = AbstractClothingType.generateClothing(Util.randomItemFrom(clothingToGenerate), false);
+								AbstractClothing clothing = Main.game.getItemGen().generateClothing(Util.randomItemFrom(clothingToGenerate), false);
 								for(int i=0; i<Util.random.nextInt(4); i++) {
 									TFModifier rndMod = TFModifier.getClothingAttributeList().get(Util.random.nextInt(TFModifier.getClothingAttributeList().size()));
 									clothing.addEffect(new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_ATTRIBUTE, rndMod, TFPotency.getRandomWeightedPositivePotency(), 0));
@@ -606,13 +606,13 @@ public class EnforcerWarehouse {
 								List<AbstractWeaponType> weaponToGenerate = new ArrayList<>(WeaponType.getAllWeapons());
 								weaponToGenerate.removeIf((weapon) -> (weapon.getRarity()!=Rarity.RARE && weapon.getRarity()!=Rarity.EPIC) || !weapon.getItemTags().contains(ItemTag.SOLD_BY_VICKY));
 								
-								AbstractWeapon weapon = AbstractWeaponType.generateWeapon(Util.randomItemFrom(weaponToGenerate));
+								AbstractWeapon weapon = Main.game.getItemGen().generateWeapon(Util.randomItemFrom(weaponToGenerate));
 								
 								Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().addWeapon(weapon, 1, false, true));
 								
 							} else {
 								List<AbstractItemType> itemTypes = Util.newArrayListOfValues(ItemType.BOTTLED_ESSENCE_DEMON, ItemType.COR_INGREDIENT_LILITHS_GIFT, ItemType.FETISH_UNREFINED);
-								AbstractItem item = AbstractItemType.generateItem(Util.randomItemFrom(itemTypes));
+								AbstractItem item = Main.game.getItemGen().generateItem(Util.randomItemFrom(itemTypes));
 								Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().addItem(item, 3+Util.random.nextInt(6), false, true));
 							}
 
@@ -732,8 +732,8 @@ public class EnforcerWarehouse {
 				return new Response("Help", "Ask Claire if she's ok.", CRATES_LUST_WEAPON_OBTAINED) {
 					@Override
 					public void effects() {
-						AbstractItem item = AbstractItemType.generateItem(ItemType.BOTTLED_ESSENCE_DEMON);
-						Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().addWeapon(AbstractWeaponType.generateWeapon("innoxia_lightningGlobe_lightning_globe", DamageType.LUST), 1, false, true));
+						AbstractItem item = Main.game.getItemGen().generateItem(ItemType.BOTTLED_ESSENCE_DEMON);
+						Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().addWeapon(Main.game.getItemGen().generateWeapon("innoxia_lightningGlobe_lightning_globe", DamageType.LUST), 1, false, true));
 						Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().addItem(item, 3, false, true));
 					}
 				};
@@ -818,7 +818,7 @@ public class EnforcerWarehouse {
 							Main.game.getPlayerCell().getPlace().setPlaceType(PlaceType.ENFORCER_WAREHOUSE_CRATES_SPELL_BOOK_SEARCHED);
 							Main.game.getPlayerCell().getPlace().setName(PlaceType.ENFORCER_WAREHOUSE_CRATES_SPELL_BOOK_SEARCHED.getName());
 							
-							AbstractItem item = AbstractItemType.generateItem(ItemType.getSpellBookType(Spell.TELEPATHIC_COMMUNICATION));
+							AbstractItem item = Main.game.getItemGen().generateItem(ItemType.getSpellBookType(Spell.TELEPATHIC_COMMUNICATION));
 							Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().addItem(item, 1, false, true));
 						}
 					};
@@ -1222,7 +1222,7 @@ public class EnforcerWarehouse {
 	public static final DialogueNode AFTER_COMBAT_DEFEAT_SENT_TO_STOCKS = new DialogueNode("", "", true) {
 		@Override
 		public void applyPreParsingEffects() {
-			Main.game.getDialogueFlags().setFlag(DialogueFlagValue.playerCaptive, true);
+			Main.game.getPlayer().setCaptive(true);
 			Main.game.getPlayer().unequipAllClothingIntoHoldingInventory(Main.game.getNpc(Sean.class), false, false);
 		}
 		@Override
@@ -1316,7 +1316,7 @@ public class EnforcerWarehouse {
 						STOCKS_RANDOMS) {
 					@Override
 					public void effects() {
-						randomSexPartners = SlaverAlleyDialogue.generateRandomStocksPartners(true);
+						randomSexPartners = SlaverAlleyDialogue.generateRandomStocksPartners(Main.game.getPlayer(), true);
 					}
 				};
 			}
@@ -1448,7 +1448,7 @@ public class EnforcerWarehouse {
 				return new Response("Continue", "Continue on your way...", Main.game.getDefaultDialogue()) {
 					@Override
 					public void effects() {
-						Main.game.getDialogueFlags().setFlag(DialogueFlagValue.playerCaptive, false);
+						Main.game.getPlayer().setCaptive(false);
 						Main.game.getPlayer().equipAllClothingFromHoldingInventory();
 					}
 				};
@@ -1461,7 +1461,7 @@ public class EnforcerWarehouse {
 	public static final DialogueNode AFTER_COMBAT_DEFEAT_SENT_TO_CELLS = new DialogueNode("", "", true) {
 		@Override
 		public void applyPreParsingEffects() {
-			Main.game.getDialogueFlags().setFlag(DialogueFlagValue.playerCaptive, true);
+			Main.game.getPlayer().setCaptive(true);
 		}
 		@Override
 		public int getSecondsPassed() {
@@ -1507,7 +1507,7 @@ public class EnforcerWarehouse {
 						Main.game.getNpc(Claire.class).returnToHome();
 						Main.game.getNpc(Claire.class).setLust(Main.game.getNpc(Claire.class).getRestingLust());
 						Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().setQuestProgress(QuestLine.SIDE_TELEPORTATION, Quest.SIDE_UTIL_COMPLETE));
-						Main.game.getDialogueFlags().setFlag(DialogueFlagValue.playerCaptive, false);
+						Main.game.getPlayer().setCaptive(false);
 						Main.game.getPlayer().setLocation(WorldType.DOMINION, PlaceType.DOMINION_ENFORCER_HQ, false);
 					}
 				};

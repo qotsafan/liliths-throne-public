@@ -15,7 +15,6 @@ import com.lilithsthrone.game.dialogue.responses.ResponseEffectsOnly;
 import com.lilithsthrone.game.dialogue.responses.ResponseSex;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.InventorySlot;
-import com.lilithsthrone.game.inventory.item.AbstractItemType;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.sex.InitialSexActionInformation;
 import com.lilithsthrone.game.sex.managers.dominion.vanessa.SMVanessaOral;
@@ -28,9 +27,9 @@ import com.lilithsthrone.game.sex.positions.slots.SexSlotStanding;
 import com.lilithsthrone.game.sex.sexActions.baseActions.PenisVagina;
 import com.lilithsthrone.game.sex.sexActions.baseActions.TongueVagina;
 import com.lilithsthrone.main.Main;
-import com.lilithsthrone.utils.Colour;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
+import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.world.WorldType;
 import com.lilithsthrone.world.places.PlaceType;
 
@@ -582,7 +581,7 @@ public class CityHallDemographics {
 						@Override
 						public void effects() {
 							Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().incrementMoney(-ItemType.OFFSPRING_MAP.getValue(null)));
-							Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().addItem(AbstractItemType.generateItem(ItemType.OFFSPRING_MAP), false));
+							Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().addItem(Main.game.getItemGen().generateItem(ItemType.OFFSPRING_MAP), false));
 						}
 					};
 					
@@ -639,8 +638,8 @@ public class CityHallDemographics {
 						+ "</div>"
 						+ "<br/>"
 						+ "<i>Your name must be between 2 and 32 characters long. You cannot use the square bracket characters or full stops. (Surname may be left blank.)</i>"
-						+ (unsuitableName ? "<p style='text-align:center;padding-top:0;'><b style=' color:"+ Colour.GENERIC_BAD.toWebHexString()+ ";'>Invalid name.</b></p>" : "")
-						+ (unsuitableSurname ? "<p style='text-align:center;padding-top:0;'><b style=' color:"+ Colour.GENERIC_BAD.toWebHexString()+ ";'>Invalid Surname.</b></p>" : "")
+						+ (unsuitableName ? "<p style='text-align:center;padding-top:0;'><b style=' color:"+ PresetColour.GENERIC_BAD.toWebHexString()+ ";'>Invalid name.</b></p>" : "")
+						+ (unsuitableSurname ? "<p style='text-align:center;padding-top:0;'><b style=' color:"+ PresetColour.GENERIC_BAD.toWebHexString()+ ";'>Invalid Surname.</b></p>" : "")
 					+ "</div>"
 					
 					+ "<p id='hiddenFieldName' style='display:none;'></p>"

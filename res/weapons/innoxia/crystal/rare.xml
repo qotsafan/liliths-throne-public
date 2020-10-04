@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <weapon>
 	<coreAttributes>
-	
-		<value>1500</value> 
+		<value>2000</value> 
 		<melee>true</melee>
 		<twoHanded>false</twoHanded>
 		<determiner><![CDATA[]]></determiner>
@@ -22,7 +21,7 @@
 		
 		<imageEquippedName/>
 		
-		<damage>8</damage> 
+		<damage>10</damage> 
 		
 		<arcaneCost>0</arcaneCost> 
 		

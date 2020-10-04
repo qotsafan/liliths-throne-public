@@ -24,7 +24,7 @@ import com.lilithsthrone.main.Main;
 
 /**
  * @since 0.1.0
- * @version 0.2.8
+ * @version 0.3.7.3
  * @author Innoxia
  */
 public abstract class SexAction implements SexActionInterface {
@@ -180,7 +180,7 @@ public abstract class SexAction implements SexActionInterface {
 	public abstract String getDescription();
 
 	private static String formatFlavour(String input) {
-		return "<p style='margin:0; padding:0; text-align:center;'><i>"
+		return "<p style='text-align:center; margin:0; padding:0;'><i>"
 				+ input
 			+ "</i></p>";
 	}
@@ -485,7 +485,6 @@ public abstract class SexAction implements SexActionInterface {
 					}
 				}
 			}
-			
 			
 			List<SexAreaInterface> cummedInList = this.getAreasCummedIn(characterPerformingAction, characterTarget);
 			if(cummedInList != null) {

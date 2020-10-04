@@ -30,16 +30,15 @@ import com.lilithsthrone.game.character.race.SubspeciesPreference;
 import com.lilithsthrone.game.dialogue.DialogueFlagValue;
 import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.dialogue.companions.SlaveDialogue;
-import com.lilithsthrone.game.dialogue.places.submission.ratWarrens.RatWarrensCaptiveDialogue;
 import com.lilithsthrone.game.dialogue.places.submission.ratWarrens.RatWarrensDialogue;
 import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.CharacterInventory;
 import com.lilithsthrone.game.inventory.InventorySlot;
-import com.lilithsthrone.game.inventory.clothing.OutfitType;
+import com.lilithsthrone.game.inventory.outfit.OutfitType;
 import com.lilithsthrone.main.Main;
-import com.lilithsthrone.utils.Colour;
 import com.lilithsthrone.utils.Util;
+import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.world.WorldType;
 import com.lilithsthrone.world.places.PlaceType;
 
@@ -79,7 +78,10 @@ public class RatGangMember extends NPC {
 				}
 			}
 			Subspecies subspecies = Util.getRandomObjectFromWeightedMap(subspeciesMap);
-			RaceStage stage = RaceStage.getRaceStageFromUserPreferences(subspecies);
+			if(subspecies==null) {
+				subspecies = Subspecies.RAT_MORPH;
+			}
+			RaceStage stage = RaceStage.getRaceStageFromUserPreferences(gender, subspecies);
 			if(stage==RaceStage.HUMAN) {
 				stage = RaceStage.PARTIAL;
 			}
@@ -103,10 +105,6 @@ public class RatGangMember extends NPC {
 				}
 			}
 			
-//			if(Math.random()<0.05) { //5% chance for the NPC to be a half-demon
-//				this.setBody(CharacterUtils.generateHalfDemonBody(this, gender, Subspecies.getFleshSubspecies(this), true), true);
-//			}
-	
 			setName(Name.getRandomTriplet(this.getRace()));
 			this.setPlayerKnowsName(false);
 			this.setGenericName("gang-member");
@@ -132,6 +130,7 @@ public class RatGangMember extends NPC {
 			this.addPersonalityTrait(PersonalityTrait.SLOVENLY);
 			this.removePersonalityTrait(PersonalityTrait.LISP);
 			this.removePersonalityTrait(PersonalityTrait.STUTTER);
+			this.removePersonalityTrait(PersonalityTrait.MUTE);
 		}
 		
 		this.setEnslavementDialogue(SlaveDialogue.DEFAULT_ENSLAVEMENT_DIALOGUE, true);
@@ -166,7 +165,7 @@ public class RatGangMember extends NPC {
 		this.clearNonEquippedInventory(false);
 		
 		if(settings.contains(EquipClothingSetting.ADD_TATTOOS)) {
-			this.addTattoo(InventorySlot.WRIST, new Tattoo(TattooType.getTattooTypeFromId("innoxia_gang_rat_skull"), Colour.CLOTHING_BLACK, Colour.CLOTHING_BLACK, Colour.CLOTHING_BLACK, false, null, null));
+			this.addTattoo(InventorySlot.WRIST, new Tattoo(TattooType.getTattooTypeFromId("innoxia_gang_rat_skull"), PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_BLACK, false, null, null));
 		}
 		
 		CharacterUtils.equipClothingFromOutfitType(this, OutfitType.MUGGER, settings);
@@ -221,9 +220,6 @@ public class RatGangMember extends NPC {
 	@Override
 	public Response endCombat(boolean applyEffects, boolean victory) {
 		if(victory) {
-			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.ratWarrensCaptiveAttemptingEscape)) {
-				return new Response("", "", RatWarrensCaptiveDialogue.STOCKS_ESCAPE_FIGHT_VICTORY);
-			}
 			return new Response("", "", RatWarrensDialogue.GUARD_COMBAT_VICTORY) {
 				@Override
 				public void effects() {
@@ -254,19 +250,16 @@ public class RatGangMember extends NPC {
 							Main.game.getDialogueFlags().setFlag(DialogueFlagValue.ratWarrensClearedCentre, true);
 						}
 					}
+					if(Main.game.getPlayerCell().getPlace().getPlaceType()==PlaceType.RAT_WARRENS_CHECKPOINT_LEFT
+							|| Main.game.getPlayerCell().getPlace().getPlaceType()==PlaceType.RAT_WARRENS_DORMITORY_LEFT
+							|| Main.game.getPlayerCell().getPlace().getPlaceType()==PlaceType.RAT_WARRENS_CORRIDOR_LEFT) {
+						Main.game.getNpc(Murk.class).setLocation(WorldType.RAT_WARRENS, PlaceType.RAT_WARRENS_VENGARS_HALL);
+					}
+					RatWarrensDialogue.banishTwoGuards();
 				}
 			};
 			
 		} else {
-			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.ratWarrensCaptiveAttemptingEscape)) {
-				return new Response("", "", RatWarrensCaptiveDialogue.STOCKS_ESCAPE_FIGHT_DEFEAT) {
-					@Override
-					public void effects() {
-						RatWarrensDialogue.applyCombatDefeatFlagsReset();
-						Main.game.getNpc(Murk.class).setLocation(WorldType.RAT_WARRENS, PlaceType.RAT_WARRENS_MILKING_STORAGE);
-					}
-				};
-			}
 			return new Response("", "", RatWarrensDialogue.GUARD_COMBAT_DEFEAT) {
 				@Override
 				public void effects() {
