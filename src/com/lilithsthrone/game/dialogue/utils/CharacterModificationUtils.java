@@ -3031,11 +3031,7 @@ public class CharacterModificationUtils {
 	}
 	
 	public static int getLactationUpperLimit() {
-		if(Main.game.isInNewWorld()) {
-			return Lactation.SEVEN_MONSTROUS_AMOUNT_POURING.getMaximumValue();
-		} else {
-			return 150;
-		}
+		return Lactation.SEVEN_MONSTROUS_AMOUNT_POURING.getMaximumValue();
 	}
 	
 	public static String getSelfTransformLactationDiv() {
@@ -4525,7 +4521,9 @@ public class CharacterModificationUtils {
 		if(BodyChanging.getTarget().hasPenis()) {
 			return new CupSize[] {CupSize.FLAT, CupSize.TRAINING_AAA, CupSize.TRAINING_AA, CupSize.TRAINING_A};
 		} else {
-			return new CupSize[] {CupSize.AA, CupSize.A, CupSize.B, CupSize.C, CupSize.D, CupSize.DD, CupSize.E};
+			return new CupSize[] {CupSize.AA, CupSize.A, CupSize.B, CupSize.C, CupSize.D, CupSize.DD, CupSize.E,
+					CupSize.F, CupSize.FF, CupSize.G, CupSize.GG, CupSize.H, CupSize.HH, CupSize.J, CupSize.JJ,
+					CupSize.K, CupSize.KK, CupSize.L, CupSize.LL, CupSize.M, CupSize.MM, CupSize.N};
 		}
 	}
 	
@@ -4979,7 +4977,112 @@ public class CharacterModificationUtils {
 		
 		return contentSB.toString();
 	}
-
+	
+	public static String getVaginaDepthDiv() {
+		contentSB.setLength(0);
+		
+		contentSB.append(
+				"<div class='container-full-width'>"
+					+"<div class='cosmetics-inner-container left'>"
+						+ "<h5 style='text-align:center;'>"
+							+"Vagina Depth"
+						+"</h5>"
+						+ "<p style='text-align:center;'>"
+							+ "Select the depth of your vagina. Depth of an orifice determines the length of a penetrating object that it can comfortably accommodate."
+						+ "</p>"
+						+ "</div>"
+						+ "<div class='cosmetics-inner-container right'>");
+		
+		for(OrificeDepth depth : OrificeDepth.values()) {
+			if(BodyChanging.getTarget().getVaginaDepth() == depth) {
+				contentSB.append(
+						"<div class='cosmetics-button active'>"
+							+ "<span style='color:"+depth.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(depth.getDescriptor())+"</span>"
+						+ "</div>");
+				
+			} else {
+				contentSB.append(
+						"<div id='VAGINA_DEPTH_"+depth+"' class='cosmetics-button'>"
+							+ "<span style='color:"+depth.getColour().getShades()[0]+";'>"+Util.capitaliseSentence(depth.getDescriptor())+"</span>"
+						+ "</div>");
+			}
+		}
+		
+		contentSB.append("</div></div>");
+		
+		return contentSB.toString();
+	}
+	
+	public static String getAnusCapacityDiv() {
+		contentSB.setLength(0);
+		
+		contentSB.append(
+				"<div class='container-full-width'>"
+					+"<div class='cosmetics-inner-container left'>"
+						+ "<h5 style='text-align:center;'>"
+							+"Anus Capacity"
+						+"</h5>"
+						+ "<p style='text-align:center;'>"
+							+ "Select the capacity of your anus. A higher capacity means that you'll be able to take larger insertions easier, but if it's too loose, it won't be very pleasurable for partners with small cocks."
+						+ "</p>"
+						+ "</div>"
+						+ "<div class='cosmetics-inner-container right'>");
+		
+		for(Capacity value : Capacity.values()) {
+			if(BodyChanging.getTarget().getAssCapacity() == value) {
+				contentSB.append(
+						"<div class='cosmetics-button active'>"
+							+ "<span style='color:"+value.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(value.getDescriptor())+"</span>"
+						+ "</div>");
+				
+			} else {
+				contentSB.append(
+						"<div id='ANUS_CAPACITY_"+value+"' class='cosmetics-button'>"
+							+ "<span style='color:"+value.getColour().getShades()[0]+";'>"+Util.capitaliseSentence(value.getDescriptor())+"</span>"
+						+ "</div>");
+			}
+		}
+		
+		contentSB.append("</div></div>");
+		
+		return contentSB.toString();
+	}
+	
+	public static String getAnusDepthDiv() {
+		contentSB.setLength(0);
+		
+		contentSB.append(
+				"<div class='container-full-width'>"
+					+"<div class='cosmetics-inner-container left'>"
+						+ "<h5 style='text-align:center;'>"
+							+"Anus Depth"
+						+"</h5>"
+						+ "<p style='text-align:center;'>"
+							+ "Select the depth of your anus. Depth of an orifice determines the length of a penetrating object that it can comfortably accommodate."
+						+ "</p>"
+						+ "</div>"
+						+ "<div class='cosmetics-inner-container right'>");
+		
+		for(OrificeDepth value : OrificeDepth.values()) {
+			if(BodyChanging.getTarget().getAssDepth() == value) {
+				contentSB.append(
+						"<div class='cosmetics-button active'>"
+							+ "<span style='color:"+value.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(value.getDescriptor())+"</span>"
+						+ "</div>");
+				
+			} else {
+				contentSB.append(
+						"<div id='ANUS_DEPTH_"+value+"' class='cosmetics-button'>"
+							+ "<span style='color:"+value.getColour().getShades()[0]+";'>"+Util.capitaliseSentence(value.getDescriptor())+"</span>"
+						+ "</div>");
+			}
+		}
+		
+		contentSB.append("</div></div>");
+		
+		return contentSB.toString();
+	}
+	
 	public static String getSelfTransformClitorisModifiersDiv() {
 		contentSB.setLength(0);
 		
@@ -5021,9 +5124,7 @@ public class CharacterModificationUtils {
 						+ "</div>"
 						+ "<div class='cosmetics-inner-container right'>");
 		
-		ClitorisSize[] sizesAvailable = new ClitorisSize[] {ClitorisSize.ZERO_AVERAGE, ClitorisSize.ONE_BIG};
-		
-		for(ClitorisSize size : sizesAvailable) {
+		for(ClitorisSize size : ClitorisSize.values()) {
 			if(BodyChanging.getTarget().getVaginaClitorisSize() == size) {
 				contentSB.append(
 						"<div class='cosmetics-button active'>"

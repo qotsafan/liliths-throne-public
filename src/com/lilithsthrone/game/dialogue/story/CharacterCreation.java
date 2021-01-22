@@ -1159,6 +1159,10 @@ public class CharacterCreation {
 			return "<div class='container-full-width' style='text-align:center;'>"
 						+ "<i>All of these options can be influenced later on in the game.</i>"
 					+ "</div>"
+					
+					+ CharacterModificationUtils.getAnusCapacityDiv()
+					
+					+ CharacterModificationUtils.getAnusDepthDiv()
 						
 					+ CharacterModificationUtils.getAssSizeDiv()
 					
@@ -1213,6 +1217,8 @@ public class CharacterCreation {
 						+ "</div>"
 	
 							+ CharacterModificationUtils.getVaginaCapacityDiv()
+	
+							+ CharacterModificationUtils.getVaginaDepthDiv()
 							
 							+ CharacterModificationUtils.getLabiaSizeDiv()
 							

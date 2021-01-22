@@ -73,6 +73,7 @@ import com.lilithsthrone.game.character.body.valueEnums.BodyMaterial;
 import com.lilithsthrone.game.character.body.valueEnums.BodySize;
 import com.lilithsthrone.game.character.body.valueEnums.BreastShape;
 import com.lilithsthrone.game.character.body.valueEnums.Capacity;
+import com.lilithsthrone.game.character.body.valueEnums.ClitorisSize;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringModifier;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringPattern;
 import com.lilithsthrone.game.character.body.valueEnums.CupSize;
@@ -3121,15 +3122,15 @@ public class MainControllerInitMethod {
 				}
 				
 				// Clit size:
-//				for(ClitorisSize cs: ClitorisSize.values()) {
-//					id = "CLITORIS_SIZE_"+cs;
-//					if (((EventTarget) MainController.document.getElementById(id)) != null) {
-//						((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
-//							BodyChanging.getTarget().setVaginaClitorisSize(cs.getMedianValue());
-//							Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
-//						}, false);
-//					}
-//				}
+				for(ClitorisSize cs: ClitorisSize.values()) {
+					id = "CLITORIS_SIZE_"+cs;
+					if (((EventTarget) MainController.document.getElementById(id)) != null) {
+						((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+							BodyChanging.getTarget().setVaginaClitorisSize(cs.getMedianValue());
+							Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+						}, false);
+					}
+				}
 
 				id = "CLITORIS_SIZE_INCREASE";
 				if (((EventTarget) MainController.document.getElementById(id)) != null) {
