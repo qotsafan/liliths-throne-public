@@ -186,7 +186,7 @@ public class BreastCrotch implements BodyPartInterface {
 			return UtilText.parse(owner, "<p style='text-align:center;'>Due to the fact that [npc.nameIsFull] incubating eggs in [npc.her] [npc.crotchBoobs],"
 					+ " [style.colourMinorBad("+(getShape()==BreastShape.UDDERS && this.getRows()==0?"it":"they")+" cannot be removed)]!</p>");
 		}
-		
+
 		if(owner.getLegConfiguration().isBipedalPositionedCrotchBoobs()
 				&& Main.getProperties().getUddersLevel()==1
 				&& type!=BreastType.NONE
@@ -196,6 +196,9 @@ public class BreastCrotch implements BodyPartInterface {
 		}
 		
 		if (type == getType()) {
+			if(type.equals(BreastType.NONE)) {
+				return UtilText.parse(owner, "<p style='text-align:center;'>[style.colourDisabled([npc.Name] already [npc.verb(lack)] [npc.crotchBoobs], so nothing happens...)]</p>");
+			}
 			return UtilText.parse(owner, "<p style='text-align:center;'>[style.colourDisabled([npc.Name] already [npc.has] the [npc.crotchBoobs] of [npc.a_breastRace], so nothing happens...)]</p>");
 		}
 		
@@ -277,7 +280,7 @@ public class BreastCrotch implements BodyPartInterface {
 			return UtilText.parse(owner, "<p style='text-align:center;'>Due to the fact that [npc.namePos] [npc.crotchBoobs] are incubating eggs,"
 					+ " [style.colourMinorBad("+(getShape()==BreastShape.UDDERS && this.getRows()==0?"its":"their")+" size cannot be reduced past "+CupSize.getMinimumCupSizeForEggIncubation().getCupSizeName()+"-cups)]!</p>");
 		}
-		
+
 		if (sizeChange == 0) {
 			return UtilText.parse(owner, "<p style='text-align:center;'>[style.colourDisabled(The size of [npc.namePos] [npc.crotchBoobs] doesn't change...)]</p>");
 		}
@@ -515,9 +518,11 @@ public class BreastCrotch implements BodyPartInterface {
 	}
 
 	public boolean isFuckable() {
-		return nipples.getOrificeNipples().getCapacity() != Capacity.ZERO_IMPENETRABLE && size >= CupSize.getMinimumCupSizeForPenetration().getMeasurement();
+		return nipples.getOrificeNipples().getCapacity() != Capacity.ZERO_IMPENETRABLE
+				&& size >= CupSize.getMinimumCupSizeForPenetration().getMeasurement()
+				&& Main.game.isNipplePenEnabled();
 	}
-	
+
 	public boolean isAbleToIncubateEggs() {
 		return this.size>=CupSize.getMinimumCupSizeForEggIncubation().getMeasurement();
 	}

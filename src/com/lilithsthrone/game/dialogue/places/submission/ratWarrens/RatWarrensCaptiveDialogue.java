@@ -157,7 +157,7 @@ public class RatWarrensCaptiveDialogue {
 				sexIntroTextPath = nodePathSex;
 				responseTitle = "Ride cock";
 				responseDescription = "Do as your Master says and ride his cock...";
-				if(Main.game.getPlayer().isTaur()) {
+				if(Main.game.getPlayer().isTaur() || !Main.game.getPlayer().hasLegs()) {
 					position = SexPosition.LYING_DOWN;
 					if(Main.game.getPlayer().hasVagina()) {
 						murkSexInfo = new Value<>(SexSlotLyingDown.LYING_DOWN, new SexType(SexParticipantType.NORMAL, SexAreaPenetration.PENIS, SexAreaOrifice.VAGINA));
@@ -200,7 +200,7 @@ public class RatWarrensCaptiveDialogue {
 				
 			} else if(stage>=4) {
 				sexIntroTextPath = nodePathSex;
-				if(Main.game.getPlayer().isTaur()) {
+				if(Main.game.getPlayer().isTaur() || !Main.game.getPlayer().hasLegs()) {
 					responseTitle = "Humped";
 					responseDescription = "Do as your Master says and present yourself to him so that he can give you a good humping...";
 					position = SexPosition.ALL_FOURS;
@@ -236,8 +236,6 @@ public class RatWarrensCaptiveDialogue {
 				playerSlot = SexSlotAllFours.ALL_FOURS;
 			}
 		}
-		
-		
 		
 		return new ResponseSex(
 				responseTitle,
@@ -2367,33 +2365,34 @@ public class RatWarrensCaptiveDialogue {
 		}
 		@Override
 		public String getContent() {
-			return UtilText.parseFromXMLFile("places/submission/ratWarrens/captive", "CAPTIVE_DAY_3_AFTERNOON_END");
+			return UtilText.parseFromXMLFile("places/submission/ratWarrens/captive", "CAPTIVE_DAY_3_AFTERNOON_END_SUBMIT");
 		}
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index==1) {
+				boolean allFours = Main.game.getPlayer().isTaur() || !Main.game.getPlayer().hasLegs();
 				return new ResponseSex(
-						Main.game.getPlayer().isTaur()
+						allFours
 							?"Present yourself"
 							:"Spread legs",
-						(Main.game.getPlayer().isTaur()
+						(allFours
 							?"Present your pussy to your Master and tell him that his cock is your one true love!"
 							:"Spread your legs for your Master and tell him that his cock is your one true love!")
 							+ getObedienceResponseDescription(25),
 						true,
 						false,
 						getBasicSexManager(
-								Main.game.getPlayer().isTaur()
+								allFours
 									?SexPosition.ALL_FOURS
 									:SexPosition.LYING_DOWN,
 								Util.newHashMapOfValues(new Value<>(getMurk(),
-										Main.game.getPlayer().isTaur()
+										allFours
 											?SexSlotAllFours.HUMPING
 											:(Main.game.getPlayer().isVisiblyPregnant()
 												?SexSlotLyingDown.MISSIONARY
 												:SexSlotLyingDown.MATING_PRESS))),
 								Util.newHashMapOfValues(new Value<>(Main.game.getPlayer(),
-										Main.game.getPlayer().isTaur()
+										allFours
 											?SexSlotAllFours.ALL_FOURS
 											:SexSlotLyingDown.LYING_DOWN)),
 								new SexType(SexParticipantType.NORMAL, SexAreaPenetration.PENIS, Main.game.getPlayer().hasVagina()?SexAreaOrifice.VAGINA:SexAreaOrifice.ANUS),
@@ -2414,7 +2413,7 @@ public class RatWarrensCaptiveDialogue {
 											:PenisAnus.PENIS_FUCKING_START,
 										false,
 										true),
-								Main.game.getPlayer().isTaur()
+								allFours
 									?null
 									:new InitialSexActionInformation(getMurk(),
 											Main.game.getPlayer(),
@@ -2432,7 +2431,7 @@ public class RatWarrensCaptiveDialogue {
 						Main.sex.incrementNumberOfOrgasms(Main.game.getPlayer(), 1);
 						if(Main.game.getPlayer().hasPenis()) {
 							Main.game.getPlayer().applyOrgasmCumEffect();
-							if(!Main.game.getPlayer().isTaur()) {
+							if(!allFours) {
 								Main.game.getPlayer().addDirtySlot(InventorySlot.CHEST);
 							}
 						}
@@ -2644,6 +2643,9 @@ public class RatWarrensCaptiveDialogue {
 		}
 		@Override
 		public Response getResponse(int responseTab, int index) {
+			if(index==1) {
+				return new Response("The End...", "[style.italicsBadEnd(With this end to your journey, the thread of prophecy is severed. Restore a saved game to restore the weave of fate, or persist in the doomed world you have created.)]", null);
+			}
 			return null;
 		}
 	};
@@ -2664,7 +2666,7 @@ public class RatWarrensCaptiveDialogue {
 
 			sb.append(UtilText.parseFromXMLFile("places/submission/ratWarrens/captive", "CAPTIVE_GIVE_BIRTH"));
 			
-			if(Main.game.getPlayer().getVaginaType().isEggLayer()) {
+			if(Main.game.getPlayer().isVaginaEggLayer()) {
 				sb.append(UtilText.parseFromXMLFile("places/submission/ratWarrens/captive", "CAPTIVE_GIVE_BIRTH_END_EGGS"));
 			} else {
 				sb.append(UtilText.parseFromXMLFile("places/submission/ratWarrens/captive", "CAPTIVE_GIVE_BIRTH_END"));
@@ -2675,7 +2677,7 @@ public class RatWarrensCaptiveDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index==1) {
-				if(Main.game.getPlayer().getVaginaType().isEggLayer()) {
+				if(Main.game.getPlayer().isVaginaEggLayer()) {
 					return new Response("Protect the eggs!", "Protect your eggs from these rats!", CAPTIVE_GIVE_BIRTH_PROTECT_THE_EGGS) {
 						@Override
 						public void effects() {
@@ -2917,18 +2919,18 @@ public class RatWarrensCaptiveDialogue {
 				};
 				
 			} else if(index==2) {
-				if(!Main.game.getPlayer().hasPerkAnywhereInTree(Perk.CONVINCING_REQUESTS) && !isPlayerObeyingOrders(false)) {
+				if(!Main.game.getPlayer().hasTraitActivated(Perk.CONVINCING_REQUESTS) && !isPlayerObeyingOrders(false)) {
 					return new Response("Seduce",
 							UtilText.parse(getMurk(),
 									"You aren't convincing enough at seduction to attempt to trick [npc.name] into taking your collar off..."
-									+ "<br/>[style.italicsMinorBad(Requires the '"+Perk.CONVINCING_REQUESTS.getName(Main.game.getPlayer())+"' perk.)]"),
+									+ "<br/>[style.italicsMinorBad(Requires the '"+Perk.CONVINCING_REQUESTS.getName(Main.game.getPlayer())+"' trait to be active.)]"),
 							null);
 				}
 				return new Response("Seduce",
 						isPlayerObeyingOrders(false)
 							?"Tell Murk that you're so desperate for sex that you can't sleep..."
 							:"Tell Murk that you're desperate for sex in an attempt to trick him into taking your collar off..."
-								+ "<br/>[style.italicsMinorGood(Unlocked from having the '"+Perk.CONVINCING_REQUESTS.getName(Main.game.getPlayer())+"' perk.)]",
+								+ "<br/>[style.italicsMinorGood(Unlocked from having the '"+Perk.CONVINCING_REQUESTS.getName(Main.game.getPlayer())+"' trait activated.)]",
 						CAPTIVE_CALL_OUT_RELEASED) {
 					@Override
 					public void effects() {
@@ -3244,7 +3246,7 @@ public class RatWarrensCaptiveDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index==1) {
-				return new Response("Follow", "Join Shadow and SIlence in following Constable Adams to the nearest Enforcer post.", RatWarrensDialogue.POST_CAPTIVITY_SWORD_RAID) {
+				return new Response("Follow", "Join Shadow and Silence in following Constable Adams to the nearest Enforcer post.", RatWarrensDialogue.POST_CAPTIVITY_SWORD_RAID) {
 					@Override
 					public void effects() {
 						Main.game.getPlayer().setLocation(WorldType.SUBMISSION, PlaceType.SUBMISSION_RAT_WARREN);

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.lilithsthrone.game.inventory.AbstractCoreItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.events.EventTarget;
 
@@ -114,6 +113,7 @@ import com.lilithsthrone.game.character.effects.StatusEffect;
 import com.lilithsthrone.game.character.effects.TreeEntry;
 import com.lilithsthrone.game.character.fetishes.Fetish;
 import com.lilithsthrone.game.character.fetishes.FetishDesire;
+import com.lilithsthrone.game.character.fetishes.FetishPreference;
 import com.lilithsthrone.game.character.gender.Gender;
 import com.lilithsthrone.game.character.gender.PronounType;
 import com.lilithsthrone.game.character.markings.AbstractTattooType;
@@ -147,6 +147,7 @@ import com.lilithsthrone.game.dialogue.DialogueNodeType;
 import com.lilithsthrone.game.dialogue.companions.CompanionManagement;
 import com.lilithsthrone.game.dialogue.companions.OccupantManagementDialogue;
 import com.lilithsthrone.game.dialogue.npcDialogue.elemental.ElementalDialogue;
+import com.lilithsthrone.game.dialogue.places.dominion.cityHall.CityHall;
 import com.lilithsthrone.game.dialogue.places.dominion.lilayashome.Library;
 import com.lilithsthrone.game.dialogue.places.dominion.lilayashome.LilayaMilkingRoomDialogue;
 import com.lilithsthrone.game.dialogue.places.dominion.lilayashome.RoomPlayer;
@@ -171,9 +172,12 @@ import com.lilithsthrone.game.dialogue.utils.OptionsDialogue;
 import com.lilithsthrone.game.dialogue.utils.PhoneDialogue;
 import com.lilithsthrone.game.dialogue.utils.SpellManagement;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
+import com.lilithsthrone.game.inventory.AbstractCoreItem;
+import com.lilithsthrone.game.inventory.AbstractSetBonus;
 import com.lilithsthrone.game.inventory.ColourReplacement;
 import com.lilithsthrone.game.inventory.InventorySlot;
 import com.lilithsthrone.game.inventory.ItemTag;
+import com.lilithsthrone.game.inventory.SetBonus;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothingType;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
@@ -227,10 +231,10 @@ import javafx.stage.FileChooser;
 
 /**
  * This method was causing MainController to lag out Eclipse, so I moved it to a separate file.
- * 
+ *
  * @since 0.2.5
- * @version 0.3.7
- * @author Innoxia
+ * @version 0.4.2
+ * @author Innoxia, Maxis
  */
 public class MainControllerInitMethod {
 
@@ -304,7 +308,7 @@ public class MainControllerInitMethod {
 				|| Main.game.getCurrentDialogueNode().equals(PhoneDialogue.CONTACTS_CHARACTER)
 				|| Main.game.getCurrentDialogueNode().equals(PhoneDialogue.CHARACTER_APPEARANCE)
 				|| Main.game.getCurrentDialogueNode().equals(CompanionManagement.SLAVE_MANAGEMENT_INSPECT)) {
-			GameCharacter character = 
+			GameCharacter character =
 					Main.game.getCurrentDialogueNode().equals(PhoneDialogue.CHARACTER_APPEARANCE)
 						? Main.game.getPlayer()
 						: (Main.game.getCurrentDialogueNode().equals(CompanionManagement.SLAVE_MANAGEMENT_INSPECT)
@@ -524,7 +528,28 @@ public class MainControllerInitMethod {
 				}, false);
 			}
 		}
-		
+
+		if(Main.game.getCurrentDialogueNode().equals(DebugDialogue.SPAWN_MENU_SET)) {
+			for(AbstractSetBonus sb : SetBonus.allSetBonuses) {
+				id = "SET_BONUS_"+SetBonus.getIdFromSetBonus(sb);
+				if (((EventTarget) MainController.document.getElementById(id)) != null) {
+					((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+						for(AbstractWeaponType wt : WeaponType.getAllWeapons()) {
+							if(wt.getClothingSet()==sb) {
+								Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation()).getInventory().addWeapon(Main.game.getItemGen().generateWeapon(wt));
+							}
+						}
+						for(AbstractClothingType ct : ClothingType.getAllClothing()) {
+							if(ct.getClothingSet()==sb) {
+								Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation()).getInventory().addClothing(Main.game.getItemGen().generateClothing(ct));
+							}
+						}
+						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+					}, false);
+					
+				}
+			}
+		}
 		
 		
 		
@@ -547,9 +572,9 @@ public class MainControllerInitMethod {
 		
 		
 		// -------------------- Inventory listeners -------------------- //
-		
-		if(Main.game.isStarted()) {
-			
+
+
+		if(Main.game.isStarted() || Main.game.getCurrentDialogueNode().equals(OptionsDialogue.FETISH_PREFERENCE)) {
 			for(Entry<String, TooltipInformationEventListener> entry : Game.informationTooltips.entrySet()) {
 				id = entry.getKey();
 				if (((EventTarget) MainController.document.getElementById(id)) != null) {
@@ -558,8 +583,9 @@ public class MainControllerInitMethod {
 					MainController.addEventListener(MainController.document, id, "mouseenter", entry.getValue(), false);
 				}
 			}
-			
-			
+		}
+		
+		if(Main.game.isStarted()) {
 			id = "";
 			
 			// Gifts:
@@ -851,7 +877,7 @@ public class MainControllerInitMethod {
 						MainController.addEventListener(MainController.document, id, "mousemove", MainController.moveTooltipListener, false);
 						MainController.addEventListener(MainController.document, id, "mouseleave", MainController.hideTooltipListener, false);
 						TooltipInventoryEventListener el2 = new TooltipInventoryEventListener().setItem(entry.getKey(), null, null);
-						MainController.addEventListener(MainController.document, id, "mouseenter", el2, false);	
+						MainController.addEventListener(MainController.document, id, "mouseenter", el2, false);
 					}
 				}
 				id = "FLOOR_MONEY_TRANSFER_SMALL";
@@ -1388,7 +1414,7 @@ public class MainControllerInitMethod {
 
 						boolean unsuitableName = false;
 						if(Main.mainController.getWebEngine().executeScript("document.getElementById('nameInput')")!=null) {
-							 
+							
 							Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenFieldName').innerHTML=document.getElementById('nameInput').value;");
 							if(Main.mainController.getWebEngine().getDocument()!=null) {
 								unsuitableName = Main.mainController.getWebEngine().getDocument().getElementById("hiddenFieldName").getTextContent().length() < 1
@@ -1404,7 +1430,7 @@ public class MainControllerInitMethod {
 								});
 							}
 						}
-							
+						
 					}, false);
 				}
 			}
@@ -1475,7 +1501,7 @@ public class MainControllerInitMethod {
 							}
 							
 						}
-							
+						
 					}, false);
 				}
 
@@ -1519,7 +1545,7 @@ public class MainControllerInitMethod {
 								});
 							}
 						}
-							
+						
 					}, false);
 				}
 
@@ -1559,7 +1585,7 @@ public class MainControllerInitMethod {
 							}
 							
 						}
-							
+						
 					}, false);
 				}
 			}
@@ -1594,7 +1620,7 @@ public class MainControllerInitMethod {
 							}
 							
 						}
-							
+						
 					}, false);
 				}
 				
@@ -2262,7 +2288,7 @@ public class MainControllerInitMethod {
 							}
 							
 						}
-							
+						
 					}, false);
 				}
 			}
@@ -3041,6 +3067,43 @@ public class MainControllerInitMethod {
 					((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
 						BodyChanging.getTarget().setVaginaSquirter(false);
 						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+					}, false);
+				}
+
+				// Vagina hymen:
+				id = "VAGINA_HYMEN_ON";
+				if (((EventTarget) MainController.document.getElementById(id)) != null) {
+					((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+						BodyChanging.getTarget().setHymen(true);
+						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+					}, false);
+				}
+				id = "VAGINA_HYMEN_OFF";
+				if (((EventTarget) MainController.document.getElementById(id)) != null) {
+					((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+						BodyChanging.getTarget().setHymen(false);
+						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+					}, false);
+				}
+				
+
+				// Vagina egg-layer:
+				id = "VAGINA_EGG_LAYER_ON";
+				if (((EventTarget) MainController.document.getElementById(id)) != null) {
+					((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+						if(!BodyChanging.getTarget().isPregnant()) {
+							BodyChanging.getTarget().setVaginaEggLayer(true);
+							Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+						}
+					}, false);
+				}
+				id = "VAGINA_EGG_LAYER_OFF";
+				if (((EventTarget) MainController.document.getElementById(id)) != null) {
+					((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+						if(!BodyChanging.getTarget().isPregnant()) {
+							BodyChanging.getTarget().setVaginaEggLayer(false);
+							Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+						}
 					}, false);
 				}
 				
@@ -4725,10 +4788,8 @@ public class MainControllerInitMethod {
 											
 											BodyChanging.getTarget().setSkinCovering(new Covering(CharacterModificationUtils.getCoveringsToBeApplied().get(bct)), false);
 											
-											if(noCost) {
-												if(bct == BodyCoveringType.HUMAN) {
-													BodyChanging.getTarget().getBody().updateCoverings(false, false, false, true);
-												}
+											if(BodyChanging.getTarget().isPlayer() && bct == BodyCoveringType.HUMAN) { // Start of game should reset skin colourings for all parts
+												BodyChanging.getTarget().getBody().updateCoverings(false, false, false, true);
 											}
 										}
 									}
@@ -4922,6 +4983,29 @@ public class MainControllerInitMethod {
 						}
 					}, false);
 				}
+			}
+			
+			id = "NECK_FLUFF_ON";
+			if (((EventTarget) MainController.document.getElementById(id)) != null) {
+				((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()){
+						@Override
+						public void effects() {
+							BodyChanging.getTarget().setNeckFluff(true);
+						}
+					});
+				}, false);
+			}
+			id = "NECK_FLUFF_OFF";
+			if (((EventTarget) MainController.document.getElementById(id)) != null) {
+				((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()){
+						@Override
+						public void effects() {
+							BodyChanging.getTarget().setNeckFluff(false);
+						}
+					});
+				}, false);
 			}
 			
 			for(HairStyle hairStyle: HairStyle.values()) {
@@ -5482,13 +5566,13 @@ public class MainControllerInitMethod {
 
 				// Clothing pattern selection:
 				for(Pattern pattern : Pattern.getAllPatterns()) {
-					id = "ITEM_PATTERN_"+pattern.getName();
+					id = "ITEM_PATTERN_"+pattern.getId();
 					
 					if (((EventTarget) MainController.document.getElementById(id)) != null) {
 						
 						((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
-							if(InventoryDialogue.dyePreviewPattern != pattern.getName()){
-								InventoryDialogue.dyePreviewPattern = pattern.getName();
+							if(!InventoryDialogue.dyePreviewPattern.equals(pattern.getId())){
+								InventoryDialogue.dyePreviewPattern = pattern.getId();
 								Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 							}
 						}, false);
@@ -5678,7 +5762,8 @@ public class MainControllerInitMethod {
 					|| Main.game.getCurrentDialogueNode() == SpellManagement.CHARACTER_SPELLS_EARTH
 					|| Main.game.getCurrentDialogueNode() == SpellManagement.CHARACTER_SPELLS_WATER
 					|| Main.game.getCurrentDialogueNode() == SpellManagement.CHARACTER_SPELLS_AIR
-					|| Main.game.getCurrentDialogueNode() == SpellManagement.CHARACTER_SPELLS_FIRE) {
+					|| Main.game.getCurrentDialogueNode() == SpellManagement.CHARACTER_SPELLS_FIRE
+					|| Main.game.getCurrentDialogueNode() == SpellManagement.CHARACTER_SPELLS_MISC) {
 				for(Spell s : Spell.values()) {
 					id = "SPELL_TREE_" + s;
 					if (((EventTarget) MainController.document.getElementById(id)) != null) {
@@ -5820,7 +5905,7 @@ public class MainControllerInitMethod {
 				} else if(Main.game.getCurrentDialogueNode() == ElementalDialogue.ELEMENTAL_PERKS) {
 					character = Main.game.getPlayer().getElemental();
 				}
-						
+				
 				for(int i = 0; i<PerkManager.ROWS; i++) {
 					for(Entry<PerkCategory, List<TreeEntry<PerkCategory, AbstractPerk>>> entry : PerkManager.MANAGER.getPerkTree(character).get(i).entrySet()) {
 						for(TreeEntry<PerkCategory, AbstractPerk> e : entry.getValue()) {
@@ -5846,7 +5931,9 @@ public class MainControllerInitMethod {
 											}
 											Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 											
-										} else if(javaSucks.getPerkPoints()>=1 && PerkManager.MANAGER.isPerkAvailable(javaSucks, e)) {
+										} else if((javaSucks.getPerkPoints()>=1
+													|| javaSucks.getAdditionalPerkCategoryPoints(e.getCategory()) > Math.max(0, javaSucks.getPerksInCategory(e.getCategory())-PerkManager.getInitialPerkCount(javaSucks, e.getCategory())))
+												&& PerkManager.MANAGER.isPerkAvailable(javaSucks, e)) {
 											if(javaSucks.addPerk(e.getRow(), e.getEntry())) {
 												if(e.getEntry().isEquippableTrait() && javaSucks.getTraits().size()<GameCharacter.MAX_TRAITS) {
 													javaSucks.addTrait(e.getEntry());
@@ -6051,6 +6138,46 @@ public class MainControllerInitMethod {
 			}
 		}
 		
+		// NPC Fetish spawn preferences:
+		if (Main.game.getCurrentDialogueNode() == OptionsDialogue.FETISH_PREFERENCE) {
+			for (Fetish f : Fetish.values()) {
+				if(!Main.game.isPenetrationLimitationsEnabled() && f == Fetish.FETISH_SIZE_QUEEN) {
+					continue;
+				}
+				if(!Main.game.isNonConEnabled() && (f == Fetish.FETISH_NON_CON_DOM || f == Fetish.FETISH_NON_CON_SUB)) {
+					continue;
+				}
+				if(!Main.game.isIncestEnabled() && f == Fetish.FETISH_INCEST) {
+					continue;
+				}
+				if(!Main.game.isLactationContentEnabled() && (f == Fetish.FETISH_LACTATION_OTHERS || f == Fetish.FETISH_LACTATION_SELF)) {
+					continue;
+				}
+				if(!Main.game.isAnalContentEnabled() && (f == Fetish.FETISH_ANAL_GIVING || f == Fetish.FETISH_ANAL_RECEIVING)) {
+					continue;
+				}
+				if(!Main.game.isFootContentEnabled() && (f == Fetish.FETISH_FOOT_GIVING || f == Fetish.FETISH_FOOT_RECEIVING)) {
+					continue;
+				}
+				for(FetishPreference preference : FetishPreference.values()) {
+					id=preference+"_"+f;
+					if (((EventTarget) MainController.document.getElementById(id)) != null) {
+						((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+							Main.getProperties().fetishPreferencesMap.put(f, preference.getValue());
+							Main.saveProperties();
+							Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+						}, false);
+					MainController.addEventListener(MainController.document, id, "mousemove", MainController.moveTooltipListener, false);
+					MainController.addEventListener(MainController.document, id, "mouseleave", MainController.hideTooltipListener, false);
+					TooltipInformationEventListener el = new TooltipInformationEventListener().setInformation(
+							Util.capitaliseSentence(preference.getName()),
+							preference.getTooltip());
+							MainController.addEventListener(MainController.document, id, "mouseenter", el, false);
+					}
+				}
+			}
+		}
+		
 		// Age preferences:
 		if (Main.game.getCurrentDialogueNode() == OptionsDialogue.AGE_PREFERENCE) {
 			for (AgeCategory ageCat : AgeCategory.values()) {
@@ -6072,7 +6199,7 @@ public class MainControllerInitMethod {
 		if (Main.game.getCurrentDialogueNode() == OptionsDialogue.FURRY_PREFERENCE) {
 			
 			for(AbstractSubspecies s : Subspecies.getAllSubspecies()) {
-				id="SUBSPECIES_PREFERNCE_INFO_"+Subspecies.getIdFromSubspecies(s);
+				id="SUBSPECIES_PREFERENCE_INFO_"+Subspecies.getIdFromSubspecies(s);
 
 				if (((EventTarget) MainController.document.getElementById(id)) != null) {
 					MainController.addEventListener(MainController.document, id, "mousemove", MainController.moveTooltipListener, false);
@@ -6550,10 +6677,12 @@ public class MainControllerInitMethod {
 					new Value<>("THUMBNAIL", PropertyValue.thumbnail),
 					new Value<>("SILLY", PropertyValue.sillyMode),
 					new Value<>("WEATHER_INTERRUPTION", PropertyValue.weatherInterruptions),
+					new Value<>("DIALOGUE_COPY", PropertyValue.automaticDialogueCopy),
 					new Value<>("AUTO_SEX_CLOTHING_STRIP", PropertyValue.autoSexStrip),
 					new Value<>("AUTO_SEX_CLOTHING_MANAGEMENT", PropertyValue.autoSexClothingManagement),
 					new Value<>("NON_CON", PropertyValue.nonConContent),
 					new Value<>("SADISTIC_SEX", PropertyValue.sadisticSexContent),
+					new Value<>("FERAL", PropertyValue.feralContent),
 					new Value<>("VOLUNTARY_NTR", PropertyValue.voluntaryNTR),
 					new Value<>("INVOLUNTARY_NTR", PropertyValue.involuntaryNTR),
 					new Value<>("INCEST", PropertyValue.incestContent),
@@ -6565,9 +6694,12 @@ public class MainControllerInitMethod {
 					new Value<>("ANAL", PropertyValue.analContent),
 					new Value<>("GAPE", PropertyValue.gapeContent),
 					new Value<>("PENETRATION_LIMITATION", PropertyValue.penetrationLimitations),
+					new Value<>("PENETRATION_LIMITATION_DYNAMIC", PropertyValue.elasticityAffectDepth),
 					new Value<>("FOOT", PropertyValue.footContent),
+					new Value<>("ARMPIT", PropertyValue.armpitContent),
 					new Value<>("FUTA_BALLS", PropertyValue.futanariTesticles),
 					new Value<>("CLOACA", PropertyValue.bipedalCloaca),
+					new Value<>("VESTIGIAL_MULTI_BREAST", PropertyValue.vestigialMultiBreasts),
 					new Value<>("COMPANION", PropertyValue.companionContent),
 					new Value<>("BAD_END", PropertyValue.badEndContent),
 					new Value<>("AGE", PropertyValue.ageContent),
@@ -7058,7 +7190,7 @@ public class MainControllerInitMethod {
 		
 		// Save/load:
 		if (Main.game.getCurrentDialogueNode() == OptionsDialogue.SAVE_LOAD) {
-			for (File f : Main.getSavedGames()) {
+			for (File f : Main.getSavedGames(false)) {
 				String fileIdentifier = Util.getFileIdentifier(f);
 				String fileName = Util.getFileName(f);
 				
@@ -7230,7 +7362,7 @@ public class MainControllerInitMethod {
 							Main.game.flashMessage(PresetColour.GENERIC_BAD, "Import Failed!");
 						}
 						
-							
+						
 					}, false);
 				}
 			}
@@ -7261,6 +7393,46 @@ public class MainControllerInitMethod {
 								UtilText.parse(npc, "You don't have a slaver license, so you're unable to big on any slaves!"));
 						MainController.addEventListener(MainController.document, id, "mouseenter", el, false);
 					}
+				}
+			}
+		}
+		
+		// Lodger import:
+		if (Main.game.getCurrentDialogueNode() == CityHall.LODGER_IMPORT) {
+			for (File f : Main.getSlavesForImport()) {
+				String fileIdentifier = Util.getFileIdentifier(f);
+				String fileName = Util.getFileName(f);
+				
+				if (((EventTarget) MainController.document.getElementById("import_lodger_" + fileIdentifier )) != null) {
+					((EventTarget) MainController.document.getElementById("import_lodger_" + fileIdentifier )).addEventListener("click", e -> {
+						try {
+							Game.importCharacterAsLodger(fileName);
+							MainController.updateUI();
+							Main.game.flashMessage(PresetColour.GENERIC_GOOD, "Imported Character!");
+						
+						} catch(Exception ex) {
+							Main.game.flashMessage(PresetColour.GENERIC_BAD, "Import Failed!");
+						}
+					}, false);
+				}
+			}
+		}
+		if (Main.game.getCurrentDialogueNode() == CityHall.CITY_HALL_WAITING_AREA_LODGER_LIST) {
+			for (NPC npc : Main.game.getCharactersPresent()) {
+				id = npc.getId()+"_LODGER";
+				if (((EventTarget) MainController.document.getElementById(id)) != null) {
+					((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+						CityHall.setupLodger(npc);
+						Main.game.setContent(new Response("", "", CityHall.CITY_HALL_APPROACH_LODGER));
+					}, false);
+					
+					MainController.addEventListener(MainController.document, id, "mousemove", MainController.moveTooltipListener, false);
+					MainController.addEventListener(MainController.document, id, "mouseleave", MainController.hideTooltipListener, false);
+
+					TooltipInformationEventListener el =  new TooltipInformationEventListener().setInformation(
+							UtilText.parse(npc, "Find [npc.name]"),
+							UtilText.parse(npc, "Look around the waiting area and see if you can find [npc.name]..."));
+					MainController.addEventListener(MainController.document, id, "mouseenter", el, false);
 				}
 			}
 		}
@@ -7306,9 +7478,6 @@ public class MainControllerInitMethod {
 							AbstractCoreItem abstractItem = lEnch.getSuitableItem();
 							EnchantmentDialogue.initModifiers(abstractItem);
 							EnchantmentDialogue.getEffects().clear();
-							for(ItemEffect ie : abstractItem.getEffects()) {
-								EnchantmentDialogue.addEffect(ie);
-							}
 							for(ItemEffect ie : lEnch.getEffects()) {
 								EnchantmentDialogue.addEffect(ie);
 							}
@@ -7545,7 +7714,7 @@ public class MainControllerInitMethod {
 								case VAGINA:
 									Main.game.getTextEndStringBuilder().append(UtilText.parse(MilkingRoom.getTargetedCharacter(),
 											"Grabbing one of the free tubes connected to the vat of "+fluidOwnerName+" "+fluidName+", you quickly remove the suction device on the end, before screwing on one of the funnel attachments."
-											+ " Guiding the end of the tube between your [pc.legs+], you waste no time in sliding the funnel into your [pc.pussy+]."
+											+ " Guiding the end of the tube #IF(pc.hasLegs())between your [pc.legs+]#ELSEto your groin#ENDIF, you waste no time in sliding the funnel into your [pc.pussy+]."
 											+ " Flicking the switch on the side of the vat from 'suck' to 'pump', you then press the start button, letting out a delighted [pc.moan] as you feel the "+fluidName+" being pumped"
 												+(MilkingRoom.getTargetedCharacter().isVisiblyPregnant()
 													?" into your [pc.pussy]."
@@ -7582,7 +7751,9 @@ public class MainControllerInitMethod {
 								case VAGINA:
 									Main.game.getTextEndStringBuilder().append(UtilText.parse(MilkingRoom.getTargetedCharacter(),
 											"Wanting to pump [npc.namePos] [npc.pussy+] full of "+fluidOwnerName+" "+fluidName+", you instruct [npc.herHim] to"
-												+ (!MilkingRoom.getTargetedCharacter().isTaur() && MilkingRoom.getTargetedCharacter().getGenitalArrangement()==GenitalArrangement.NORMAL
+												+ (!MilkingRoom.getTargetedCharacter().isTaur()
+													&& MilkingRoom.getTargetedCharacter().hasLegs()
+													&& MilkingRoom.getTargetedCharacter().getGenitalArrangement()==GenitalArrangement.NORMAL
 														?" sit down on a nearby chair and spread [npc.her] [npc.legs]."
 														:" kneel down and present [npc.herself] to you.")
 												+ " As soon as [npc.she] complies, and [npc.her] [npc.pussy+] is fully on display, you grab one of the free tubes connected to your selected vat of fluid,"

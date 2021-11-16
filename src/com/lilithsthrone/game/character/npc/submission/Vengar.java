@@ -3,6 +3,7 @@ package com.lilithsthrone.game.character.npc.submission;
 import java.time.Month;
 import java.util.List;
 
+import com.lilithsthrone.rendering.Pattern;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -163,7 +164,7 @@ public class Vengar extends NPC {
 		this.setSkinCovering(new Covering(BodyCoveringType.RAT_FUR, PresetColour.COVERING_BROWN_DARK), true);
 		this.setSkinCovering(new Covering(BodyCoveringType.RAT_SKIN, PresetColour.SKIN_PINK_LIGHT), true);
 		this.setSkinCovering(new Covering(BodyCoveringType.HUMAN, PresetColour.SKIN_OLIVE), true);
-		this.setSkinCovering(new Covering(BodyCoveringType.PENIS, PresetColour.SKIN_PINK_LIGHT), false);
+		this.setSkinCovering(new Covering(BodyCoveringType.PENIS, PresetColour.SKIN_PINK_PALE), false);
 		this.setHairCovering(new Covering(BodyCoveringType.HAIR_RAT_FUR, PresetColour.COVERING_BROWN_DARK), false);
 		this.setHairLength(0);
 		this.setHairStyle(HairStyle.NONE);
@@ -315,7 +316,7 @@ public class Vengar extends NPC {
 			this.isAbleToBeDisplaced(this.getClothingInSlot(InventorySlot.TORSO_UNDER), DisplacementType.UNBUTTONS, true, true, this);
 			
 			AbstractClothing cargo = Main.game.getItemGen().generateClothing("innoxia_leg_cargo_trousers", PresetColour.CLOTHING_BLACK, false);
-			cargo.setPattern("multi_camo");
+			cargo.setPattern(Pattern.getPatternIdByName("multi_camo"));
 			cargo.setPatternColour(0, PresetColour.CLOTHING_BLACK);
 			cargo.setPatternColour(1, PresetColour.CLOTHING_BLACK_JET);
 			cargo.setPatternColour(2, PresetColour.CLOTHING_GREY);

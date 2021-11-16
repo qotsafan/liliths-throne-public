@@ -40,10 +40,10 @@ public enum OrificePlasticity {
 			"[style.colourPlasticity(slowly recover almost all of their original capacity)]",
 			3, 0.1f, 2/(60*60f*4), PresetColour.GENERIC_SIZE_FOUR),
 
-	/**Normal value, along with THREE_RESILIENT. Will very slowly return to starting value after sex, at a rate of 2 cm per 12 hours.*/
+	/**Normal value, along with THREE_RESILIENT. Will recover about 98% of its original size after sex, at a rate of 2 cm per 12 hours.*/
 	FOUR_ACCOMMODATING("accommodating",
-			"[style.colourPlasticity(very slowly recovers most of its original capacity)]",
-			"[style.colourPlasticity(very slowly recover most of their original capacity)]",
+			"[style.colourPlasticity(very slowly recovers [style.italicsMinorBad(most)] of its original capacity)]",
+			"[style.colourPlasticity(very slowly recover [style.italicsMinorBad(most)] of their original capacity)]",
 			4, 0.15f, 2/(60*60f*12), PresetColour.GENERIC_SIZE_FIVE),
 
 	/*-------STRETCHY:---------*/

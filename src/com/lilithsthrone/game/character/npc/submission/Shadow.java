@@ -102,9 +102,11 @@ public class Shadow extends NPC {
 			equipClothing(EquipClothingSetting.getAllClothingSettings());
 			this.addPersonalityTrait(PersonalityTrait.SLOVENLY);
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.6")
-				&& !this.hasItemType(ItemType.RESONANCE_STONE)) {
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.6") && !this.hasItemType(ItemType.RESONANCE_STONE)) {
 			this.addItem(Main.game.getItemGen().generateItem(ItemType.RESONANCE_STONE), false);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.2.1")) {
+			this.setupPerks(true);
 		}
 	}
 
@@ -115,7 +117,9 @@ public class Shadow extends NPC {
 		this.addSpecialPerk(Perk.SPECIAL_SLUT);
 		
 		PerkManager.initialisePerks(this,
-				Util.newArrayListOfValues(Perk.BESERK),
+				Util.newArrayListOfValues(
+						Perk.BESERK,
+						Perk.UNARMED_TRAINING),
 				Util.newHashMapOfValues(
 						new Value<>(PerkCategory.PHYSICAL, 1),
 						new Value<>(PerkCategory.LUST, 0),
@@ -228,7 +232,7 @@ public class Shadow extends NPC {
 		this.setVaginaCapacity(Capacity.FOUR_LOOSE, true);
 		this.setVaginaWetness(Wetness.THREE_WET);
 		this.setVaginaElasticity(OrificeElasticity.THREE_FLEXIBLE.getValue());
-		this.setVaginaPlasticity(OrificePlasticity.THREE_RESILIENT.getValue());
+		this.setVaginaPlasticity(OrificePlasticity.FOUR_ACCOMMODATING.getValue());
 		
 		// Feet:
 //		this.setFootStructure(FootStructure.PLANTIGRADE);
@@ -293,7 +297,7 @@ public class Shadow extends NPC {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("As her adopted name, 'Shadow', suggests, this sneaky rat-girl is an unrivalled expert at sneaking around and remaining unseen when moving by cover of darkness."
-				+ " Her considerable stealth skills are greatly enhanced by the fact that she has pitch-black fur and ebony skin, making her nigh impossible to spot when in a poorly-illumanted area.");
+				+ " Her considerable stealth skills are greatly enhanced by the fact that she has pitch-black fur and ebony skin, making her nigh impossible to spot when in a poorly-illuminated area.");
 
 		sb.append("<br/>"
 				+ "While her lust is not quite as insatiable as her companion, Silence, Shadow does often find herself feeling extremely horny,"

@@ -118,18 +118,14 @@ public class Natalya extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.7.5")) {
 			this.setLocation(WorldType.DOMINION_EXPRESS, PlaceType.DOMINION_EXPRESS_OFFICE_STABLE, true);
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.7.8")) {
-			this.setEyeCovering(new Covering(BodyCoveringType.EYE_DEMON_COMMON, PresetColour.EYE_GREY_GREEN));
-			this.setHeight(172);
-		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.8")) {
 			this.equipMainWeaponFromNowhere(Main.game.getItemGen().generateWeapon("innoxia_bdsm_riding_crop", DamageType.PHYSICAL));
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.8.5")) {
-			this.setTesticleCount(2);
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.20")) {
+			this.setStartingBody(false);
 		}
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.10")) {
-			this.setSkinCovering(new Covering(BodyCoveringType.HORSE_HAIR, PresetColour.COVERING_BLACK), true);
+		if(this.getClothingInSlot(InventorySlot.LEG)==null) {
+			this.equipClothing(EquipClothingSetting.getAllClothingSettings());
 		}
 	}
 
@@ -172,6 +168,7 @@ public class Natalya extends NPC {
 		this.setWingType(WingType.NONE);
 		this.setHornType(HornType.STRAIGHT);
 		this.setHornLength(HornLength.ZERO_TINY.getMedianValue());
+		this.setLegType(LegType.DEMON_HORSE_HOOFED);
 		this.setLegConfiguration(LegType.DEMON_HORSE_HOOFED, LegConfiguration.QUADRUPEDAL, true);
 		this.setBreastCrotchType(BreastType.NONE);
 		
@@ -326,7 +323,7 @@ public class Natalya extends NPC {
 	
 	@Override
 	public boolean isAbleToBeImpregnated() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -359,7 +356,7 @@ public class Natalya extends NPC {
 	}
 	
 	@Override
-	public SexActionOrgasmOverride getSexActionOrgasmOverride(SexActionInterface sexAction, OrgasmCumTarget target, boolean applyExtraEffects) {
+	public SexActionOrgasmOverride getSexActionOrgasmOverride(SexActionInterface sexAction, OrgasmCumTarget target, boolean applyExtraEffects, String description) {
 		if(this.getLocationPlace().getPlaceType()==PlaceType.SLAVER_ALLEY_SCARLETTS_SHOP) { // Scene in alleyway behind Helena's shop:
 			StringBuilder sb = new StringBuilder();
 //			sb.append(GenericOrgasms.getGenericOrgasmDescription(sexAction, this, target));
@@ -392,7 +389,7 @@ public class Natalya extends NPC {
 			};
 		}
 		
-		return super.getSexActionOrgasmOverride(sexAction, target, applyExtraEffects);
+		return super.getSexActionOrgasmOverride(sexAction, target, applyExtraEffects, description);
 	}
 	
 	public String getDirtyTalk() {
@@ -434,7 +431,7 @@ public class Natalya extends NPC {
 								+ (Main.sex.hasLubricationTypeFromAnyone(characterBeingRevealed, SexAreaOrifice.VAGINA, LubricationType.GIRLCUM)
 										? "[npc.namePos] wet [npc.pussy] betraying [npc.her] arousal, and in a tone of absolute disgust, [npc2.she] snaps, "
 										: "[npc.namePos] [npc.pussy+], and in a tone of absolute disgust, [npc2.she] snaps, ")
-								+ "[npc2.speech(How disgusting! I <i>hate</i> seeing dirty little fuck-holes! I'll have that removed later...)]"));
+								+ "[npc2.speech(How repulsive! I <i>hate</i> seeing dirty little fuck-holes! I'll have that removed later...)]"));
 			sb.append("</p>");
 			
 			return sb.toString();

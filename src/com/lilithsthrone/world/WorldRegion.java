@@ -12,16 +12,18 @@ public enum WorldRegion {
 	// Misc:
 	MISC,
 	OLD_WORLD,
+        FELICIA_APARTMENT,
 	
 	// Cities
 	DOMINION,
+	HARPY_NESTS,
 	SUBMISSION,
 	FIELD_CITY,
 	DESERT_CITY,
 	JUNGLE_CITY,
 	SEA_CITY,
 	
-	// Foloi fields:
+	// Foloi Fields:
 	FIELDS,
 	WOODLAND,
 	RIVER,

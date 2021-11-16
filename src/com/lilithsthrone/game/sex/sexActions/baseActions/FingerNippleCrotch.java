@@ -166,16 +166,16 @@ public class FingerNippleCrotch {
 					UtilText.nodeContentSB.append(" As [npc.name] [npc.verb(start)] pinching [npc2.namePos] [npc2.crotchNipples], a trickle of [npc2.milk] runs down over [npc2.her] [npc2.crotchBoobs+].");
 					break;
 				case FOUR_LARGE_AMOUNT:
-					UtilText.nodeContentSB.append(" [npc2.namePos] [npc2.milk] [npc.verb(start)] to flow out over [npc.namePos] fingertips as [npc.she] greedily milks [npc2.her] [npc2.crotchBoobs+].");
+					UtilText.nodeContentSB.append(" [npc2.NamePos] [npc2.milk] [npc.verb(start)] to flow out over [npc.namePos] fingertips as [npc.she] greedily milks [npc2.her] [npc2.crotchBoobs+].");
 					break;
 				case FIVE_VERY_LARGE_DROOLING:
-					UtilText.nodeContentSB.append(" [npc2.namePos] [npc2.milk] [npc.verb(start)] drooling out over [npc.namePos] fingertips as [npc.she] greedily milks [npc2.her] [npc2.crotchBoobs+].");
+					UtilText.nodeContentSB.append(" [npc2.NamePos] [npc2.milk] [npc.verb(start)] drooling out over [npc.namePos] fingertips as [npc.she] greedily milks [npc2.her] [npc2.crotchBoobs+].");
 					break;
 				case SIX_EXTREME_AMOUNT_DRIPPING:
-					UtilText.nodeContentSB.append(" [npc2.namePos] [npc2.milk] [npc.verb(start)] pouring out over [npc.namePos] fingertips as [npc.she] greedily milks [npc2.her] [npc2.crotchBoobs+].");
+					UtilText.nodeContentSB.append(" [npc2.NamePos] [npc2.milk] [npc.verb(start)] pouring out over [npc.namePos] fingertips as [npc.she] greedily milks [npc2.her] [npc2.crotchBoobs+].");
 					break;
 				case SEVEN_MONSTROUS_AMOUNT_POURING:
-					UtilText.nodeContentSB.append(" [npc2.namePos] [npc2.milk] [npc.verb(start)] pouring out over [npc.namePos] fingertips as [npc.she] greedily milks [npc2.her] [npc2.crotchBoobs+].");
+					UtilText.nodeContentSB.append(" [npc2.NamePos] [npc2.milk] [npc.verb(start)] pouring out over [npc.namePos] fingertips as [npc.she] greedily milks [npc2.her] [npc2.crotchBoobs+].");
 					break;
 				default:
 					break;
@@ -999,7 +999,7 @@ public class FingerNippleCrotch {
 					UtilText.nodeContentSB.append(UtilText.returnStringAtRandom(
 							"Sliding [npc.her] [npc.fingers] out of [npc2.namePos] [npc2.crotchNipple], [npc.name] [npc.verb(give)] [npc2.namePos] [npc2.crotchBoob] one last squeeze as [npc.she] stops fingering [npc2.her] chest.",
 
-							"[npc.Name] sharply [npc.verb(inhale)], breathing in [npc.namePos] [npc.scent+] as before sliding [npc.her] [npc.fingers] out of [npc2.her] [npc2.crotchNipple]."));
+							"[npc.Name] sharply [npc.verb(inhale)], breathing in [npc2.namePos] [npc2.scent+] before sliding [npc.her] [npc.fingers] out of [npc2.her] [npc2.crotchNipple]."));
 					break;
 			}
 			

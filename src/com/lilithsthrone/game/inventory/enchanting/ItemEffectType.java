@@ -2,6 +2,7 @@ package com.lilithsthrone.game.inventory.enchanting;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.effects.StatusEffect;
 import com.lilithsthrone.game.character.fetishes.Fetish;
 import com.lilithsthrone.game.character.fetishes.FetishDesire;
+import com.lilithsthrone.game.character.npc.misc.GenericAndrogynousNPC;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.race.AbstractRace;
@@ -431,6 +433,16 @@ public class ItemEffectType {
 				target.getPotentialPartnersAsMother().removeIf((pp) -> !pp.getFatherId().equals(target.getPregnantLitter().getFatherId()));
 				
 				GameCharacter father = target.getPregnantLitter().getFather();
+				String unknownFatherName = "Unknown!";
+				if(father==null) {
+					try {
+						GameCharacter offspring0 = target.getPregnantLitter().getOffspringCharacters().iterator().next();
+						if(!offspring0.getFatherName().equals("???")) {
+							unknownFatherName = offspring0.getFatherName();
+						}
+					} catch(Exception ex) {
+					}
+				}
 				
 				return "<p>"
 						+ "The digital readout lights up with two parallel red lines, with flashing pink text next to that displaying: '[style.italicsArcane(Pregnant!)]'"
@@ -440,7 +452,7 @@ public class ItemEffectType {
 						+ "<i>"
 						+ "Father: "+(father!=null
 										?father.getNameIgnoresPlayerKnowledge()+" ("+Util.capitaliseSentence(target.getPregnantLitter().getFatherRace().getName(father))+")"
-										:"Unknown!"+" ("+Util.capitaliseSentence(target.getPregnantLitter().getFatherRace().getName(target))+")")+"<br/>"
+										:unknownFatherName+" ("+Util.capitaliseSentence(target.getPregnantLitter().getFatherRace().getName(Main.game.getNpc(GenericAndrogynousNPC.class)))+")")+"<br/>"
 						+ "Litter size: " +target.getPregnantLitter().getTotalLitterCount()+"<br/>"
 						+ "[style.colourFeminine(Daughters)]: " +(target.getPregnantLitter().getDaughtersFromFather()+target.getPregnantLitter().getDaughtersFromMother())+"<br/>"
 						+ "[style.colourMasculine(Sons)]: " +(target.getPregnantLitter().getSonsFromFather()+target.getPregnantLitter().getSonsFromMother())+"<br/>"
@@ -736,6 +748,12 @@ public class ItemEffectType {
 				fetishesToAdd.remove(Fetish.FETISH_FOOT_RECEIVING);
 				fetishesToRemove.remove(Fetish.FETISH_FOOT_GIVING);
 				fetishesToRemove.remove(Fetish.FETISH_FOOT_RECEIVING);
+			}
+			if(!Main.game.isArmpitContentEnabled()) {
+				fetishesToAdd.remove(Fetish.FETISH_ARMPIT_GIVING);
+				fetishesToAdd.remove(Fetish.FETISH_ARMPIT_RECEIVING);
+				fetishesToRemove.remove(Fetish.FETISH_ARMPIT_GIVING);
+				fetishesToRemove.remove(Fetish.FETISH_ARMPIT_RECEIVING);
 			}
 			if(!Main.game.isIncestEnabled()) {
 				fetishesToAdd.remove(Fetish.FETISH_INCEST);
@@ -1067,13 +1085,13 @@ public class ItemEffectType {
 			clothingMap.put(ClothingType.JOLNIR_DRESS, 4);
 			clothingMap.put(ClothingType.JOLNIR_HAT, 4);
 			
-			clothingMap.put(ClothingType.KIMONO_DRESS, 4);
-			clothingMap.put(ClothingType.KIMONO_GETA, 4);
-			clothingMap.put(ClothingType.KIMONO_HAIR_KANZASHI, 4);
+			clothingMap.put(ClothingType.getClothingTypeFromId("innoxia_japanese_kimono"), 4);
+			clothingMap.put(ClothingType.getClothingTypeFromId("innoxia_japanese_geta"), 4);
+			clothingMap.put(ClothingType.getClothingTypeFromId("innoxia_japanese_kanzashi"), 4);
 
-			clothingMap.put(ClothingType.KIMONO_MENS_KIMONO, 4);
-			clothingMap.put(ClothingType.KIMONO_MENS_GETA, 4);
-			clothingMap.put(ClothingType.KIMONO_HAORI, 4);
+			clothingMap.put(ClothingType.getClothingTypeFromId("innoxia_japanese_mens_kimono"), 4);
+			clothingMap.put(ClothingType.getClothingTypeFromId("innoxia_japanese_mens_geta"), 4);
+			clothingMap.put(ClothingType.getClothingTypeFromId("innoxia_japanese_haori"), 4);
 			
 			// 50% chance for consumable, 50% for clothing:
 			if(Math.random()<0.5f) {
@@ -1426,27 +1444,6 @@ public class ItemEffectType {
 	
 	// Essences:
 	
-//	public static AbstractItemEffectType BOTTLED_ESSENCE_ANGEL = new AbstractItemEffectType(Util.newArrayListOfValues(
-//			"[style.boldGood(+1)] [style.boldAngel(Angel)] essence"),
-//			PresetColour.RACE_ANGEL) {
-//		
-//		@Override
-//		public List<TFModifier> getPrimaryModifiers() {
-//			return null;
-//		}
-//
-//		@Override
-//		public List<TFModifier> getSecondaryModifiers(AbstractCoreItem targetItem, TFModifier primaryModifier) {
-//			return null;
-//		}
-//		
-//		@Override
-//		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-//			target.incrementEssenceCount(TFEssence.ANGEL, 1);
-//			return "You have absorbed [style.boldGood(+1)] [style.boldAngel(Angel)] essence!";
-//		}
-//	};
-	
 	public static AbstractItemEffectType BOTTLED_ESSENCE_ARCANE = new AbstractItemEffectType(Util.newArrayListOfValues(
 			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
 			PresetColour.GENERIC_ARCANE) {
@@ -1458,364 +1455,7 @@ public class ItemEffectType {
 		}
 	};
 	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_CAT_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_CAT_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_CAT_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_CAT_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldCat(cat-morphs)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_COW_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_COW_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_COW_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_COW_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldCow(cow-morphs)]!";
-		}
-	};
 
- 	public static AbstractItemEffectType BOTTLED_ESSENCE_SQUIRREL_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_SQUIRREL_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_SQUIRREL_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_SQUIRREL_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldSquirrel(squirrel-morphs)]!";
-		}
-	};
-
- 	public static AbstractItemEffectType BOTTLED_ESSENCE_RAT_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_RAT_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_RAT_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_RAT_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldRat(rat-morphs)]!";
-		}
-	};
-
- 	public static AbstractItemEffectType BOTTLED_ESSENCE_RABBIT_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_RABBIT_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_RABBIT_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_RABBIT_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldRabbit(rabbit-morphs)]!";
-		}
-	};
-
- 	public static AbstractItemEffectType BOTTLED_ESSENCE_BAT_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_BAT_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_BAT_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_BAT_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldBat(bat-morphs)]!";
-		}
-	};
-	
- 	public static AbstractItemEffectType BOTTLED_ESSENCE_ALLIGATOR_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_ALLIGATOR_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_ALLIGATOR_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_ALLIGATOR_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldAlligator(alligator-morphs)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_DEMON = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_DEMON) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_DEMON;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_DEMON, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldDemon(demons)]!";
-		}
-	};
-
-	public static AbstractItemEffectType BOTTLED_ESSENCE_IMP = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_IMP) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_IMP;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_IMP, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldImp(imps)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_DOG_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_DOG_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_DOG_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_DOG_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldDog(dog-morphs)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_HARPY = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_HARPY) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_HARPY;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_HARPY, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldHarpy(harpies)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_HORSE_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_HORSE_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_HORSE_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_HORSE_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldHorse(horse-morphs)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_REINDEER_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_REINDEER_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_REINDEER_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_REINDEER_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldReindeer(reindeer-morphs)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_HUMAN = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_HUMAN) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_HUMAN;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_HUMAN, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldHuman(humans)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_WOLF_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_WOLF_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_WOLF_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_WOLF_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldWolf(wolf-morphs)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_FOX_MORPH = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_FOX_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_FOX_MORPH;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_FOX_MORPH, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldFox(fox-morphs)]!";
-		}
-	};
-	
-	public static AbstractItemEffectType BOTTLED_ESSENCE_SLIME = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldGood(+1)] [style.boldArcane(Arcane essence)]"),
-			PresetColour.RACE_WOLF_MORPH) {
-		@Override
-		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			List<String> list = super.getEffectsDescription(primaryModifier, secondaryModifier, potency, limit, user, target);
-			AbstractStatusEffect se = StatusEffect.COMBAT_BONUS_SLIME;
-			list.add("Applies <i style='color:"+se.getColour().toWebHexString()+";'>'"+Util.capitaliseSentence(se.getName(target))+"'</i>:");
-			for(Entry<AbstractAttribute, Float> entry : se.getAttributeModifiers(target).entrySet()) {
-				list.add("<i>"+entry.getKey().getFormattedValue(entry.getValue())+"</i>");
-			}
-			return list;
-		}
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(1, false);
-			target.addStatusEffect(StatusEffect.COMBAT_BONUS_SLIME, 60*4*60);
-			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldSlime(slimes)]!";
-		}
-	};
-	
-	
 	// Specials:
 	
 	public static AbstractItemEffectType BIMBO_LOLLIPOP = new AbstractItemEffectType(Util.newArrayListOfValues(
@@ -1864,52 +1504,59 @@ public class ItemEffectType {
 			if(target.getHipSize().getValue()<HipSize.FOUR_WOMANLY.getValue()) {
 				sb.append("<br/>" + target.setHipSize(HipSize.FOUR_WOMANLY.getValue()));
 			}
-			if(target.getHairType()!=HairType.HARPY) {
-				sb.append("<br/>" + target.setHairCovering(new Covering(BodyCoveringType.HAIR_HARPY, CoveringPattern.NONE, PresetColour.COVERING_BLEACH_BLONDE, false, PresetColour.COVERING_BLEACH_BLONDE, false), true));
-			}
-			if(target.getTorsoType()!=TorsoType.HARPY) {
-				sb.append("<br/>" + target.setSkinCovering(new Covering(BodyCoveringType.FEATHERS, CoveringPattern.NONE, PresetColour.COVERING_BLEACH_BLONDE, false, PresetColour.COVERING_BLEACH_BLONDE, false), true));
-			}
 			
-			// Harpy TFs:
-			if(target.getFaceType()!=FaceType.HUMAN)
-				sb.append("<br/>" + target.setFaceType(FaceType.HUMAN));
-			if(target.getEarType()!=EarType.HARPY)
-				sb.append("<br/>" + target.setEarType(EarType.HARPY));
-			if(target.getEyeType()!=EyeType.HARPY)
-				sb.append("<br/>" + target.setEyeType(EyeType.HARPY));
-			if(target.getHairType()!=HairType.HARPY)
-				sb.append("<br/>" + target.setHairType(HairType.HARPY));
-			if(target.getTorsoType()!=TorsoType.HUMAN)
-				sb.append("<br/>" + target.setTorsoType(TorsoType.HUMAN));
-
-			if(target.getWingType()!=WingType.NONE)
-				sb.append("<br/>" + target.setWingType(WingType.NONE));
-			if(target.getHornType()!=HornType.NONE)
-				sb.append("<br/>" + target.setHornType(HornType.NONE));
-
-			if(target.getArmType()!=ArmType.HARPY)
-				sb.append("<br/>" + target.setArmType(ArmType.HARPY));
-			if(target.getLegType()!=LegType.HARPY)
-				sb.append("<br/>" + target.setLegType(LegType.HARPY));
-			if(target.getTailType()!=TailType.HARPY)
-				sb.append("<br/>" + target.setTailType(TailType.HARPY));
-
-			if(target.getBreastType()!=BreastType.HARPY)
-				sb.append("<br/>" + target.setBreastType(BreastType.HARPY));
-			if(target.getAssType()!=AssType.HARPY)
-				sb.append("<br/>" + target.setAssType(AssType.HARPY));
-
-			if(target.hasPenisIgnoreDildo()) {
-				sb.append("<br/>" + target.setPenisType(PenisType.HARPY));
-
-				if(target.getPenisRawCumStorageValue()<CumProduction.TWO_SMALL_AMOUNT.getMedianValue()) {
-					sb.append("<br/>" + target.setPenisCumStorage(CumProduction.TWO_SMALL_AMOUNT.getMedianValue()));
-					target.fillCumToMaxStorage();
+			if(!target.isAbleToHaveRaceTransformed()) {
+				sb.append("<br/>");
+				sb.append(UtilText.parse(target, "As [npc.nameIsFull] immune to racial transformations, the lollipop has no further effect!"));
+				
+			} else {
+				if(target.getHairType()!=HairType.HARPY) {
+					sb.append("<br/>" + target.setHairCovering(new Covering(BodyCoveringType.HAIR_HARPY, CoveringPattern.NONE, PresetColour.COVERING_BLEACH_BLONDE, false, PresetColour.COVERING_BLEACH_BLONDE, false), true));
 				}
-			}
-			if(target.hasVagina()) {
-				sb.append("<br/>" + target.setVaginaType(VaginaType.HARPY));
+				if(target.getTorsoType()!=TorsoType.HARPY) {
+					sb.append("<br/>" + target.setSkinCovering(new Covering(BodyCoveringType.FEATHERS, CoveringPattern.NONE, PresetColour.COVERING_BLEACH_BLONDE, false, PresetColour.COVERING_BLEACH_BLONDE, false), true));
+				}
+				
+				// Harpy TFs:
+				if(target.getFaceType()!=FaceType.HUMAN)
+					sb.append("<br/>" + target.setFaceType(FaceType.HUMAN));
+				if(target.getEarType()!=EarType.HARPY)
+					sb.append("<br/>" + target.setEarType(EarType.HARPY));
+				if(target.getEyeType()!=EyeType.HARPY)
+					sb.append("<br/>" + target.setEyeType(EyeType.HARPY));
+				if(target.getHairType()!=HairType.HARPY)
+					sb.append("<br/>" + target.setHairType(HairType.HARPY));
+				if(target.getTorsoType()!=TorsoType.HUMAN)
+					sb.append("<br/>" + target.setTorsoType(TorsoType.HUMAN));
+	
+				if(target.getWingType()!=WingType.NONE)
+					sb.append("<br/>" + target.setWingType(WingType.NONE));
+				if(target.getHornType()!=HornType.NONE)
+					sb.append("<br/>" + target.setHornType(HornType.NONE));
+	
+				if(target.getArmType()!=ArmType.HARPY)
+					sb.append("<br/>" + target.setArmType(ArmType.HARPY));
+				if(target.getLegType()!=LegType.HARPY)
+					sb.append("<br/>" + target.setLegType(LegType.HARPY));
+				if(target.getTailType()!=TailType.HARPY)
+					sb.append("<br/>" + target.setTailType(TailType.HARPY));
+	
+				if(target.getBreastType()!=BreastType.HARPY)
+					sb.append("<br/>" + target.setBreastType(BreastType.HARPY));
+				if(target.getAssType()!=AssType.HARPY)
+					sb.append("<br/>" + target.setAssType(AssType.HARPY));
+	
+				if(target.hasPenisIgnoreDildo()) {
+					sb.append("<br/>" + target.setPenisType(PenisType.HARPY));
+	
+					if(target.getPenisRawCumStorageValue()<CumProduction.TWO_SMALL_AMOUNT.getMedianValue()) {
+						sb.append("<br/>" + target.setPenisCumStorage(CumProduction.TWO_SMALL_AMOUNT.getMedianValue()));
+						target.fillCumToMaxStorage();
+					}
+				}
+				if(target.hasVagina()) {
+					sb.append("<br/>" + target.setVaginaType(VaginaType.HARPY));
+				}
 			}
 			
 			return sb.toString();
@@ -1961,58 +1608,65 @@ public class ItemEffectType {
 			if(target.getHipSize().getValue()<HipSize.THREE_GIRLY.getValue()) {
 				sb.append("<br/>" + target.setHipSize(HipSize.THREE_GIRLY.getValue()));
 			}
-			if(target.getHairType()!=HairType.HARPY) {
-				sb.append("<br/>" + target.setHairCovering(new Covering(BodyCoveringType.HAIR_HARPY, CoveringPattern.NONE, PresetColour.COVERING_PINK, false, PresetColour.COVERING_PINK, false), true));
-			}
-			if(target.getTorsoType()!=TorsoType.HARPY) {
-				sb.append("<br/>" + target.setHairCovering(new Covering(BodyCoveringType.FEATHERS, CoveringPattern.NONE, PresetColour.COVERING_PINK, false, PresetColour.COVERING_PINK, false), true));
-			}
-			
-			// Harpy TFs:
-			if(target.getFaceType()!=FaceType.HUMAN)
-				sb.append("<br/>" + target.setFaceType(FaceType.HUMAN));
-			if(target.getEarType()!=EarType.HARPY)
-				sb.append("<br/>" + target.setEarType(EarType.HARPY));
-			if(target.getEyeType()!=EyeType.HARPY)
-				sb.append("<br/>" + target.setEyeType(EyeType.HARPY));
-			if(target.getHairType()!=HairType.HARPY)
-				sb.append("<br/>" + target.setHairType(HairType.HARPY));
-			if(target.getTorsoType()!=TorsoType.HUMAN)
-				sb.append("<br/>" + target.setTorsoType(TorsoType.HUMAN));
 
-			if(target.getWingType()!=WingType.NONE)
-				sb.append("<br/>" + target.setWingType(WingType.NONE));
-			if(target.getHornType()!=HornType.NONE)
-				sb.append("<br/>" + target.setHornType(HornType.NONE));
-
-			if(target.getArmType()!=ArmType.HARPY)
-				sb.append("<br/>" + target.setArmType(ArmType.HARPY));
-			if(target.getLegType()!=LegType.HARPY)
-				sb.append("<br/>" + target.setLegType(LegType.HARPY));
-			if(target.getTailType()!=TailType.HARPY)
-				sb.append("<br/>" + target.setTailType(TailType.HARPY));
-
-			if(target.getBreastType()!=BreastType.HARPY)
-				sb.append("<br/>" + target.setBreastType(BreastType.HARPY));
-			if(target.getAssType()!=AssType.HARPY)
-				sb.append("<br/>" + target.setAssType(AssType.HARPY));
-			if(target.getAssWetness().getValue()<Wetness.TWO_MOIST.getValue())
-				sb.append("<br/>" + target.setAssWetness(Wetness.TWO_MOIST.getValue()));
+			if(!target.isAbleToHaveRaceTransformed()) {
+				sb.append("<br/>");
+				sb.append(UtilText.parse(target, "As [npc.nameIsFull] immune to racial transformations, the lollipop has no further effect!"));
 				
-
-			if(target.hasPenisIgnoreDildo()) {
-				sb.append("<br/>" + target.setPenisType(PenisType.HARPY));
-
-				if(target.getPenisRawCumStorageValue()<CumProduction.THREE_AVERAGE.getMedianValue()) {
-					sb.append("<br/>" + target.setPenisCumStorage(CumProduction.THREE_AVERAGE.getMedianValue()));
-					target.fillCumToMaxStorage();
+			} else {
+				if(target.getHairType()!=HairType.HARPY) {
+					sb.append("<br/>" + target.setHairCovering(new Covering(BodyCoveringType.HAIR_HARPY, CoveringPattern.NONE, PresetColour.COVERING_PINK, false, PresetColour.COVERING_PINK, false), true));
 				}
-			}
-			if(target.hasVagina()) {
-				sb.append("<br/>" + target.setVaginaType(VaginaType.HARPY));
-
-				if(target.getVaginaWetness().getValue()<Wetness.FOUR_SLIMY.getValue())
-					sb.append("<br/>" + target.setVaginaWetness(Wetness.FOUR_SLIMY.getValue()));
+				if(target.getTorsoType()!=TorsoType.HARPY) {
+					sb.append("<br/>" + target.setHairCovering(new Covering(BodyCoveringType.FEATHERS, CoveringPattern.NONE, PresetColour.COVERING_PINK, false, PresetColour.COVERING_PINK, false), true));
+				}
+				
+				// Harpy TFs:
+				if(target.getFaceType()!=FaceType.HUMAN)
+					sb.append("<br/>" + target.setFaceType(FaceType.HUMAN));
+				if(target.getEarType()!=EarType.HARPY)
+					sb.append("<br/>" + target.setEarType(EarType.HARPY));
+				if(target.getEyeType()!=EyeType.HARPY)
+					sb.append("<br/>" + target.setEyeType(EyeType.HARPY));
+				if(target.getHairType()!=HairType.HARPY)
+					sb.append("<br/>" + target.setHairType(HairType.HARPY));
+				if(target.getTorsoType()!=TorsoType.HUMAN)
+					sb.append("<br/>" + target.setTorsoType(TorsoType.HUMAN));
+	
+				if(target.getWingType()!=WingType.NONE)
+					sb.append("<br/>" + target.setWingType(WingType.NONE));
+				if(target.getHornType()!=HornType.NONE)
+					sb.append("<br/>" + target.setHornType(HornType.NONE));
+	
+				if(target.getArmType()!=ArmType.HARPY)
+					sb.append("<br/>" + target.setArmType(ArmType.HARPY));
+				if(target.getLegType()!=LegType.HARPY)
+					sb.append("<br/>" + target.setLegType(LegType.HARPY));
+				if(target.getTailType()!=TailType.HARPY)
+					sb.append("<br/>" + target.setTailType(TailType.HARPY));
+	
+				if(target.getBreastType()!=BreastType.HARPY)
+					sb.append("<br/>" + target.setBreastType(BreastType.HARPY));
+				if(target.getAssType()!=AssType.HARPY)
+					sb.append("<br/>" + target.setAssType(AssType.HARPY));
+				if(target.getAssWetness().getValue()<Wetness.TWO_MOIST.getValue())
+					sb.append("<br/>" + target.setAssWetness(Wetness.TWO_MOIST.getValue()));
+					
+	
+				if(target.hasPenisIgnoreDildo()) {
+					sb.append("<br/>" + target.setPenisType(PenisType.HARPY));
+	
+					if(target.getPenisRawCumStorageValue()<CumProduction.THREE_AVERAGE.getMedianValue()) {
+						sb.append("<br/>" + target.setPenisCumStorage(CumProduction.THREE_AVERAGE.getMedianValue()));
+						target.fillCumToMaxStorage();
+					}
+				}
+				if(target.hasVagina()) {
+					sb.append("<br/>" + target.setVaginaType(VaginaType.HARPY));
+	
+					if(target.getVaginaWetness().getValue()<Wetness.FOUR_SLIMY.getValue())
+						sb.append("<br/>" + target.setVaginaWetness(Wetness.FOUR_SLIMY.getValue()));
+				}
 			}
 			
 			return sb.toString();
@@ -2061,53 +1715,60 @@ public class ItemEffectType {
 			if(target.getHipSize().getValue()<HipSize.THREE_GIRLY.getValue()) {
 				sb.append("<br/>" + target.setHipSize(HipSize.THREE_GIRLY.getValue()));
 			}
-			if(target.getHairType()!=HairType.HARPY) {
-				sb.append("<br/>" + target.setHairCovering(new Covering(BodyCoveringType.HAIR_HARPY, CoveringPattern.NONE, PresetColour.COVERING_BLACK, false, PresetColour.COVERING_BLACK, false), true));
-			}
-			if(target.getTorsoType()!=TorsoType.HARPY) {
-				sb.append("<br/>" + target.setSkinCovering(new Covering(BodyCoveringType.FEATHERS, CoveringPattern.NONE, PresetColour.COVERING_RED, false, PresetColour.COVERING_RED, false), true));
-			}
-			
-			// Harpy TFs:
-			if(target.getFaceType()!=FaceType.HUMAN)
-				sb.append("<br/>" + target.setFaceType(FaceType.HUMAN));
-			if(target.getEarType()!=EarType.HARPY)
-				sb.append("<br/>" + target.setEarType(EarType.HARPY));
-			if(target.getEyeType()!=EyeType.HARPY)
-				sb.append("<br/>" + target.setEyeType(EyeType.HARPY));
-			if(target.getHairType()!=HairType.HARPY)
-				sb.append("<br/>" + target.setHairType(HairType.HARPY));
-			if(target.getTorsoType()!=TorsoType.HUMAN)
-				sb.append("<br/>" + target.setTorsoType(TorsoType.HUMAN));
 
-			if(target.getWingType()!=WingType.NONE)
-				sb.append("<br/>" + target.setWingType(WingType.NONE));
-			if(target.getHornType()!=HornType.NONE)
-				sb.append("<br/>" + target.setHornType(HornType.NONE));
-
-			if(target.getArmType()!=ArmType.HARPY)
-				sb.append("<br/>" + target.setArmType(ArmType.HARPY));
-			if(target.getLegType()!=LegType.HARPY)
-				sb.append("<br/>" + target.setLegType(LegType.HARPY));
-			if(target.getTailType()!=TailType.HARPY)
-				sb.append("<br/>" + target.setTailType(TailType.HARPY));
-
-			if(target.getBreastType()!=BreastType.HARPY)
-				sb.append("<br/>" + target.setBreastType(BreastType.HARPY));
-			if(target.getAssType()!=AssType.HARPY)
-				sb.append("<br/>" + target.setAssType(AssType.HARPY));
+			if(!target.isAbleToHaveRaceTransformed()) {
+				sb.append("<br/>");
+				sb.append(UtilText.parse(target, "As [npc.nameIsFull] immune to racial transformations, the perfume has no further effect!"));
 				
-
-			if(target.hasPenisIgnoreDildo()) {
-				sb.append("<br/>" + target.setPenisType(PenisType.HARPY));
-
-				if(target.getPenisRawCumStorageValue()<CumProduction.TWO_SMALL_AMOUNT.getMedianValue()) {
-					sb.append("<br/>" + target.setPenisCumStorage(CumProduction.TWO_SMALL_AMOUNT.getMedianValue()));
-					target.fillCumToMaxStorage();
+			} else {
+				if(target.getHairType()!=HairType.HARPY) {
+					sb.append("<br/>" + target.setHairCovering(new Covering(BodyCoveringType.HAIR_HARPY, CoveringPattern.NONE, PresetColour.COVERING_BLACK, false, PresetColour.COVERING_BLACK, false), true));
 				}
-			}
-			if(target.hasVagina()) {
-				sb.append("<br/>" + target.setVaginaType(VaginaType.HARPY));
+				if(target.getTorsoType()!=TorsoType.HARPY) {
+					sb.append("<br/>" + target.setSkinCovering(new Covering(BodyCoveringType.FEATHERS, CoveringPattern.NONE, PresetColour.COVERING_RED, false, PresetColour.COVERING_RED, false), true));
+				}
+				
+				// Harpy TFs:
+				if(target.getFaceType()!=FaceType.HUMAN)
+					sb.append("<br/>" + target.setFaceType(FaceType.HUMAN));
+				if(target.getEarType()!=EarType.HARPY)
+					sb.append("<br/>" + target.setEarType(EarType.HARPY));
+				if(target.getEyeType()!=EyeType.HARPY)
+					sb.append("<br/>" + target.setEyeType(EyeType.HARPY));
+				if(target.getHairType()!=HairType.HARPY)
+					sb.append("<br/>" + target.setHairType(HairType.HARPY));
+				if(target.getTorsoType()!=TorsoType.HUMAN)
+					sb.append("<br/>" + target.setTorsoType(TorsoType.HUMAN));
+	
+				if(target.getWingType()!=WingType.NONE)
+					sb.append("<br/>" + target.setWingType(WingType.NONE));
+				if(target.getHornType()!=HornType.NONE)
+					sb.append("<br/>" + target.setHornType(HornType.NONE));
+	
+				if(target.getArmType()!=ArmType.HARPY)
+					sb.append("<br/>" + target.setArmType(ArmType.HARPY));
+				if(target.getLegType()!=LegType.HARPY)
+					sb.append("<br/>" + target.setLegType(LegType.HARPY));
+				if(target.getTailType()!=TailType.HARPY)
+					sb.append("<br/>" + target.setTailType(TailType.HARPY));
+	
+				if(target.getBreastType()!=BreastType.HARPY)
+					sb.append("<br/>" + target.setBreastType(BreastType.HARPY));
+				if(target.getAssType()!=AssType.HARPY)
+					sb.append("<br/>" + target.setAssType(AssType.HARPY));
+					
+	
+				if(target.hasPenisIgnoreDildo()) {
+					sb.append("<br/>" + target.setPenisType(PenisType.HARPY));
+	
+					if(target.getPenisRawCumStorageValue()<CumProduction.TWO_SMALL_AMOUNT.getMedianValue()) {
+						sb.append("<br/>" + target.setPenisCumStorage(CumProduction.TWO_SMALL_AMOUNT.getMedianValue()));
+						target.fillCumToMaxStorage();
+					}
+				}
+				if(target.hasVagina()) {
+					sb.append("<br/>" + target.setVaginaType(VaginaType.HARPY));
+				}
 			}
 			
 			return sb.toString();
@@ -2497,7 +2158,7 @@ public class ItemEffectType {
 				return "<p style='text-align:center'>[style.italicsDisabled(This item does not work on non-slave unique characters...)]</p>";
 			}
 			
-			AbstractSubspecies sub = AbstractSubspecies.getFleshSubspecies(target);
+			AbstractSubspecies sub = target.getFleshSubspecies();
 			if(sub.getRace()!=Race.DEMON) {
 				target.setBody(Main.game.getCharacterUtils().generateHalfDemonBody(target, target.getGender(), sub, true), false);
 				return UtilText.parse(target, "<p style='text-align:center; color:"+PresetColour.RACE_DEMON.toWebHexString()+";'><i>[npc.Name] is now [npc.a_race]!</i></p>");
@@ -2536,18 +2197,22 @@ public class ItemEffectType {
 			} else if(primaryModifier == TFModifier.CLOTHING_SPECIAL) {
 				List<TFModifier> mods =  Util.newArrayListOfValues(TFModifier.CLOTHING_SEALING, TFModifier.CLOTHING_SERVITUDE);
 				if(targetItem instanceof AbstractClothing) {
-					 //If this clothing is a 'sex toy' or groin clothing, then allow vibration enchantment:
-					if(((AbstractClothing)targetItem).getItemTags().contains(ItemTag.ENABLE_SEX_EQUIP) || ((AbstractClothing)targetItem).getSlotEquippedTo()==InventorySlot.GROIN) {
+					 //If this clothing is a 'sex toy' or groin/nipple clothing, then allow vibration and orgasm denial enchantments:
+					if(((AbstractClothing)targetItem).getItemTags().contains(ItemTag.ENABLE_SEX_EQUIP)
+							|| !Collections.disjoint(
+									((AbstractClothing)targetItem).getClothingType().getEquipSlots(),
+									Util.newArrayListOfValues(
+											InventorySlot.GROIN,
+											InventorySlot.VAGINA,
+											InventorySlot.PENIS,
+											InventorySlot.ANUS,
+											InventorySlot.NIPPLE,
+											InventorySlot.CHEST,
+											InventorySlot.PIERCING_NIPPLE,
+											InventorySlot.PIERCING_PENIS,
+											InventorySlot.PIERCING_VAGINA))) {
 						mods.add(TFModifier.CLOTHING_VIBRATION);
-						
-					} else {
-						for(InventorySlot slot : ((AbstractClothing)targetItem).getClothingType().getEquipSlots()) {
-							List<ItemTag> tags = ((AbstractClothing)targetItem).getClothingType().getItemTags(slot);
-							if(tags.contains(ItemTag.ENABLE_SEX_EQUIP) || slot==InventorySlot.GROIN) {
-								mods.add(TFModifier.CLOTHING_VIBRATION);
-								break;
-							}
-						}
+						mods.add(TFModifier.CLOTHING_ORGASM_PREVENTION);
 					}
 				}
 				if(Main.game.getPlayer().isHasSlaverLicense()) {
@@ -2569,17 +2234,17 @@ public class ItemEffectType {
 				return Util.newArrayListOfValues(TFPotency.MINOR_BOOST, TFPotency.MINOR_DRAIN, TFPotency.DRAIN, TFPotency.MAJOR_DRAIN);
 				
 			} else if(secondaryModifier == TFModifier.CLOTHING_VIBRATION
-					|| secondaryModifier == TFModifier.REMOVAL
-					|| secondaryModifier == TFModifier.TF_TYPE_1) {
+						|| secondaryModifier == TFModifier.REMOVAL
+						|| secondaryModifier == TFModifier.TF_TYPE_1) {
 				return Util.newArrayListOfValues(TFPotency.MINOR_BOOST, TFPotency.BOOST, TFPotency.MAJOR_BOOST);
 				
 			} else if(primaryModifier == TFModifier.CLOTHING_ATTRIBUTE
-				|| primaryModifier == TFModifier.CLOTHING_MAJOR_ATTRIBUTE
-				|| primaryModifier == TFModifier.TF_MOD_FETISH_BEHAVIOUR
-				|| primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART
-				|| primaryModifier == TFModifier.CLOTHING_CONDOM
-				|| !getClothingTFSecondaryModifiers(primaryModifier).isEmpty()) {
-			return TFPotency.getAllPotencies();
+						|| primaryModifier == TFModifier.CLOTHING_MAJOR_ATTRIBUTE
+						|| primaryModifier == TFModifier.TF_MOD_FETISH_BEHAVIOUR
+						|| primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART
+						|| primaryModifier == TFModifier.CLOTHING_CONDOM
+						|| !getClothingTFSecondaryModifiers(primaryModifier).isEmpty()) {
+				return TFPotency.getAllPotencies();
 				
 			} else {
 				return Util.newArrayListOfValues(TFPotency.MINOR_BOOST);
@@ -2596,16 +2261,16 @@ public class ItemEffectType {
 				
 			} else if(secondaryModifier == TFModifier.CLOTHING_SEALING) {
 				if(potency==TFPotency.MINOR_DRAIN) {
-					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Removal cost: [style.boldArcane(25)])</b>");
+					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Unseal: [style.boldArcane(25)])</b>");
 					
 				} else if(potency==TFPotency.DRAIN) {
-					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Removal cost: [style.boldArcane(100)])</b>");
+					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Unseal: [style.boldArcane(100)])</b>");
 					
 				} else if(potency==TFPotency.MAJOR_DRAIN) {
-					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Removal cost: [style.boldArcane(500)])</b>");
+					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Unseal: [style.boldArcane(500)])</b>");
 					
 				} else {
-					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Removal cost: [style.boldArcane(5)])</b>");
+					effectsList.add("[style.boldCrimson(Seals onto wearer)] <b>(Unseal: [style.boldArcane(5)])</b>");
 				}
 				
 			} else if(secondaryModifier == TFModifier.CLOTHING_SERVITUDE) {
@@ -2614,6 +2279,9 @@ public class ItemEffectType {
 				
 			} else if(secondaryModifier == TFModifier.CLOTHING_ENSLAVEMENT) {
 				effectsList.add("[style.boldCrimson(Enslaves the wearer)]");
+				
+			} else if(secondaryModifier == TFModifier.CLOTHING_ORGASM_PREVENTION) {
+				effectsList.add("[style.boldCrimson(Prevents wearer from orgasming)]");
 				
 			} else if(primaryModifier == TFModifier.TF_MOD_FETISH_BEHAVIOUR
 					|| primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART) {
@@ -2973,7 +2641,6 @@ public class ItemEffectType {
 		}
 		
 		for(Entry<AbstractRace, AbstractItemEffectType> entry : racialEffectTypes.entrySet()) {
-
 			allEffectTypes.add(entry.getValue());
 			
 			String id = "RACE_"+Race.getIdFromRace(entry.getKey());

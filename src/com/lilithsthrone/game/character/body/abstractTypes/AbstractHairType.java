@@ -4,9 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.lilithsthrone.main.Main;
 import org.w3c.dom.Document;
 
 import com.lilithsthrone.controller.xmlParsing.Element;
@@ -38,6 +36,9 @@ public abstract class AbstractHairType implements BodyPartTypeInterface {
 	private AbstractRace race;
 
 	private String transformationName;
+	
+	private double neckFluffChance;
+	private boolean neckFluffRequiresGreater;
 
 	private boolean defaultPlural;
 	private String determiner;
@@ -62,6 +63,7 @@ public abstract class AbstractHairType implements BodyPartTypeInterface {
 	 * @param descriptorsFeminine The descriptors that can be used to describe a feminine form of this hair type.
 	 * @param hairTransformationDescription A paragraph describing a character's hair transforming into this hair type. Parsing assumes that the character already has this hair type and associated covering.
 	 * @param hairBodyDescription A sentence or two to describe this hair type, as seen in the character view screen. It should follow the same format as all of the other entries in the HairType class.
+	 * @param tags BodyPartTags whichshould be applied to this hair type.
 	 */
 	public AbstractHairType(AbstractBodyCoveringType skinType,
 			AbstractRace race,
@@ -71,10 +73,14 @@ public abstract class AbstractHairType implements BodyPartTypeInterface {
 			List<String> descriptorsMasculine,
 			List<String> descriptorsFeminine,
 			String hairTransformationDescription,
-			String hairBodyDescription) {
+			String hairBodyDescription,
+			List<BodyPartTag> tags) {
 		
 		this.coveringType = skinType;
 		this.race = race;
+		
+		this.neckFluffRequiresGreater = true;
+		this.neckFluffChance = 0;
 		
 		this.transformationName = transformationName;
 		
@@ -89,15 +95,17 @@ public abstract class AbstractHairType implements BodyPartTypeInterface {
 		this.hairTransformationDescription = hairTransformationDescription;
 		this.hairBodyDescription = hairBodyDescription;
 		
-		this.tags = new ArrayList<>();
+		if(tags==null) {
+			this.tags = new ArrayList<>();
+		} else {
+			this.tags = tags;
+		}
 	}
 
 	public AbstractHairType(File XMLFile, String author, boolean mod) {
 		if (XMLFile.exists()) {
 			try {
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document doc = dBuilder.parse(XMLFile);
+				Document doc = Main.getDocBuilder().parse(XMLFile);
 				
 				// Cast magic:
 				doc.getDocumentElement().normalize();
@@ -111,11 +119,21 @@ public abstract class AbstractHairType implements BodyPartTypeInterface {
 				this.coveringType = BodyCoveringType.getBodyCoveringTypeFromId(coreElement.getMandatoryFirstOf("coveringType").getTextContent());
 
 				this.transformationName = coreElement.getMandatoryFirstOf("transformationName").getTextContent();
-
+				
+				this.neckFluffRequiresGreater = true;
+				if(coreElement.getOptionalFirstOf("neckFluffChance").isPresent()) {
+					neckFluffRequiresGreater = Boolean.valueOf(coreElement.getMandatoryFirstOf("neckFluffChance").getAttribute("requiresGreaterMorph"));
+				}
+				
+				neckFluffChance = 0;
+				if(coreElement.getOptionalFirstOf("neckFluffChance").isPresent()) {
+					neckFluffChance = Float.valueOf(coreElement.getMandatoryFirstOf("neckFluffChance").getTextContent())/100d;
+				}
+				
 				this.tags = new ArrayList<>();
 				if(coreElement.getOptionalFirstOf("tags").isPresent()) {
 					for(Element e : coreElement.getMandatoryFirstOf("tags").getAllOf("tag")) {
-						tags.add(BodyPartTag.valueOf(e.getTextContent()));
+						tags.add(BodyPartTag.getBodyPartTagFromId(e.getTextContent()));
 					}
 				}
 				
@@ -157,6 +175,20 @@ public abstract class AbstractHairType implements BodyPartTypeInterface {
 	
 	public boolean isAbleToBeGrabbedInSex() {
 		return this.getTags().contains(BodyPartTag.HAIR_HANDLES_IN_SEX);
+	}
+	
+	/**
+	 * @return Chance for this hair type to spawn with neck fluff, from 0->1.0 representing 0->100%
+	 */
+	public double getNeckFluffChance() {
+		return neckFluffChance;
+	}
+
+	/**
+	 * @return true if neck fluff is only applied on spawn if the character is a greater morph.
+	 */
+	public boolean isNeckFluffRequiresGreater() {
+		return neckFluffRequiresGreater;
 	}
 	
 	@Override

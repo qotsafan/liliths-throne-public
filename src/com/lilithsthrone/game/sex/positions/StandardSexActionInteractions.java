@@ -31,6 +31,9 @@ public class StandardSexActionInteractions {
 				OrgasmCumTarget.SELF_GROIN,
 				OrgasmCumTarget.SELF_LEGS,
 				OrgasmCumTarget.SELF_FEET,
+				OrgasmCumTarget.SELF_HANDS,
+				OrgasmCumTarget.SELF_FACE,
+				OrgasmCumTarget.SELF_BREASTS,
 				OrgasmCumTarget.FLOOR),
 		null);
 	
@@ -45,6 +48,9 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.SELF_GROIN,
 								OrgasmCumTarget.SELF_LEGS,
 								OrgasmCumTarget.SELF_FEET,
+								OrgasmCumTarget.SELF_HANDS,
+								OrgasmCumTarget.SELF_FACE,
+								OrgasmCumTarget.SELF_BREASTS,
 								OrgasmCumTarget.FLOOR),
 						Util.newArrayListOfValues()))));
 			}
@@ -217,7 +223,9 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.FACE,
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.BREASTS,
-								OrgasmCumTarget.FLOOR)))));
+								OrgasmCumTarget.STOMACH,
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS)))));
 			}
 	};
 
@@ -484,7 +492,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.FACE,
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.BREASTS,
-								OrgasmCumTarget.FLOOR)))));
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS)))));
 			}
 	};
 	
@@ -608,7 +617,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.BREASTS,
 								OrgasmCumTarget.STOMACH,
-								OrgasmCumTarget.FLOOR)))));
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS)))));
 			}
 	};
 
@@ -627,7 +637,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.FACE,
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.BREASTS,
-								OrgasmCumTarget.FLOOR)))));
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS)))));
 			}
 	};
 
@@ -793,7 +804,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.FACE,
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.BACK,
-								OrgasmCumTarget.FLOOR)))));
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS)))));
 			}
 	};
 
@@ -893,6 +905,7 @@ public class StandardSexActionInteractions {
 									SexActionPresets.allAreasToAppendages,
 									SexActionPresets.kissing,
 									SexActionPresets.breastsToMouth,
+									SexActionPresets.mouthToBreasts,
 									SexActionPresets.vaginaToPenis,
 									SexActionPresets.assToGroin),
 							Util.newArrayListOfValues(
@@ -1034,7 +1047,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.STOMACH,
 								OrgasmCumTarget.BREASTS,
 								OrgasmCumTarget.FACE,
-								OrgasmCumTarget.SELF_LEGS),
+								OrgasmCumTarget.SELF_LEGS,
+								OrgasmCumTarget.ARMPITS),
 						Util.newArrayListOfValues(
 								OrgasmCumTarget.LEGS,
 								OrgasmCumTarget.ASS,
@@ -1113,7 +1127,8 @@ public class StandardSexActionInteractions {
 									OrgasmCumTarget.HAIR,
 									OrgasmCumTarget.SELF_GROIN,
 									OrgasmCumTarget.SELF_LEGS,
-									OrgasmCumTarget.FLOOR),
+									OrgasmCumTarget.FLOOR,
+									OrgasmCumTarget.ARMPITS),
 							Util.newArrayListOfValues(
 									OrgasmCumTarget.SELF_STOMACH,
 									OrgasmCumTarget.SELF_LEGS,
@@ -1128,7 +1143,8 @@ public class StandardSexActionInteractions {
 									OrgasmCumTarget.FACE,
 									OrgasmCumTarget.HAIR,
 									OrgasmCumTarget.SELF_LEGS,
-									OrgasmCumTarget.FLOOR),
+									OrgasmCumTarget.FLOOR,
+									OrgasmCumTarget.ARMPITS),
 							Util.newArrayListOfValues(
 									OrgasmCumTarget.SELF_STOMACH,
 									OrgasmCumTarget.SELF_LEGS,
@@ -1156,7 +1172,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.STOMACH,
 								OrgasmCumTarget.SELF_GROIN,
 								OrgasmCumTarget.SELF_LEGS,
-								OrgasmCumTarget.FLOOR),
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS),
 						Util.newArrayListOfValues(
 								OrgasmCumTarget.SELF_STOMACH,
 								OrgasmCumTarget.SELF_LEGS,
@@ -1172,7 +1189,8 @@ public class StandardSexActionInteractions {
 									OrgasmCumTarget.BREASTS,
 									OrgasmCumTarget.STOMACH,
 									OrgasmCumTarget.SELF_LEGS,
-									OrgasmCumTarget.FLOOR),
+									OrgasmCumTarget.FLOOR,
+									OrgasmCumTarget.ARMPITS),
 							Util.newArrayListOfValues(
 									OrgasmCumTarget.SELF_STOMACH,
 									OrgasmCumTarget.SELF_LEGS,
@@ -1202,12 +1220,14 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.BREASTS,
 								OrgasmCumTarget.STOMACH,
-								OrgasmCumTarget.FLOOR),
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS),
 						Util.newArrayListOfValues(
 								OrgasmCumTarget.FACE,
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.BREASTS,
-								OrgasmCumTarget.FLOOR)))));
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS)))));
 			}
 	};
 	
@@ -1361,7 +1381,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.BREASTS,
 								OrgasmCumTarget.SELF_STOMACH,
 								OrgasmCumTarget.SELF_LEGS,
-								OrgasmCumTarget.FLOOR),
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS),
 						Util.newArrayListOfValues(
 								OrgasmCumTarget.SELF_STOMACH,
 								OrgasmCumTarget.FLOOR)))));
@@ -1553,7 +1574,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.BREASTS,
 								OrgasmCumTarget.GROIN,
 								OrgasmCumTarget.LEGS,
-								OrgasmCumTarget.FEET),
+								OrgasmCumTarget.FEET,
+								OrgasmCumTarget.ARMPITS),
 						Util.newArrayListOfValues(
 								OrgasmCumTarget.SELF_STOMACH,
 								OrgasmCumTarget.FLOOR)))));
@@ -1574,7 +1596,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.BREASTS,
 								OrgasmCumTarget.GROIN,
 								OrgasmCumTarget.LEGS,
-								OrgasmCumTarget.FEET),
+								OrgasmCumTarget.FEET,
+								OrgasmCumTarget.ARMPITS),
 						Util.newArrayListOfValues(
 								OrgasmCumTarget.SELF_STOMACH,
 								OrgasmCumTarget.FLOOR)))));
@@ -1659,7 +1682,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.BREASTS,
 								OrgasmCumTarget.STOMACH,
-								OrgasmCumTarget.FLOOR)))));
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS)))));
 			}
 	};
 	
@@ -1696,7 +1720,8 @@ public class StandardSexActionInteractions {
 								OrgasmCumTarget.BREASTS,
 								OrgasmCumTarget.HAIR,
 								OrgasmCumTarget.FACE,
-								OrgasmCumTarget.FLOOR)))));
+								OrgasmCumTarget.FLOOR,
+								OrgasmCumTarget.ARMPITS)))));
 			}
 	};
 	

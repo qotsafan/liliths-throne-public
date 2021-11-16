@@ -53,7 +53,6 @@ public class ZaranixHomeGroundFloorRepeat {
 	private static NPC pet;
 	private static NPC owner;
 	
-
 	public static void resetHouseAfterLeaving() {
 		((Zaranix)Main.game.getNpc(Zaranix.class)).setStartingBody(false);
 		((Amber)Main.game.getNpc(Amber.class)).setStartingBody(false);
@@ -423,7 +422,7 @@ public class ZaranixHomeGroundFloorRepeat {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 1) {
-				if(!Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.katherineRepeatEncountered)) {
+				if(!Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.katherineRepeatEncountered) && Main.game.getCharactersPresent().contains(Main.game.getNpc(ZaranixMaidKatherine.class))) {
 					return new Response("Upstairs", "You need to respond to Katherine first!", null);
 					
 				} else {
@@ -1442,11 +1441,11 @@ public class ZaranixHomeGroundFloorRepeat {
 //						if(rnd>0.01f) { // Testing:
 //							return WALKIES_PET_FUCKS;
 //						}
-						if(rnd<0.3) {
+						if(rnd<0.2) {
 							return WALKIES_PEACEFUL;
-						} else if(rnd<0.5) {
+						} else if(rnd<0.4) {
 							return WALKIES_HUMILIATION;
-						} else if(rnd<0.7) {
+						} else if(rnd<0.6) {
 							return WALKIES_PUNISHMENT;
 						} else if(rnd<0.85
 								&& (Main.game.getPlayer().isAbleToAccessCoverableArea(CoverableArea.ANUS, true) || (Main.game.getPlayer().hasVagina() && Main.game.getPlayer().isAbleToAccessCoverableArea(CoverableArea.VAGINA, true)))) {
