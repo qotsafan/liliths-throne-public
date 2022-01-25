@@ -506,6 +506,26 @@ public class PlaceType {
 			return DOMINION_STREET.getPopulation();
 		}
 	};
+
+	public static final AbstractPlaceType DOMINION_CALLIE_BAKERY = new AbstractPlaceType(
+			WorldRegion.DOMINION,
+			"The Creamy Bakey",
+			"This bakery is owned by a horse-girl named Callie.",
+			"dominion/callieBakeryIcon",
+			PresetColour.BASE_BROWN,
+			DominionPlaces.STREET,
+			Darkness.ALWAYS_LIGHT,
+			Encounter.DOMINION_STREET,
+			"in the streets of Dominion") {
+		@Override
+		public boolean isDangerous() {
+			return Main.game.getCurrentWeather() == Weather.MAGIC_STORM;
+		}
+		@Override
+		public List<Population> getPopulation() {
+			return DOMINION_STREET.getPopulation();
+		}
+	};
 	
 	public static final AbstractPlaceType DOMINION_STREET_HARPY_NESTS = new AbstractPlaceType(
 			WorldRegion.DOMINION,
@@ -2811,7 +2831,7 @@ public class PlaceType {
 	public static final AbstractPlaceType SHOPPING_ARCADE_PIXS_GYM = new AbstractPlaceType(
 			WorldRegion.DOMINION,
 			"Pix's Playground",
-			"A huge, multi-story gym, 'Pix's Playground' is both owned and run by a particularly energetic border-collie-girl.",
+			"A huge, multi-story gym, 'Pix's Playground' is both owned and run by a particularly energetic border collie-girl.",
 			"dominion/shoppingArcade/gym",
 			PresetColour.BASE_GOLD,
 			PixsPlayground.GYM_EXTERIOR,
@@ -5831,12 +5851,12 @@ public class PlaceType {
 		for(Entry<String, Map<String, File>> entry : filesMap.entrySet()) {
 			for(Entry<String, File> innerEntry : entry.getValue().entrySet()) {
 				try {
-					String id = "innoxia_"+innerEntry.getKey().replace("_placeTypes", "");
+					String id = innerEntry.getKey().replace("_placeTypes", "");
 					AbstractPlaceType placeType = new AbstractPlaceType(innerEntry.getValue(), entry.getKey(), id, false) {};
 					allPlaceTypes.add(placeType);
 					placeToIdMap.put(placeType, id);
 					idToPlaceMap.put(id, placeType);
-//					System.out.println("res PT: "+innerEntry.getKey());
+//					System.out.println("res PT: "+innerEntry.getKey()+" | "+id);
 				} catch(Exception ex) {
 					System.err.println("Loading place type failed at 'PlaceType'. File path: "+innerEntry.getValue().getAbsolutePath());
 					System.err.println("Actual exception: ");
