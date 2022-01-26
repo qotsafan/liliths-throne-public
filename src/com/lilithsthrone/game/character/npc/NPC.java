@@ -1661,8 +1661,8 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 				"You're too muscly for me!"));
 			if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 			
-		} else if(target.getMuscleValue() < body.getMuscle()
-				&& target.getMuscle() != Muscle.valueOf(body.getMuscle())
+		} else if((target.getMuscleValue() < body.getMuscle()
+				&& target.getMuscle() != Muscle.valueOf(body.getMuscle()))
 				|| isHermOrFuta()) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_SIZE_SECONDARY, TFPotency.MAJOR_BOOST, 1),
@@ -1679,8 +1679,8 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 				"Let's slim you down a bit!"));
 			if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 			
-		} else if(target.getBodySizeValue() < body.getBodySize()
-				&& target.getBodySize() != BodySize.valueOf(body.getBodySize())
+		} else if((target.getBodySizeValue() < body.getBodySize()
+				&& target.getBodySize() != BodySize.valueOf(body.getBodySize()))
 				|| isHermOrFuta()) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_SIZE_TERTIARY, TFPotency.MAJOR_BOOST, 1),
@@ -1689,8 +1689,8 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		}
 		
 		// Femininity:
-		if(target.getFemininityValue() < body.getFemininity()
-				&& Femininity.valueOf(target.getFemininityValue()) != Femininity.valueOf(body.getFemininity())
+		if((target.getFemininityValue() < body.getFemininity()
+				&& Femininity.valueOf(target.getFemininityValue()) != Femininity.valueOf(body.getFemininity()))
 				|| isHermOrFuta()) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_FEMININITY, TFPotency.MAJOR_BOOST, 1),
@@ -1889,7 +1889,8 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		
 		//--- VAGINA ---//
 		
-		if(target.getVaginaType() != VaginaType.NONE && body.getVagina().getType() != VaginaType.NONE) {
+		if((target.getVaginaType() != VaginaType.NONE && body.getVagina().getType() != VaginaType.NONE)
+				|| isHermOrFuta()) {
 			// Capacity:
 			if(target.getVaginaRawCapacityValue()+10 < body.getVagina().getOrificeVagina().getRawCapacityValue()
 					|| isHermOrFuta()) {
