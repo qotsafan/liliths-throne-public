@@ -128,13 +128,17 @@ import com.lilithsthrone.game.character.effects.AbstractStatusEffect;
 import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.effects.PerkCategory;
 import com.lilithsthrone.game.character.effects.StatusEffect;
+import com.lilithsthrone.game.character.fetishes.AbstractFetish;
 import com.lilithsthrone.game.character.fetishes.Fetish;
 import com.lilithsthrone.game.character.fetishes.FetishDesire;
 import com.lilithsthrone.game.character.gender.Gender;
 import com.lilithsthrone.game.character.gender.GenderPronoun;
 import com.lilithsthrone.game.character.gender.PronounType;
 import com.lilithsthrone.game.character.markings.AbstractTattooType;
+import com.lilithsthrone.game.character.markings.TattooCountType;
+import com.lilithsthrone.game.character.markings.TattooCounterType;
 import com.lilithsthrone.game.character.markings.TattooType;
+import com.lilithsthrone.game.character.markings.TattooWritingStyle;
 import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.npc.NPCFlagValue;
 import com.lilithsthrone.game.character.npc.NPCGenerationFlag;
@@ -196,6 +200,8 @@ import com.lilithsthrone.game.sex.SexAreaOrifice;
 import com.lilithsthrone.game.sex.SexAreaPenetration;
 import com.lilithsthrone.game.sex.SexPace;
 import com.lilithsthrone.game.sex.SexParticipantType;
+import com.lilithsthrone.game.sex.positions.slots.SexSlot;
+import com.lilithsthrone.game.sex.positions.slots.SexSlotManager;
 import com.lilithsthrone.game.sex.sexActions.baseActions.ToyVagina;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.rendering.SVGImages;
@@ -214,6 +220,7 @@ import com.lilithsthrone.world.places.AbstractPlaceType;
 import com.lilithsthrone.world.places.AbstractPlaceUpgrade;
 import com.lilithsthrone.world.places.PlaceType;
 import com.lilithsthrone.world.places.PlaceUpgrade;
+
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
@@ -9634,7 +9641,17 @@ public class UtilText {
 	public static GameCharacter findFirstCharacterFromParserTarget(String target) {
 		AbstractParserTarget parserTarget = findParserTargetWithTag(target);
 		
-		return parserTarget.getCharacter(target, new ArrayList<>(Main.game.getCharactersPresent()));
+		List<GameCharacter> specialNPCs = new ArrayList<>();
+		if(Main.game.getActiveNPC()!=null && Main.game.getCharactersPresent().contains(Main.game.getActiveNPC())) {
+			specialNPCs.add(Main.game.getActiveNPC()); // Make sure active NPC is in index 0 if they're also present
+		}
+		for(NPC gc : Main.game.getCharactersPresent()) {
+			if(!specialNPCs.contains(gc)) {
+				specialNPCs.add(gc);
+			}
+		}
+		
+		return parserTarget.getCharacter(target, specialNPCs);
 	}
 
 	private static ParserCommand findCommandWithTag(String command) {
@@ -9745,9 +9762,6 @@ public class UtilText {
 		for(AbstractItemType itemType : ItemType.getAllItems()) {
 			engine.put("ITEM_"+ItemType.getIdFromItemType(itemType), itemType);
 		}
-		for(AbstractTattooType tattooType : TattooType.getAllTattooTypes()) {
-			engine.put("TATTOO_"+TattooType.getIdFromTattooType(tattooType), tattooType);
-		}
 		for(AbstractSetBonus setBonus : SetBonus.getAllSetBonuses()) {
 			engine.put("SET_BONUS_"+SetBonus.getIdFromSetBonus(setBonus), setBonus);
 		}
@@ -9771,6 +9785,20 @@ public class UtilText {
 		for(EquipClothingSetting ecs : EquipClothingSetting.values()) {
 			engine.put("EQUIP_CLOTHING_SETTING_"+ecs.toString(), ecs);
 			engine.put("ECS_"+ecs.toString(), ecs);
+		}
+		
+		// Tattoos:
+		for(AbstractTattooType tattooType : TattooType.getAllTattooTypes()) {
+			engine.put("TATTOO_"+TattooType.getIdFromTattooType(tattooType), tattooType);
+		}
+		for(TattooCounterType tattooCounterType : TattooCounterType.values()) {
+			engine.put("TATTOO_COUNTER_"+tattooCounterType.toString(), tattooCounterType);
+		}
+		for(TattooCountType tattooCountType : TattooCountType.values()) {
+			engine.put("TATTOO_COUNT_"+tattooCountType.toString(), tattooCountType);
+		}
+		for(TattooWritingStyle tattooWritingStyle : TattooWritingStyle.values()) {
+			engine.put("TATTOO_WRITING_STYLE_"+tattooWritingStyle.toString(), tattooWritingStyle);
 		}
 		
 		// Misc.:
@@ -9949,8 +9977,8 @@ public class UtilText {
 		
 		
 		// Effects & persona:
-		for(Fetish f : Fetish.values()) {
-			engine.put(f.toString(), f);
+		for(AbstractFetish f : Fetish.getAllFetishes()) {
+			engine.put(Fetish.getIdFromFetish(f), f);
 		}
 		for(FetishDesire fetishDesire : FetishDesire.values()) {
 			engine.put("FETISH_DESIRE_"+fetishDesire.toString(), fetishDesire);
@@ -10020,6 +10048,9 @@ public class UtilText {
 		}
 		for(OrgasmCumTarget oct : OrgasmCumTarget.values()) {
 			engine.put("OCT_"+oct.toString(), oct);
+		}
+		for(Entry<String, SexSlot> slot : SexSlotManager.getIdToSexSlotMap().entrySet()) {
+			engine.put("SEX_SLOT_"+slot.getKey(), slot.getValue());
 		}
 		
 		

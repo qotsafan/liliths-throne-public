@@ -29,6 +29,7 @@ import com.lilithsthrone.game.character.body.valueEnums.PenetrationModifier;
 import com.lilithsthrone.game.character.body.valueEnums.WingSize;
 import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.effects.StatusEffect;
+import com.lilithsthrone.game.character.fetishes.AbstractFetish;
 import com.lilithsthrone.game.character.fetishes.Fetish;
 import com.lilithsthrone.game.dialogue.places.dominion.lilayashome.LilayasRoom;
 import com.lilithsthrone.game.dialogue.responses.Response;
@@ -82,6 +83,8 @@ public class GenericOrgasms {
 						SexAreaOrifice.URETHRA_PENIS,
 						SexAreaOrifice.URETHRA_VAGINA,
 						SexAreaOrifice.BREAST,
+						SexAreaOrifice.ARMPITS,
+						SexAreaOrifice.THIGHS,
 						SexAreaPenetration.FOOT));
 	}
 	
@@ -1369,7 +1372,7 @@ public class GenericOrgasms {
 					}
 				}
 			case FLOOR:
-				return " out all over the floor.";
+				return " all over the floor.";
 			case STOMACH:
 				target = Main.sex.getTargetedPartner(characterOrgasming);
 				if (!targetAreaClothingCummedOn.isEmpty()) {
@@ -1517,7 +1520,7 @@ public class GenericOrgasms {
 					}
 				}
 			case WALL:
-				return " all up the wall.";
+				return " all up the [pc.wall].";
 				
 			case SELF_GROIN:
 				if (!targetAreaClothingCummedOn.isEmpty()) {
@@ -1835,6 +1838,7 @@ public class GenericOrgasms {
 									cumTargetSB.append(" delicious, highly-addictive [npc.cum] as you possibly can.");
 									break;
 								case ALCOHOLIC:
+								case ALCOHOLIC_WEAK:
 									cumTargetSB.append(" alcoholic [npc.cum] as you possibly can.");
 									break;
 								case BUBBLING:
@@ -6266,8 +6270,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			if(isRealPenisFuckingCharacter(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this))) {
 				if(character.equals(Main.sex.getCharacterPerformingAction())) {
 					fetishes.add(Fetish.FETISH_CUM_ADDICT);
@@ -6517,8 +6521,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			if(isRealPenisFuckingCharacter(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this))) {
 				if(character.equals(Main.sex.getCharacterPerformingAction())) {
 					fetishes.add(Fetish.FETISH_CUM_ADDICT);
@@ -6778,8 +6782,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			if(isRealPenisFuckingCharacter(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this))) {
 				if(character.equals(Main.sex.getCharacterPerformingAction())) {
 					fetishes.add(Fetish.FETISH_CUM_ADDICT);
@@ -6940,8 +6944,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			if(isRealPenisFuckingCharacter(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this))) {
 				if(character.equals(Main.sex.getCharacterPerformingAction())) {
 					fetishes.add(Fetish.FETISH_CUM_ADDICT);
@@ -7099,8 +7103,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			if(isRealPenisFuckingCharacter(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this))) {
 				if(character.equals(Main.sex.getCharacterPerformingAction())) {
 					fetishes.add(Fetish.FETISH_CUM_ADDICT);
@@ -7255,8 +7259,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			if(isRealPenisFuckingCharacter(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this))) {
 				if(character.equals(Main.sex.getCharacterPerformingAction())) {
 					fetishes.add(Fetish.FETISH_CUM_ADDICT);
@@ -7418,8 +7422,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			if(isRealPenisFuckingCharacter(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this))) {
 				if(character.equals(Main.sex.getCharacterPerformingAction())) {
 					fetishes.add(Fetish.FETISH_CUM_ADDICT);
@@ -7581,8 +7585,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			if(isRealPenisFuckingCharacter(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this))) {
 				if(character.equals(Main.sex.getCharacterPerformingAction())) {
 					fetishes.add(Fetish.FETISH_CUM_ADDICT);
@@ -7976,7 +7980,7 @@ public class GenericOrgasms {
 			}
 		}
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
 			if(character.equals(Main.sex.getCharacterPerformingAction())) {
 				return Util.newArrayListOfValues(Fetish.FETISH_CUM_ADDICT);
 			} else {
@@ -8250,7 +8254,7 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
 			if(character.equals(Main.sex.getCharacterPerformingAction())) {
 				return Util.newArrayListOfValues(Fetish.FETISH_DENIAL);
 			} else {
@@ -8606,8 +8610,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			fetishes.add(Fetish.FETISH_VOYEURIST);
 			return fetishes;
 		}
@@ -8849,8 +8853,8 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
-			List<Fetish> fetishes = new ArrayList<>();
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
+			List<AbstractFetish> fetishes = new ArrayList<>();
 			fetishes.add(Fetish.FETISH_VOYEURIST);
 			return fetishes;
 		}
@@ -9293,7 +9297,7 @@ public class GenericOrgasms {
 		}
 		
 		@Override
-		public List<Fetish> getFetishes(GameCharacter character) {
+		public List<AbstractFetish> getFetishes(GameCharacter character) {
 			if(character.equals(Main.sex.getCharacterPerformingAction())) {
 				return Util.newArrayListOfValues(Fetish.FETISH_DENIAL_SELF);
 			} else {
