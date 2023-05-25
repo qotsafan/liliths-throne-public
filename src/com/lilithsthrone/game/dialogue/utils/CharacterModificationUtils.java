@@ -5633,9 +5633,7 @@ public class CharacterModificationUtils {
 						+ "</div>"
 						+ "<div class='cosmetics-inner-container right'>");
 		
-		ClitorisSize[] sizesAvailable = getClitorisSizesAvailable();
-		
-		for(ClitorisSize size : sizesAvailable) {
+		for(ClitorisSize size : ClitorisSize.values()) {
 			if(BodyChanging.getTarget().getVaginaClitorisSize() == size) {
 				contentSB.append(
 						"<div class='cosmetics-button active'>"
