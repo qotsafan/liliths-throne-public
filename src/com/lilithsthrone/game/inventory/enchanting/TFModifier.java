@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.lilithsthrone.game.character.attributes.AbstractAttribute;
 import com.lilithsthrone.game.character.attributes.Attribute;
@@ -1333,6 +1332,8 @@ public enum TFModifier {
 	
 	TF_MOD_FLAVOUR_BLUEBERRY(FluidFlavour.BLUEBERRY, "flavours/blueberry"),
 	
+	TF_MOD_FLAVOUR_BANANA(FluidFlavour.BANANA, "flavours/banana"),
+	
 	
 	// Fetishes:
 	
@@ -1793,10 +1794,12 @@ public enum TFModifier {
 	}
 
 	public static List<TFModifier> getTFRacialBodyPartsList() {
-		if(Main.getProperties().getUddersLevel()==0) {
-			return TFRacialBodyPartsList.stream().filter(mod -> mod!=TFModifier.TF_BREASTS_CROTCH && mod!=TFModifier.TF_MILK_CROTCH).collect(Collectors.toList());
+		List<TFModifier> returnList = new ArrayList<>(TFRacialBodyPartsList);
+		if(!Main.game.isUdderContentEnabled()) {
+			returnList.remove(TFModifier.TF_BREASTS_CROTCH);
+			returnList.remove(TFModifier.TF_MILK_CROTCH);
 		}
-		return TFRacialBodyPartsList;
+		return returnList;
 	}
 
 	public static List<TFModifier> getTFAttributeList() {
@@ -1805,33 +1808,13 @@ public enum TFModifier {
 
 	public static List<TFModifier> getTFBodyPartFetishList() {
 		List<TFModifier> returnList = new ArrayList<>(TFBodyPartFetishList);
-		if(!Main.game.isAnalContentEnabled()) {
-			returnList.remove(TFModifier.TF_MOD_FETISH_ANAL_GIVING);
-			returnList.remove(TFModifier.TF_MOD_FETISH_ANAL_RECEIVING);
-		}
-		if(!Main.game.isFootContentEnabled()) {
-			returnList.remove(TFModifier.TF_MOD_FETISH_FOOT_GIVING);
-			returnList.remove(TFModifier.TF_MOD_FETISH_FOOT_RECEIVING);
-		}
-		if(!Main.game.isLactationContentEnabled()) {
-			returnList.remove(TFModifier.TF_MOD_FETISH_LACTATION_OTHERS);
-			returnList.remove(TFModifier.TF_MOD_FETISH_LACTATION_SELF);
-		}
+		returnList.removeIf(modifier->!modifier.fetish.isContentEnabled());
 		return returnList;
 	}
 	
 	public static List<TFModifier> getTFBehaviouralFetishList() {
 		List<TFModifier> returnList = new ArrayList<>(TFBehaviouralFetishList);
-		if(!Main.game.isNonConEnabled()) {
-			returnList.remove(TFModifier.TF_MOD_FETISH_NON_CON_DOM);
-			returnList.remove(TFModifier.TF_MOD_FETISH_NON_CON_SUB);
-		}
-		if(!Main.game.isIncestEnabled()) {
-			returnList.remove(TFModifier.TF_MOD_FETISH_INCEST);
-		}
-		if(!Main.game.isPenetrationLimitationsEnabled()) {
-			returnList.remove(TFModifier.TF_MOD_FETISH_SIZE_QUEEN);
-		}
+		returnList.removeIf(modifier->!modifier.fetish.isContentEnabled());
 		return returnList;
 	}
 
@@ -1848,12 +1831,15 @@ public enum TFModifier {
 	}
 
 	public static List<TFModifier> getClothingPrimaryList() {
+		List<TFModifier> returnList = new ArrayList<>(clothingPrimaryList);
 		if(!Main.game.isBodyHairEnabled()) {
-			List<TFModifier> noArms = new ArrayList<>(clothingPrimaryList);
-			noArms.remove(TF_ARMS);
-			return noArms;
+			returnList.remove(TF_ARMS);
 		}
-		return clothingPrimaryList;
+		if(!Main.game.isUdderContentEnabled()) {
+			returnList.remove(TFModifier.TF_BREASTS_CROTCH);
+			returnList.remove(TFModifier.TF_MILK_CROTCH);
+		}
+		return returnList;
 	}
 
 	public static List<TFModifier> getTattooPrimaryList() {

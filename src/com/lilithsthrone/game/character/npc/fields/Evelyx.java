@@ -72,7 +72,6 @@ import com.lilithsthrone.game.character.fetishes.Fetish;
 import com.lilithsthrone.game.character.fetishes.FetishDesire;
 import com.lilithsthrone.game.character.gender.Gender;
 import com.lilithsthrone.game.character.markings.Tattoo;
-import com.lilithsthrone.game.character.markings.TattooType;
 import com.lilithsthrone.game.character.markings.TattooWriting;
 import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.persona.NameTriplet;
@@ -270,7 +269,7 @@ public class Evelyx extends NPC {
 		this.unequipAllClothingIntoVoid(true, true);
 
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_groin_lacy_thong", PresetColour.CLOTHING_ORANGE, false), true, this);
-		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing(ClothingType.CHEST_FULLCUP_BRA, PresetColour.CLOTHING_ORANGE, false), true, this);
+		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_chest_fullcup_bra", PresetColour.CLOTHING_ORANGE, false), true, this);
 		
 		AbstractClothing scrunchie = Main.game.getItemGen().generateClothing("norin_hair_accessories_hair_scrunchie", PresetColour.CLOTHING_ORANGE, false);
 		scrunchie.setPattern("none");
@@ -494,7 +493,7 @@ public class Evelyx extends NPC {
 		}
 		
 		// Crotch boobs:
-		if(crotchBoobs && ((Main.getProperties().getUddersLevel()==1 && worker.isTaur()) || (Main.getProperties().getUddersLevel()==2 && worker.getRace().getRacialBody().getBreastCrotchType()!=BreastType.NONE))) {
+		if(crotchBoobs && Main.game.isUdderContentEnabled() && (worker.isTaur() || worker.getRace().getRacialBody().getBreastCrotchType()!=BreastType.NONE)) {
 			boolean applyCrotchBoobs = !worker.hasBreastsCrotch();
 			if(!anyTransformationAvailable) {
 				anyTransformationAvailable = applyCrotchBoobs;
@@ -926,7 +925,7 @@ public class Evelyx extends NPC {
 	public void applyCowTattoo(GameCharacter worker, boolean slave) {
 		worker.addTattoo(InventorySlot.ANUS,
 				new Tattoo(
-					TattooType.NONE,
+					"innoxia_misc_none",
 					PresetColour.CLOTHING_BLACK,
 					null,
 					null,
@@ -1345,7 +1344,7 @@ public class Evelyx extends NPC {
 		princess.equipMainWeaponFromNowhere(Main.game.getItemGen().generateWeapon("innoxia_axe_battle", DamageType.FIRE));
 		
 		princess.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_neck_velvet_choker", PresetColour.CLOTHING_BLACK, false), true, princess);
-		princess.equipClothingFromNowhere(Main.game.getItemGen().generateClothing(ClothingType.NIPPLE_TAPE_CROSSES, PresetColour.CLOTHING_BLACK, false), true, princess);
+		princess.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_nipple_tape_crosses", PresetColour.CLOTHING_BLACK, false), true, princess);
 		princess.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_hand_wraps", PresetColour.CLOTHING_BLACK, false), true, princess);
 		
 		AbstractClothing ring = Main.game.getItemGen().generateClothing("innoxia_finger_gemstone_ring_unisex", PresetColour.CLOTHING_PLATINUM, PresetColour.CLOTHING_RED_VERY_DARK, null, false);

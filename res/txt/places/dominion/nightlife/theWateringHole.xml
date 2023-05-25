@@ -47,6 +47,22 @@
 	]]>
 	</htmlContent>
 	
+	<htmlContent tag="OUTSIDE_LIGHTS_OUT"><![CDATA[
+	<p>
+		[style.boldYellow(Lights Out)]
+		<br/>
+		A neon sign reading 'Lights Out' is positioned above a short, steep staircase that leads down to a basement bar. A second neon sign declares that the bar's opening hours are from
+		#IF(game.isHourBetween(18, 4))
+			 [style.colourMinorGood([unit.time(18)]-[unit.time(4)])], and as such the bar is currently [style.colourGood(open)].
+		#ELSE
+			 [style.colourMinorBad([unit.time(18)]-[unit.time(4)])], and as such the bar is currently [style.colourBad(closed)].
+		#ENDIF
+	</p>
+	]]>
+	</htmlContent>
+	
+	<!-- Interior: -->
+	
 	<htmlContent tag="WATERING_HOLE_ENTRANCE"><![CDATA[
 	<p>
 		Walking up to the entrance of the club, you push the front door open and step inside. As it swings shut behind you, you find yourself standing in a large, well-lit entrance hall, and before you, a winding queue leads up to a pair of white doors. The walls have been decorated with savannah-themed murals, which, combined with the club's name 'The Watering Hole', as well as the pair of imposing zebra-boy bouncers standing guard at the front of the queue, gives the club an African theme.
@@ -214,6 +230,26 @@
 	</p>
 	<p>
 		The two of you chat for a little while, and it soon becomes apparent that [npc.name] would like to spend some of [npc.her] time with you once again. With your familiar partner in tow, you wonder where you should head to next...
+	</p>
+	]]>
+	</htmlContent>
+	
+	<htmlContent tag="WATERING_HOLE_IMPORT_DOM"><![CDATA[
+	<p>
+		You can import any of your previously exported characters in order to add them to your contacts list. Once imported, this character will show up in your 'Contacts (as dom)' list.
+	</p>
+	<p>
+		<i>You can export any character in the game by viewing their character sheet and pressing the little export button in the bottom-right of the screen.</i>
+	</p>
+	]]>
+	</htmlContent>
+	
+	<htmlContent tag="WATERING_HOLE_IMPORT_SUB"><![CDATA[
+	<p>
+		You can import any of your previously exported characters in order to add them to your contacts list. Once imported, this character will show up in your 'Contacts (as sub)' list.
+	</p>
+	<p>
+		<i>You can export any character in the game by viewing their character sheet and pressing the little export button in the bottom-right of the screen.</i>
 	</p>
 	]]>
 	</htmlContent>
@@ -645,7 +681,7 @@
 	
 	<htmlContent tag="WATERING_HOLE_SEATING_SEX_AS_SUB_REJECTED"><![CDATA[
 	<p>
-		DEsperate to have sex with [npc.name], you start to make your move, but, sensing what it is you want, [npc.she] quickly lets out a frustrated sigh and pushes you away.
+		Desperate to have sex with [npc.name], you start to make your move, but, sensing what it is you want, [npc.she] quickly lets out a frustrated sigh and pushes you away.
 		#IF(npc.isShy())
 			 Stuttering in embarrassment, [npc.she] exclaims, [npc.speech(P-Please stay on your side!)]
 		#ELSE
@@ -2241,6 +2277,67 @@
 	</p>
 	<p>
 		[pc.speech(Yeah, that sounds good,)] you reply, before spending the next few minutes talking with [npc.name], allowing [npc.herHim] to take the lead in conversation. It very quickly becomes apparent that [npc.she] wants to show you a good time this evening, and, leading [npc.herHim] on, you wonder where [npc.she]'ll take you first...
+	</p>
+	]]>
+	</htmlContent>
+	
+	<htmlContent tag="WATERING_HOLE_DOM_PARTNER_LEAVES"><![CDATA[
+	<p>
+		Letting out a frustrated sigh, [npc.name] [npc.steps] away from you and says,
+		#IF(npc.isKind())
+			[npc.speech(This really isn't working out. I think I'm going to leave now...)]
+		#ELSE
+			#IF(npc.isSelfish())
+				[npc.speech(You're being a real cunt. Fuck this, I'm off.)]
+			#ELSE
+				[npc.speech(This isn't working out. I'm off.)]
+			#ENDIF
+		#ENDIF
+	</p>
+	<p>
+		As the [npc.race] turns and starts to head off into the club, you wonder how to respond...
+	</p>
+	]]>
+	</htmlContent>
+	
+	<htmlContent tag="WATERING_HOLE_DOM_PARTNER_LEAVES_SAVE_CLUBBER"><![CDATA[
+	<p>
+		Not wanting this to be the end of your relation with [npc.name], you quickly say that despite how the evening has gone, you hope to see [npc.herHim] again.
+	</p>
+	<p>
+		#IF(npc.isKind())
+			[npc.speech(Fine... I guess I could meet up with you here again some other time... See you later,)] [npc.name] sighs, before continuing forwards and taking [npc.her] leave.
+		#ELSE
+			#IF(npc.isSelfish())
+				[npc.speech(Really? After all the shit you just pulled? You'd better not be such a drag the next time we're doing this,)] [npc.name] bluntly responds, before abruptly turning and taking [npc.her] leave.
+			#ELSE
+				[npc.speech(Really? Well, I guess we could give it another go. I'll catch you around some other time,)] [npc.name] responds, before continuing forwards and taking [npc.her] leave.
+			#ENDIF
+		#ENDIF
+	</p>
+	<p>
+		Now that you're alone once more, you wonder what you should do next...
+	</p>
+	]]>
+	</htmlContent>
+	
+	<htmlContent tag="WATERING_HOLE_DOM_PARTNER_LEAVES_LOSE_COMPANY"><![CDATA[
+	<p>
+		Feeling as though you've had enough of [npc.namePos] company to last a lifetime, you call out after [npc.herHim] that you don't ever want to see [npc.herHim] again.
+	</p>
+	<p>
+		#IF(npc.isKind())
+			[npc.speech(That suits me. Bye, [pc.name],)] [npc.name] unhappily responds, before continuing forwards and taking [npc.her] leave.
+		#ELSE
+			#IF(npc.isSelfish())
+				[npc.speech(Yeah, fuck you too, [pc.bitch]. Have fun getting fucked by one of your other cunt friends,)] [npc.name] rudely responds, before storming off to another part of the club.
+			#ELSE
+				[npc.speech(The feeling's mutual,)] [npc.name] dismissively responds, before continuing forwards and taking [npc.her] leave.
+			#ENDIF
+		#ENDIF
+	</p>
+	<p>
+		Now that you're alone once more, you wonder what you should do next...
 	</p>
 	]]>
 	</htmlContent>

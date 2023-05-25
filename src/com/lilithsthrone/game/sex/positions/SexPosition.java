@@ -37,6 +37,7 @@ import com.lilithsthrone.game.sex.positions.slots.SexSlotTag;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotUnique;
 import com.lilithsthrone.game.sex.sexActions.SexActionInterface;
 import com.lilithsthrone.game.sex.sexActions.SexActionPresets;
+import com.lilithsthrone.game.sex.sexActions.baseActionsMisc.GenericActions;
 import com.lilithsthrone.game.sex.sexActions.baseActionsMisc.GenericOrgasms;
 import com.lilithsthrone.game.sex.sexActions.baseActionsMisc.PlayerTalk;
 import com.lilithsthrone.game.sex.sexActions.dominion.MasturbationPanties;
@@ -185,7 +186,7 @@ public class SexPosition {
 			List<String> subSizeDiffBehindNames = new ArrayList<>();
 			List<String> domNames = new ArrayList<>();
 			
-			List<String> sizeDifferenceAdditions = new ArrayList<>();
+//			List<String> sizeDifferenceAdditions = new ArrayList<>();
 			Map<GameCharacter, SexSlot> doms = new HashMap<>();
 			Map<GameCharacter, SexSlot> domTaurs = new HashMap<>();
 			Map<GameCharacter, SexSlot> subs = new HashMap<>();
@@ -444,65 +445,85 @@ public class SexPosition {
 			
 
 			// Size difference:
-			List<GameCharacter> allDoms = new ArrayList<>(doms.keySet());
-			allDoms.addAll(domTaurs.keySet());
-			playerInDoms = false;
-			playerInSubs = false;
-			for(GameCharacter sub : subsStanding) {
-				mainSub = sub;
-				List<String> names = new ArrayList<>();
-				for(GameCharacter dom : allDoms) {
-					if(sub.isSizeDifferenceShorterThan(dom)) {
-						names.add(UtilText.parse(dom, "[npc.name]"));
-						if(dom.isPlayer()) {
-							playerInDoms = true;
-						}
-					}
-				}
-				if(!names.isEmpty()) {
-					sizeDifferenceAdditions.add(UtilText.parse(sub,
-							"As [npc.nameIsFull] considerably shorter than "+Util.stringsToStringList(names, false)
-								+", [npc.sheIs] in a position to perform oral on "+(names.size()>1?(playerInDoms?"you":"them"):UtilText.parse(mainDom, "[npc.herHim]"))+", even though [npc.sheIs] standing fully upright."));
-				}
-			}
-			for(GameCharacter sub : subsStandingBehind) {
-				mainSub = sub;
-				List<String> names = new ArrayList<>();
-				for(GameCharacter dom : allDoms) {
-					if(sub.isSizeDifferenceShorterThan(dom)) {
-						names.add(UtilText.parse(dom, "[npc.name]"));
-						if(dom.isPlayer()) {
-							playerInDoms = true;
-						}
-					}
-				}
-				if(!names.isEmpty()) {
-					sizeDifferenceAdditions.add(UtilText.parse(sub,
-							"As [npc.nameIsFull] considerably shorter than "+Util.stringsToStringList(names, false)
-								+", [npc.sheIs] in a position to perform oral on "
-									+(names.size()>1?(playerInDoms?"your rear end":"their rear ends"):UtilText.parse(mainDom, "[npc.namePos] [npc.ass+]"))+", even though [npc.sheIs] standing fully upright."));
-				}
-			}
-			for(GameCharacter dom : allDoms) {
-				List<String> names = new ArrayList<>();
-				for(GameCharacter sub : subsStanding) {
-					if(dom.isSizeDifferenceShorterThan(sub)) {
-						names.add(UtilText.parse(sub, "[npc.name]"));
-					}
-					if(sub.isPlayer()) {
-						playerInSubs = true;
-					}
-				}
-				if(!names.isEmpty()) {
-					sizeDifferenceAdditions.add(UtilText.parse(dom,
-							"As [npc.nameIsFull] considerably shorter than "+Util.stringsToStringList(names, false)
-								+", [npc.sheIs] in a position to perform oral on "+(names.size()>1?(playerInSubs?"you":"them"):UtilText.parse(mainSub, "[npc.herHim]"))+", even though [npc.sheIs] standing fully upright."));
-				}
-			}
-			for(String s : sizeDifferenceAdditions) {
-				sb.append("<br/>[style.italicsOrange("+s+")]");
-			}
+//			List<GameCharacter> allDoms = new ArrayList<>(doms.keySet());
+//			allDoms.addAll(domTaurs.keySet());
+//			playerInDoms = false;
+//			playerInSubs = false;
+//			for(GameCharacter sub : subsStanding) {
+//				mainSub = sub;
+//				List<String> names = new ArrayList<>();
+//				for(GameCharacter dom : allDoms) {
+//					if(sub.isSizeDifferenceShorterThan(dom)) {
+//						names.add(UtilText.parse(dom, "[npc.name]"));
+//						if(dom.isPlayer()) {
+//							playerInDoms = true;
+//						}
+//					}
+//				}
+//				if(!names.isEmpty()) {
+//					sizeDifferenceAdditions.add(UtilText.parse(sub,
+//							"As [npc.nameIsFull] considerably shorter than "+Util.stringsToStringList(names, false)
+//								+", [npc.sheIs] in a position to perform oral on "+(names.size()>1?(playerInDoms?"you":"them"):UtilText.parse(mainDom, "[npc.herHim]"))+", even though [npc.sheIs] standing fully upright."));
+//				}
+//			}
+//			for(GameCharacter sub : subsStandingBehind) {
+//				mainSub = sub;
+//				List<String> names = new ArrayList<>();
+//				for(GameCharacter dom : allDoms) {
+//					if(sub.isSizeDifferenceShorterThan(dom)) {
+//						names.add(UtilText.parse(dom, "[npc.name]"));
+//						if(dom.isPlayer()) {
+//							playerInDoms = true;
+//						}
+//					}
+//				}
+//				if(!names.isEmpty()) {
+//					sizeDifferenceAdditions.add(UtilText.parse(sub,
+//							"As [npc.nameIsFull] considerably shorter than "+Util.stringsToStringList(names, false)
+//								+", [npc.sheIs] in a position to perform oral on "
+//									+(names.size()>1?(playerInDoms?"your rear end":"their rear ends"):UtilText.parse(mainDom, "[npc.namePos] [npc.ass+]"))+", even though [npc.sheIs] standing fully upright."));
+//				}
+//			}
+//			for(GameCharacter dom : allDoms) {
+//				List<String> names = new ArrayList<>();
+//				for(GameCharacter sub : subsStanding) {
+//					if(dom.isSizeDifferenceShorterThan(sub)) {
+//						names.add(UtilText.parse(sub, "[npc.name]"));
+//					}
+//					if(sub.isPlayer()) {
+//						playerInSubs = true;
+//					}
+//				}
+//				if(!names.isEmpty()) {
+//					sizeDifferenceAdditions.add(UtilText.parse(dom,
+//							"As [npc.nameIsFull] considerably shorter than "+Util.stringsToStringList(names, false)
+//								+", [npc.sheIs] in a position to perform oral on "+(names.size()>1?(playerInSubs?"you":"them"):UtilText.parse(mainSub, "[npc.herHim]"))+", even though [npc.sheIs] standing fully upright."));
+//				}
+//			}
+//			for(String s : sizeDifferenceAdditions) {
+//				sb.append("<br/>[style.italicsOrange("+s+")]");
+//			}
 			
+			// Size difference:
+			Map<GameCharacter, List<String>> shorterMap = new HashMap<>(); // Mapping short character to list of larger characters
+			for(GameCharacter c1 : occupiedSlots.keySet()) {
+				for(GameCharacter c2 : occupiedSlots.keySet()) {
+					if(c1!=c2 && c1.isSizeDifferenceShorterThan(c2)) {
+						shorterMap.putIfAbsent(c1, new ArrayList<>());
+						shorterMap.get(c1).add(UtilText.parse(c2, "<span style='color:"+c2.getFemininity().getColour().toWebHexString()+";'>[npc.Name]</span>"));
+					}
+				}
+			}
+			if(!shorterMap.isEmpty()) {
+				sb.append("<br/>[style.italicsOrange(Some characters are significantly shorter than others, and as such will be in a position to perform oral on their larger partners even while standing:)]");
+				for(Entry<GameCharacter, List<String>> entry : shorterMap.entrySet()) {
+					sb.append(UtilText.parse(entry.getKey(), "<br/><span style='color:"+entry.getKey().getFemininity().getColour().toWebHexString()+";'>[npc.Name]</span> [npc.is] shorter than "));
+					sb.append("");
+					sb.append(Util.stringsToStringList(entry.getValue(), false));
+					sb.append(".");
+				}
+			}
+						
 			return sb.toString();
 		}
 		@Override
@@ -791,6 +812,27 @@ public class SexPosition {
 					sb.append(", ready to have some fun with the "+Util.intToString(totalAgainstWall)+" of "+(playerFacingWall?"you":"them")+".");
 				} else {
 					sb.append(", ready to have some fun with "+UtilText.parse(mainWall,"[npc.herHim]")+".");
+				}
+			}
+			
+
+			// Size difference:
+			Map<GameCharacter, List<String>> shorterMap = new HashMap<>(); // Mapping short character to list of larger characters
+			for(GameCharacter c1 : occupiedSlots.keySet()) {
+				for(GameCharacter c2 : occupiedSlots.keySet()) {
+					if(c1!=c2 && c1.isSizeDifferenceShorterThan(c2)) {
+						shorterMap.putIfAbsent(c1, new ArrayList<>());
+						shorterMap.get(c1).add(UtilText.parse(c2, "<span style='color:"+c2.getFemininity().getColour().toWebHexString()+";'>[npc.Name]</span>"));
+					}
+				}
+			}
+			if(!shorterMap.isEmpty()) {
+				sb.append("<br/>[style.italicsOrange(Some characters are significantly shorter than others, and as such will be in a position to perform oral on their larger partners even while standing:)]");
+				for(Entry<GameCharacter, List<String>> entry : shorterMap.entrySet()) {
+					sb.append(UtilText.parse(entry.getKey(), "<br/><span style='color:"+entry.getKey().getFemininity().getColour().toWebHexString()+";'>[npc.Name]</span> [npc.is] shorter than "));
+					sb.append("");
+					sb.append(Util.stringsToStringList(entry.getValue(), false));
+					sb.append(".");
 				}
 			}
 			
@@ -2506,7 +2548,7 @@ public class SexPosition {
 			for(int i=0; i<4; i++) {
 				if(Main.sex.getCharacterInPosition(allFoursList.get(i))!=null && !Main.sex.getCharacterInPosition(allFoursList.get(i)).isTaur()) {
 					for(SexSlot inFrontSlot : inFrontList) {
-						interactions.add(StandardSexActionInteractions.allFourscharacterBehindToCharactersFront.getSexActionInteractions(behindList.get(i), inFrontSlot));
+						interactions.add(StandardSexActionInteractions.allFoursCharacterBehindToCharactersFront.getSexActionInteractions(behindList.get(i), inFrontSlot));
 					}
 				}
 			}
@@ -2914,7 +2956,7 @@ public class SexPosition {
 							sb.append(UtilText.parse(lyingDown,
 									(!lyingDown.isTaur()
 										?"[npc.NameIsFull] lying down on [npc.her] back, submissively exposing [npc.her] stomach, [npc.face], and groin. "
-										:"[npc.NameHasFull] lay down on [npc.her] feral [npc.legRace]'s body, before rolling over onto [npc.her] back in order to submissively expose [npc.her] stomach. ")));
+										:"[npc.NameHasFull] lain down on [npc.her] feral [npc.legRace]'s body, before rolling over onto [npc.her] back in order to submissively expose [npc.her] stomach. ")));
 							break;
 						case 1:
 							sb.append(UtilText.parse(lyingDown, fallBackLyingDown3,
@@ -3363,13 +3405,13 @@ public class SexPosition {
 				}
 			}
 			
-			if(characterToTakeSlot.isTaur()
-					&& (slot==SexSlotSitting.SITTING
-							|| slot==SexSlotSitting.SITTING_TWO
-							|| slot==SexSlotSitting.SITTING_THREE
-							|| slot==SexSlotSitting.SITTING_FOUR)) {
-				return new Value<Boolean, String>(false, UtilText.parse(characterToTakeSlot, "Due to the proportions of [npc.her] animalistic lower body, [npc.nameIsFull] unable to use the '"+Util.capitaliseSentence(slot.getDescription())+"' slot."));
-			}
+//			if(characterToTakeSlot.isTaur()
+//					&& (slot==SexSlotSitting.SITTING
+//							|| slot==SexSlotSitting.SITTING_TWO
+//							|| slot==SexSlotSitting.SITTING_THREE
+//							|| slot==SexSlotSitting.SITTING_FOUR)) {
+//				return new Value<Boolean, String>(false, UtilText.parse(characterToTakeSlot, "Due to the proportions of [npc.her] animalistic lower body, [npc.nameIsFull] unable to use the '"+Util.capitaliseSentence(slot.getDescription())+"' slot."));
+//			}
 			if(!characterToTakeSlot.isTaur()
 					&& (slot==SexSlotSitting.SITTING_TAUR_PRESENTING_ORAL
 							|| slot==SexSlotSitting.SITTING_TAUR_PRESENTING_ORAL_TWO
@@ -3914,6 +3956,19 @@ public class SexPosition {
 						&& action.getParticipantType()!=SexParticipantType.SELF)) {
 				return true;
 			}
+			List<SexActionInterface> blockedActions = Util.newArrayListOfValues(
+					PlayerTalk.PLAYER_OFFER_ANAL,
+					PlayerTalk.PLAYER_OFFER_NAIZURI,
+					PlayerTalk.PLAYER_OFFER_NIPPLE,
+					PlayerTalk.PLAYER_OFFER_ORAL,
+					PlayerTalk.PLAYER_OFFER_PAIZURI,
+					!Main.sex.isDom(performer)?null:PlayerTalk.PLAYER_OFFER_VAGINAL,
+					PlayerTalk.PLAYER_REQUEST_ANAL,
+					PlayerTalk.PLAYER_REQUEST_ORAL,
+					Main.sex.isDom(performer)?null:PlayerTalk.PLAYER_REQUEST_VAGINAL);
+			if(blockedActions.contains(action)) {
+				return true;
+			}
 			
 			return super.isActionBlocked(performer, target, action);
 		}
@@ -3938,14 +3993,15 @@ public class SexPosition {
 		public boolean isActionBlocked(GameCharacter performer, GameCharacter target, SexActionInterface action) {
 			List<SexActionInterface> blockedActions = Util.newArrayListOfValues(
 					GenericOrgasms.GENERIC_PREPARATION_DENIAL,
+					GenericActions.GENERIC_DENY,
 					PlayerTalk.PLAYER_OFFER_ANAL,
 					PlayerTalk.PLAYER_OFFER_NAIZURI,
 					PlayerTalk.PLAYER_OFFER_NIPPLE,
-					PlayerTalk.PLAYER_OFFER_ORAL,
+					!Main.sex.isDom(performer)?null:PlayerTalk.PLAYER_OFFER_ORAL,
 					PlayerTalk.PLAYER_OFFER_PAIZURI,
 					PlayerTalk.PLAYER_OFFER_VAGINAL,
 					PlayerTalk.PLAYER_REQUEST_ANAL,
-					PlayerTalk.PLAYER_REQUEST_ORAL,
+					Main.sex.isDom(performer)?null:PlayerTalk.PLAYER_REQUEST_ORAL,
 					PlayerTalk.PLAYER_REQUEST_VAGINAL);
 			if(blockedActions.contains(action)) {
 				return true;
@@ -4032,6 +4088,16 @@ public class SexPosition {
 			true,
 			null, Util.newArrayListOfValues(GloryHole.class)) {
 		@Override
+		public boolean isActionBlocked(GameCharacter performer, GameCharacter target, SexActionInterface action) {
+			List<SexActionInterface> blockedActions = Util.newArrayListOfValues(
+					GenericOrgasms.GENERIC_PREPARATION_DENIAL,
+					GenericActions.GENERIC_DENY);
+			if(blockedActions.contains(action)) {
+				return true;
+			}
+			return super.isActionBlocked(performer, target, action);
+		}
+		@Override
 		public String getDescription(Map<GameCharacter, SexSlot> occupiedSlots) {
 			List<GameCharacter> characters = new ArrayList<>();
 			
@@ -4100,10 +4166,28 @@ public class SexPosition {
 	static {
 		allSexPositions = new ArrayList<>();
 		
-		// Hard-coded status effects (all those up above):
-		
+		// Hard-coded status effects:
+		// SexPosition:
 		Field[] fields = SexPosition.class.getFields();
-		
+		for(Field f : fields){
+			if (AbstractSexPosition.class.isAssignableFrom(f.getType())) {
+				
+				AbstractSexPosition sexPosition;
+				
+				try {
+					sexPosition = ((AbstractSexPosition) f.get(null));
+
+					sexPositionToIdMap.put(sexPosition, f.getName());
+					idToSexPositionMap.put(f.getName(), sexPosition);
+					allSexPositions.add(sexPosition);
+					
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		// SexPositionUnique:
+		fields = SexPositionUnique.class.getFields();
 		for(Field f : fields){
 			if (AbstractSexPosition.class.isAssignableFrom(f.getType())) {
 				

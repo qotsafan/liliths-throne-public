@@ -95,7 +95,9 @@ public enum Attack {
 			damage *= (attacker.getAttributeValue(Attribute.CRITICAL_DAMAGE) / 100f);
 		}
 		
-		if(attacker.isPlayer()||(attacker.getPartyLeader()!=null && attacker.getPartyLeader().isPlayer())) {
+		if(attacker.isPlayer()
+				|| (attacker.getPartyLeader() != null && attacker.getPartyLeader().isPlayer())
+				|| (attacker instanceof Elemental && ((Elemental) attacker).getSummoner()!=null && ((Elemental) attacker).getSummoner().isPlayer())) {
 			damage *= Main.getProperties().difficultyLevel.getDamageModifierPlayer();
 		} else {
 			damage *= Main.getProperties().difficultyLevel.getDamageModifierNPC();
@@ -135,14 +137,16 @@ public enum Attack {
 		if (critical) {
 			damage *= (attacker.getAttributeValue(Attribute.CRITICAL_DAMAGE) / 100f);
 		}
-		
-		if(attacker.isPlayer() || (attacker.getPartyLeader()!=null && attacker.getPartyLeader().isPlayer())) {
+
+		if(attacker.isPlayer()
+				|| (attacker.getPartyLeader() != null && attacker.getPartyLeader().isPlayer())
+				|| (attacker instanceof Elemental && ((Elemental) attacker).getSummoner()!=null && ((Elemental) attacker).getSummoner().isPlayer())) {
 			damage *= Main.getProperties().difficultyLevel.getDamageModifierPlayer();
 		} else {
 			damage *= Main.getProperties().difficultyLevel.getDamageModifierNPC();
 		}
 		
-		if(attacker.hasTrait(Perk.JOB_SOLDIER, true) && Main.game.isInCombat() && Main.combat.getTurn()==0) {
+		if(attacker.hasStatusEffect(StatusEffect.COMBAT_JOB_SOLDIER) && Main.game.isInCombat() && Main.combat.getTurn()==0) {
 			return 2 * Math.round(damage);
 		} else {
 			return Math.round(damage);
@@ -165,14 +169,16 @@ public enum Attack {
 		if (critical) {
 			finalDamage *= (attacker.getAttributeValue(Attribute.CRITICAL_DAMAGE) / 100f);
 		}
-		
-		if(attacker.isPlayer()||(attacker.getPartyLeader()!=null && attacker.getPartyLeader().isPlayer())) {
+
+		if(attacker.isPlayer()
+				|| (attacker.getPartyLeader() != null && attacker.getPartyLeader().isPlayer())
+				|| (attacker instanceof Elemental && ((Elemental) attacker).getSummoner()!=null && ((Elemental) attacker).getSummoner().isPlayer())) {
 			finalDamage *= Main.getProperties().difficultyLevel.getDamageModifierPlayer();
 		} else {
 			finalDamage *= Main.getProperties().difficultyLevel.getDamageModifierNPC();
 		}
 		
-		if(attacker.hasTrait(Perk.JOB_SOLDIER, true) && Main.game.isInCombat() && Main.combat.getTurn()==0) {
+		if(attacker.hasStatusEffect(StatusEffect.COMBAT_JOB_SOLDIER) && Main.game.isInCombat() && Main.combat.getTurn()==0) {
 			return 2 * Math.round(finalDamage);
 		} else {
 			return Math.round(finalDamage);
@@ -199,14 +205,16 @@ public enum Attack {
 		if (critical) {
 			finalDamage *= (attacker.getAttributeValue(Attribute.CRITICAL_DAMAGE) / 100f);
 		}
-		
-		if(attacker.isPlayer()||(attacker.getPartyLeader()!=null && attacker.getPartyLeader().isPlayer())) {
+
+		if(attacker.isPlayer()
+				|| (attacker.getPartyLeader() != null && attacker.getPartyLeader().isPlayer())
+				|| (attacker instanceof Elemental && ((Elemental) attacker).getSummoner()!=null && ((Elemental) attacker).getSummoner().isPlayer())) {
 			finalDamage *= Main.getProperties().difficultyLevel.getDamageModifierPlayer();
 		} else {
 			finalDamage *= Main.getProperties().difficultyLevel.getDamageModifierNPC();
 		}
 		
-		if(attacker.hasTrait(Perk.JOB_SOLDIER, true) && Main.game.isInCombat() && Main.combat.getTurn()==0) {
+		if(attacker.hasStatusEffect(StatusEffect.COMBAT_JOB_SOLDIER) && Main.game.isInCombat() && Main.combat.getTurn()==0) {
 			return 2 * Math.round(finalDamage);
 		} else {
 			return Math.round(finalDamage);

@@ -2061,13 +2061,13 @@ public class ImpCitadelDialogue {
 					public void effects() {
 						if(Main.game.getCharactersPresent().contains(getBoss())) {
 							if(Main.game.getPlayer().getQuest(QuestLine.MAIN) == Quest.MAIN_2_B_SIRENS_CALL) {
-								Main.game.getTextEndStringBuilder().append(UtilText.parseFromXMLFile("places/submission/impCitadel"+getDialogueEncounterId(), "KEEP_COLLAPSE_ESCAPE_GUARDS_ENSLAVE", getAllCharacters()));
+								Main.game.getTextEndStringBuilder().append(UtilText.parseFromXMLFile("places/submission/impCitadel"+getDialogueEncounterId(), "KEEP_COLLAPSE_ESCAPE_GUARDS_EXPLAIN", getAllCharacters()));
 							} else {
-								Main.game.getTextEndStringBuilder().append(UtilText.parseFromXMLFile("places/submission/impCitadel"+getDialogueEncounterId(), "KEEP_COLLAPSE_ESCAPE_GUARDS_ENSLAVE_PRE_QUEST", getAllCharacters()));
+								Main.game.getTextEndStringBuilder().append(UtilText.parseFromXMLFile("places/submission/impCitadel"+getDialogueEncounterId(), "KEEP_COLLAPSE_ESCAPE_GUARDS_EXPLAIN_PRE_QUEST", getAllCharacters()));
 							}
 							
 						} else {
-							Main.game.getTextEndStringBuilder().append(UtilText.parseFromXMLFile("places/submission/impCitadel"+getDialogueEncounterId(), "KEEP_COLLAPSE_ESCAPE_GUARDS_EXPLAIN", getAllCharacters()));
+							Main.game.getTextEndStringBuilder().append(UtilText.parseFromXMLFile("places/submission/impCitadel"+getDialogueEncounterId(), "KEEP_COLLAPSE_ESCAPE_GUARDS_ENSLAVE", getAllCharacters()));
 						}
 						
 						if(isImpsDefeated()) {
@@ -2372,7 +2372,7 @@ public class ImpCitadelDialogue {
 		}
 	};
 	
-	public static final DialogueNode KEEP_AFTER_COMBAT_DEFEAT_POST_SEX = new DialogueNode("", "", false) {
+	public static final DialogueNode KEEP_AFTER_COMBAT_DEFEAT_POST_SEX = new DialogueNode("", "", true) {
 
 		@Override
 		public String getContent() {

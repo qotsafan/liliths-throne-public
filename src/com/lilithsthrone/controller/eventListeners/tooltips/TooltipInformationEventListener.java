@@ -127,8 +127,8 @@ public class TooltipInformationEventListener implements EventListener {
 
 			// I hate this. If only JavaFX's height detection and resizing methods actually worked...
 			int size = statusEffect.getModifiersAsStringList(owner).size() + statusEffect.getCombatMoves().size() + statusEffect.getSpells().size();
-			int yIncrease = (size > 4 ? size - 4 : 0)
-								+ (owner.hasStatusEffect(statusEffect)?(owner.getStatusEffectDuration(statusEffect) == -1 ? 0 : 2):0);
+			int yIncrease = (size > 4 ? size - 4 : 0) + (owner.hasStatusEffect(statusEffect)?(owner.getStatusEffectDuration(statusEffect)==-1 && !statusEffect.isCombatEffect() ? 0 : 2):0);
+//								+ (owner.hasStatusEffect(statusEffect)?(owner.getStatusEffectDuration(statusEffect) == -1 ? 0 : 2):0);
 			int spacingHeight = 0;
 			
 			List<Value<Integer, String>> additionalDescriptions = statusEffect.getAdditionalDescriptions(owner);
@@ -136,7 +136,7 @@ public class TooltipInformationEventListener implements EventListener {
 				for(Value<Integer, String> value : additionalDescriptions) {
 					yIncrease += 1 + value.getKey();
 				}
-				spacingHeight += additionalDescriptions.size() * 4;
+				spacingHeight += 12 * additionalDescriptions.size();
 			}
 				
 			Main.mainController.setTooltipSize(360, 278 + spacingHeight + (yIncrease * LINE_HEIGHT));
@@ -150,11 +150,21 @@ public class TooltipInformationEventListener implements EventListener {
 			// Attribute modifiers:
 			tooltipSB.append("<div class='subTitle-picture'>");// style='white-space: nowrap'>");
 				boolean effectsFound = false;
-				if(!statusEffect.getModifiersAsStringList(owner).isEmpty()) {
-					for (String s : statusEffect.getModifiersAsStringList(owner)) {
-						tooltipSB.append((effectsFound?"<br/>":"") + UtilText.parse(owner, s));
-						effectsFound =true;
+				if(statusEffect!=StatusEffect.SUBSPECIES_BONUS || (Main.getProperties().isAdvancedRaceKnowledgeDiscovered(owner.getTrueSubspecies()) && !owner.isRaceConcealed()) || owner.isPlayer()) {
+					if (!statusEffect.getModifiersAsStringList(owner).isEmpty()) {
+						for (String s : statusEffect.getModifiersAsStringList(owner)) {
+							tooltipSB.append((effectsFound?"<br/>":"")+UtilText.parse(owner, s));
+							effectsFound = true;
+						}
 					}
+				} else {
+					tooltipSB.append("<p style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>");
+					if(owner.isRaceConcealed()) {
+						tooltipSB.append(UtilText.parse(owner, "You don't know what [npc.namePos] race is, so can't know [npc.her] strengths and weaknesses...</p>"));
+					} else {
+						tooltipSB.append(UtilText.parse(owner, "You don't know enough about [npc.racePlural] to know [npc.her] strengths and weaknesses...</p>"));
+					}
+					effectsFound = true;
 				}
 				for (AbstractCombatMove cm : statusEffect.getCombatMoves()) {
 					tooltipSB.append((effectsFound?"<br/>":"")+"[style.boldExcellent(Grants)] [style.boldCombat(Move)]: "+Util.capitaliseSentence(cm.getName(0, owner)));
@@ -180,16 +190,24 @@ public class TooltipInformationEventListener implements EventListener {
 			
 			if(additionalDescriptions!=null && !additionalDescriptions.isEmpty()) {
 				for(Value<Integer, String> desc : additionalDescriptions) {
-					tooltipSB.append("<div class='description' style='text-align:center; line-height:"+LINE_HEIGHT+"px; height:"+(16+(desc.getKey()*LINE_HEIGHT))+"px'>"
+					int heightString = 16+(desc.getKey()*LINE_HEIGHT);
+					tooltipSB.append("<div class='description' style='text-align:center; line-height:"+LINE_HEIGHT+"px; min-height:"+heightString+"px;height:"+heightString+"px;'>"
 							+ desc.getValue()
 						+ "</div>");
 				}
 			}
 			
 			if(owner.hasStatusEffect(statusEffect)) {
-				if (owner.getStatusEffectDuration(statusEffect) != -1) {
+				if (owner.getStatusEffectDuration(statusEffect) != -1 || statusEffect.isCombatEffect()) {
 					if (statusEffect.isCombatEffect()) {
-						tooltipSB.append("<div class='subTitle'><b>Turns remaining: " + owner.getStatusEffectDuration(statusEffect) + "</b></div>");
+						tooltipSB.append("<div class='subTitle'><b>Turns remaining: ");
+						if(owner.getStatusEffectDuration(statusEffect) != -1) {
+							tooltipSB.append(owner.getStatusEffectDuration(statusEffect));
+						} else {
+							tooltipSB.append(UtilText.getBasicInfinitySymbol());
+						}
+						tooltipSB.append("</b></div>");
+						
 					} else {
 						int timerHeight = (int) ((owner.getStatusEffectDuration(statusEffect)/(60*60*6f))*100);
 
@@ -268,8 +286,9 @@ public class TooltipInformationEventListener implements EventListener {
 					tooltipSB.append((i!=0?"<br/>":"") + s);
 					i++;
 				}
-			} else
+			} else {
 				tooltipSB.append("<b style='color:" + PresetColour.PERK.toWebHexString() + ";'>Perk</b>" + "<br/><span style='color:" + PresetColour.TEXT_GREY.toWebHexString() + ";'>None</span>");
+			}
 			tooltipSB.append("</div>");
 
 			// Picture:
@@ -860,8 +879,7 @@ public class TooltipInformationEventListener implements EventListener {
 					}
 					
 					boolean crotchBreasts = owner.hasBreastsCrotch()
-							&& (Main.getProperties().getUddersLevel()>0 || owner.isFeral())
-							&& (owner.isBreastsCrotchVisibleThroughClothing()||owner.isAreaKnownByCharacter(CoverableArea.NIPPLES_CROTCH, Main.game.getPlayer()));
+							&& (owner.isBreastsCrotchVisibleThroughClothing() || owner.isAreaKnownByCharacter(CoverableArea.NIPPLES_CROTCH, Main.game.getPlayer()));
 					boolean spinneret = owner.hasSpinneret();
 					boolean elemental = owner.isElemental() && !((Elemental)owner).getSummoner().isElementalActive();
 					
@@ -883,6 +901,7 @@ public class TooltipInformationEventListener implements EventListener {
 
 					Main.mainController.setTooltipSize(dimensions[0], dimensions[1]);
 					
+					boolean showWinged = (owner.hasWings() || owner.isArmWings()) && !owner.getFleshSubspecies().isWinged();
 					tooltipSB.setLength(0);
 					tooltipSB.append("<div class='title' style='color:" + owner.getRace().getColour().toWebHexString() + ";'>"
 							+(owner.getRaceStage().getName()!=""
@@ -890,8 +909,8 @@ public class TooltipInformationEventListener implements EventListener {
 								:"")
 							+ "<b style='color:"+owner.getSubspecies().getColour(owner).toWebHexString()+";'>"
 								+ (owner.isFeminine()
-										?Util.capitaliseSentence(owner.getSubspecies().getSingularFemaleName(owner.getBody()))
-										:Util.capitaliseSentence(owner.getSubspecies().getSingularMaleName(owner.getBody())))
+										?Util.capitaliseSentence((showWinged ? "winged " : "") + owner.getSubspecies().getSingularFemaleName(owner.getBody()))
+										:Util.capitaliseSentence((showWinged ? "winged " : "") + owner.getSubspecies().getSingularMaleName(owner.getBody())))
 							+ "</b>"
 							+ "</div>");
 					
@@ -970,9 +989,14 @@ public class TooltipInformationEventListener implements EventListener {
 						if (owner.getHairRawLengthValue() == 0 && owner.isFaceBaldnessNatural()) {
 							tooltipSB.append(getEmptyBodyPartDiv("Hair", "None"));
 						} else {
-							tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(owner.getHairLength().getDescriptor())+" "+owner.getHairStyle().getName(owner)+" "+owner.getHairName(), owner.getHairRace(), owner.getHairCovering(), owner.isHairFeral()));
+							tooltipSB.append(getBodyPartDiv(owner,
+									Util.capitaliseSentence(owner.getHairLength().getDescriptor())+" "+owner.getHairStyle().getName(owner)+" "+owner.getHairName(), owner.getHairRace(), owner.getHairCovering(), owner.isHairFeral()));
 						}
-						tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(Util.intToString(owner.getEyePairs()*2))+" eyes", owner.getEyeRace(), owner.getEyeCovering(), owner.isEyeFeral()));
+						if(!owner.isPlayer() && !owner.isAreaKnownByCharacter(CoverableArea.EYES, Main.game.getPlayer())) {
+							tooltipSB.append(getEmptyBodyPartDiv("Eyes", "Unknown!"));
+						} else {
+							tooltipSB.append(getBodyPartDiv(owner, Util.capitaliseSentence(Util.intToString(owner.getEyePairs()*2))+" eyes", owner.getEyeRace(), owner.getEyeCovering(), owner.isEyeFeral()));
+						}
 						tooltipSB.append(getBodyPartDiv(owner, "Ears", owner.getEarRace(), owner.getEarCovering(), owner.isEarFeral()));
 						tooltipSB.append(getBodyPartDiv(owner, "Tongue", owner.getTongueRace(), owner.getTongueCovering(), owner.isTongueFeral()));
 						if (owner.getHornType() != HornType.NONE) {
@@ -1332,7 +1356,7 @@ public class TooltipInformationEventListener implements EventListener {
 										:"This slot is currently hidden from view by [npc.namePos] <b>"+Util.clothesToStringList(clothingVisible, false)+"</b>.")))
 					+ "</div>"));
 			
-		} else if(slaveJob!=null) {
+		} else if(slaveJob!=null) {//TODO
 			int yIncrease = 0;
 
 			// Title:
@@ -1348,9 +1372,13 @@ public class TooltipInformationEventListener implements EventListener {
 										:" [style.boldGood(")+slaveJob.getHourlyStaminaDrain()+")]"
 							+ "</div>");
 			
-			tooltipSB.append("<div class='description' style='height:64px'>"
-								+ slaveJob.getDescription()
-							+ "</div>");
+			tooltipSB.append("<div class='description' style='height:64px'>");
+				tooltipSB.append(slaveJob.getDescription());
+				if(slaveJob==SlaveJob.IDLE) {
+					tooltipSB.append("<br/>");
+					tooltipSB.append("The idle hours in which this slave will choose to sleep will be marked with [style.colourSleep(zzZ)].");
+				}
+			tooltipSB.append("</div>");
 
 			for(SlaveJobFlag flag : slaveJob.getFlags()) {
 				tooltipSB.append("<div class='description' style='height:48px'>"
@@ -1410,13 +1438,15 @@ public class TooltipInformationEventListener implements EventListener {
 			if(!cell.equals(Main.game.getWorlds().get(WorldType.DOMINION).getCell(0, 0))) { // Override as NPCs had their home placed here... Add a version catch?
 				charactersPresent.addAll(Main.game.getCharactersTreatingCellAsHome(cell));
 			}
-
-			boolean teleport = Main.game.getPlayer().hasSpell(Spell.TELEPORT);
+			
+			boolean libraryMap = Main.game.getCurrentDialogueNode()==Library.DOMINION_MAP;
+			
+			boolean teleport = !libraryMap && Main.game.getPlayer().hasSpell(Spell.TELEPORT);
 			
 			int yIncrease = 0;
 			StringBuilder charactersPresentDescription = new StringBuilder();
 			StringBuilder teleportingDescription = new StringBuilder();
-			if(Main.game.getCurrentDialogueNode() != Library.DOMINION_MAP) {
+			if(!libraryMap) {
 				if(!charactersPresent.isEmpty()) {
 					for(NPC character : charactersPresent) {
 						yIncrease++;
@@ -1532,7 +1562,7 @@ public class TooltipInformationEventListener implements EventListener {
 			
 		} else if(loadedBody!=null) {
 			boolean feral = loadedBody.isFeral();
-			boolean crotchBreasts = loadedBody.hasBreastsCrotch() && (Main.getProperties().getUddersLevel()>0 || feral);
+			boolean crotchBreasts = loadedBody.hasBreastsCrotch();
 			boolean spinneret = loadedBody.hasSpinneret();
 			
 			int crotchBreastAddition = crotchBreasts?24:0;
@@ -1574,13 +1604,13 @@ public class TooltipInformationEventListener implements EventListener {
 			
 			tooltipSB.append(getBodyPartDiv(loadedBody, "Torso", loadedBody.getTorso(),
 					"<span>"
-					+(feral && !loadedBody.getSubspecies().getFeralAttributes().isSizeHeight()
+					+(feral && !loadedBody.getSubspecies().getFeralAttributes(loadedBody).isSizeHeight()
 						?"Length: [unit.sizeShort(" + (loadedBody.getHeightValue())+ ")]</span>"
 						:"Height: [unit.sizeShort(" + loadedBody.getHeightValue() + ")]</span>")));
 			
 			
 			// LESSER:
-			if(feral && !loadedBody.getSubspecies().getFeralAttributes().isArmsOrWingsPresent() && loadedBody.getLegConfiguration()!=LegConfiguration.AVIAN) {
+			if(feral && !loadedBody.getSubspecies().getFeralAttributes(loadedBody).isArmsOrWingsPresent() && loadedBody.getLegConfiguration()!=LegConfiguration.AVIAN) {
 				tooltipSB.append(getEmptyBodyPartDiv("Arms", "None"));
 			} else {
 				tooltipSB.append(getBodyPartDiv(loadedBody, Util.capitaliseSentence(Util.intToString(loadedBody.getArm().getArmRows()*2))+" arms", loadedBody.getArm()));
@@ -1665,7 +1695,7 @@ public class TooltipInformationEventListener implements EventListener {
 			
 			tooltipSB.append(getBodyPartDiv(loadedBody, "Anus", loadedBody.getAss().getAnus()));
 			
-			if(feral && !loadedBody.getSubspecies().getFeralAttributes().isBreastsPresent()) {
+			if(feral && !loadedBody.getSubspecies().getFeralAttributes(loadedBody).isBreastsPresent()) {
 				tooltipSB.append(getEmptyBodyPartDiv("Nipples (Breasts)", "None"));
 			} else {
 				tooltipSB.append(getBodyPartDiv(loadedBody, "Nipples",
