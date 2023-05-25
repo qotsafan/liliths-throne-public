@@ -3231,11 +3231,7 @@ public class CharacterModificationUtils {
 	}
 	
 	public static int getLactationUpperLimit() {
-		if (Main.game.isInNewWorld()) {
-			return Lactation.SEVEN_MONSTROUS_AMOUNT_POURING.getMaximumValue();
-		} else {
-			return 150;
-		}
+		return Lactation.SEVEN_MONSTROUS_AMOUNT_POURING.getMaximumValue();
 	}
 	
 	public static String getSelfTransformLactationDiv() {
