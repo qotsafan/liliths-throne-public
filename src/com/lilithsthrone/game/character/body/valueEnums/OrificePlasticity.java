@@ -65,7 +65,7 @@ public enum OrificePlasticity {
 			"remains [style.italicsTerrible(permanently stretched)] [style.colourPlasticity(and recovers almost none of its original capacity)]",
 			"remains [style.italicsTerrible(permanently stretched)] [style.colourPlasticity(and recovers almost none of their original capacity)]",
 			7, 0.9f, 2/(60*60f*24), PresetColour.GENERIC_SIZE_EIGHT);
-	
+
 	private String descriptor;
 	private String description;
 	private String descriptionPlural;

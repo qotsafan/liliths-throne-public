@@ -106,6 +106,7 @@ import com.lilithsthrone.game.character.body.valueEnums.Capacity;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringModifier;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringPattern;
 import com.lilithsthrone.game.character.body.valueEnums.CumProduction;
+import com.lilithsthrone.game.character.body.valueEnums.CupSize;
 import com.lilithsthrone.game.character.body.valueEnums.EyeShape;
 import com.lilithsthrone.game.character.body.valueEnums.Femininity;
 import com.lilithsthrone.game.character.body.valueEnums.FluidFlavour;
@@ -190,12 +191,16 @@ import com.lilithsthrone.game.inventory.clothing.AbstractClothingType;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
 import com.lilithsthrone.game.inventory.enchanting.AbstractItemEffectType;
 import com.lilithsthrone.game.inventory.enchanting.ItemEffectType;
+import com.lilithsthrone.game.inventory.enchanting.TFModifier;
+import com.lilithsthrone.game.inventory.enchanting.TFPotency;
 import com.lilithsthrone.game.inventory.item.AbstractItemType;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.inventory.outfit.AbstractOutfit;
 import com.lilithsthrone.game.inventory.outfit.OutfitType;
 import com.lilithsthrone.game.inventory.weapon.AbstractWeaponType;
 import com.lilithsthrone.game.inventory.weapon.WeaponType;
+import com.lilithsthrone.game.occupantManagement.slave.SlaveJob;
+import com.lilithsthrone.game.occupantManagement.slave.SlaveJobSetting;
 import com.lilithsthrone.game.occupantManagement.slave.SlavePermission;
 import com.lilithsthrone.game.occupantManagement.slave.SlavePermissionSetting;
 import com.lilithsthrone.game.settings.ForcedFetishTendency;
@@ -227,16 +232,16 @@ import com.lilithsthrone.world.places.AbstractPlaceUpgrade;
 import com.lilithsthrone.world.places.PlaceType;
 import com.lilithsthrone.world.places.PlaceUpgrade;
 
+// Prepend 'org.open' to these if using JDK11+
 //import jdk.nashorn.api.scripting.NashornScriptEngine;
 //import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-// Use the following imports when using the org.openjdk.nashorn dependency:
 import org.openjdk.nashorn.api.scripting.NashornScriptEngine;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 /**
  * @since 0.1.0
- * @version 0.4
- * @author Innoxia, Pimvgd, AlacoGit, Tad Unlikely
+ * @version 0.4.10.4
+ * @author Innoxia, Pimvgd, AlacoGit, Tad Unlikely, CognitiveMist, tarbh-uisge
  */
 public class UtilText {
 
@@ -489,7 +494,7 @@ public class UtilText {
 		
 		modifiedSentence = UtilText.parse(parsingCharactersForSpeech, splitOnConditional[splitOnConditional.length-1]);
 		
-		if(target.hasPersonalityTrait(PersonalityTrait.MUTE) && canBeMuted) {
+		if(target.isMute() && canBeMuted) {
 			modifiedSentence = Util.replaceWithMute(modifiedSentence, Main.game.isInSex() && Main.sex.getAllParticipants().contains(target));
 			
 		} else if(includeExtraEffects
@@ -534,7 +539,8 @@ public class UtilText {
 			}
 
 			if(includePersonalityEffects) {
-				if(target.getLipSize().isImpedesSpeech() || target.hasPersonalityTrait(PersonalityTrait.LISP)) {
+				if((Main.game.isLipLispEnabled() && target.getLipSize().isImpedesSpeech())
+						|| target.hasPersonalityTrait(PersonalityTrait.LISP)) {
 					modifiedSentence = Util.applyLisp(modifiedSentence);
 				}
 	
@@ -597,7 +603,15 @@ public class UtilText {
 		return parseNPCSpeech(text, femininity, false, false);
 	}
 
+	public static String parseNPCSpeechDoll(String text, Femininity femininity) {
+		return parseNPCSpeech(text, femininity, false, false, true);
+	}
+	
 	public static String parseNPCSpeech(String text, Femininity femininity, boolean bimbo, boolean stutter) {
+		return parseNPCSpeech(text, femininity, bimbo, stutter, false);
+	}
+	
+	public static String parseNPCSpeech(String text, Femininity femininity, boolean bimbo, boolean stutter, boolean doll) {
 		modifiedSentence = text;
 		if (bimbo) {
 			modifiedSentence = Util.addBimbo(modifiedSentence, 6);
@@ -605,7 +619,7 @@ public class UtilText {
 		if (stutter) {
 			modifiedSentence = Util.addStutter(modifiedSentence, 4);
 		}
-		return "<span class='speech' style='color:" + femininity.getSpeechColour().toWebHexString() + ";'>" + modifiedSentence + "</span>";
+		return "<span class='speech"+(doll?" doll":"")+"' style='color:" + femininity.getSpeechColour().toWebHexString() + ";'>" + modifiedSentence + "</span>";
 	}
 	
 	public static String getDisabledResponse(String label) {
@@ -759,6 +773,13 @@ public class UtilText {
 	}
 	
 	public static String formatAsMoney(String money, String tag) {
+		if(!money.contains("[npc.")) { // DO not parse it out if this is a generic NPC's money
+			try {
+				int moneyInt = Integer.parseInt(UtilText.parse(money));
+				return formatAsMoney(moneyInt, tag, PresetColour.TEXT);
+			} catch(Exception ex) {
+			}
+		}
 		return formatAsMoney(money, tag, PresetColour.TEXT);
 	}
 	
@@ -788,6 +809,13 @@ public class UtilText {
 		return "AEIOUaeiou".indexOf(c) != -1;
 	}
 
+	/**
+	 * @return The word, with an appropriate determiner (either 'a' or 'an' ) added in front of it.
+	 */
+	public static String addDeterminer(String word) {
+		return generateSingularDeterminer(word)+" "+word;
+	}
+	
 	/**
 	 * @return 'a' or 'an'
 	 */
@@ -2487,6 +2515,29 @@ public class UtilText {
 		
 		commandsList.add(new ParserCommand(
 				Util.newArrayListOfValues(
+						"bitch+",
+						"slut+",
+						"insult+",
+						"bitchD",
+						"slutD",
+						"insultD"),
+				true,
+				true,
+				"",
+				"Returns a random mean word to describe this person, based on their femininity, with a mean descriptor before it.") {
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				String naughtyDescriptor = Util.randomItemFromValues("worthless", "dumb", "dirty", "filthy");
+				if(character.isFeminine()) {
+					return naughtyDescriptor+" "+UtilText.returnStringAtRandom("bitch", "slut", "cunt", "whore", "skank");
+				} else {
+					return naughtyDescriptor+" "+UtilText.returnStringAtRandom("asshole", "bastard", "fuckface", "fucker");
+				}
+			}
+		});
+
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
 						"bitches",
 						"sluts",
 						"insultPlural"),
@@ -2500,6 +2551,29 @@ public class UtilText {
 					return UtilText.returnStringAtRandom("bitches", "sluts", "cunts", "whores", "skanks");
 				} else {
 					return UtilText.returnStringAtRandom("assholes", "bastards", "fuckfaces", "fuckers");
+				}
+			}
+		});
+
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"bitches+",
+						"sluts+",
+						"insultPlural+",
+						"bitchesD",
+						"slutsD",
+						"insultPluralD"),
+				true,
+				true,
+				"",
+				"Returns a random mean pluralised word to describe this person, based on their femininity, with a mean descriptor before it.") {
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				String naughtyDescriptor = Util.randomItemFromValues("worthless", "dumb", "dirty", "filthy");
+				if(character.isFeminine()) {
+					return naughtyDescriptor+" "+UtilText.returnStringAtRandom("bitches", "sluts", "cunts", "whores", "skanks");
+				} else {
+					return naughtyDescriptor+" "+UtilText.returnStringAtRandom("assholes", "bastards", "fuckfaces", "fuckers");
 				}
 			}
 		});
@@ -3480,6 +3554,104 @@ public class UtilText {
 					return parseNPCSpeech(arguments, Femininity.FEMININE_STRONG);
 				} else {
 					return parseNPCSpeech("...", Femininity.FEMININE_STRONG);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechMasculineDoll",
+						"masculineSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, masculine character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.MASCULINE);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.MASCULINE);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechMasculineStrongDoll",
+						"speechMasculineHeavyDoll",
+						"speechMasculinePlusDoll",
+						"masculineStrongSpeechDoll",
+						"masculineHeavySpeechDoll",
+						"masculinePlusSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, very masculine character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.MASCULINE_STRONG);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.MASCULINE_STRONG);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechAndrogynousDoll",
+						"androgynousSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, androgynous character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.ANDROGYNOUS);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.ANDROGYNOUS);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechFeminineDoll",
+						"feminineSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, feminine character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.FEMININE);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.FEMININE);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechFeminineStrongDoll",
+						"speechFeminineHeavyDoll",
+						"speechFemininePlusDoll",
+						"feminineStrongSpeechDoll",
+						"feminineHeavySpeechDoll",
+						"femininePlusSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, very feminine character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.FEMININE_STRONG);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.FEMININE_STRONG);
 				}
 			}
 		});
@@ -5697,7 +5869,7 @@ public class UtilText {
 				Util.newArrayListOfValues(
 						"armRows"),
 				true,
-				true,
+				false,
 				"",
 				"Returns a descriptor in the form of the character number of arms. i.e. If the character has 1 arm row it will return 'a pair of', for 2, 'two pairs of', and 3, 'three pairs of'.",
 				BodyPartType.ARM){
@@ -5710,6 +5882,20 @@ public class UtilText {
 				} else {
 					return "three pairs of";
 				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"handCount"),
+				true,
+				false,
+				"",
+				"Returns the total number of the character's hands, which will usually be 'two', 'four', or 'six'. (Sometimes 'no' for ferals!)",
+				BodyPartType.ARM){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				return Util.intToString(character.getArmRows() * 2);
 			}
 		});
 		
@@ -5973,7 +6159,7 @@ public class UtilText {
 				BodyPartType.ASS){
 			@Override
 			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
-				return getSkinName(character.getTorsoType(), character);
+				return getSkinName(character.getAssType(), character);
 			}
 		});
 		
@@ -5988,7 +6174,7 @@ public class UtilText {
 				BodyPartType.ASS){
 			@Override
 			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
-				return getSkinNameWithDescriptor(character.getTorsoType(), character.getCovering(character.getTorsoType().getBodyCoveringType(character)), character);
+				return getSkinNameWithDescriptor(character.getAssType(), character.getCovering(character.getAssType().getBodyCoveringType(character)), character);
 			}
 		});
 		
@@ -9608,6 +9794,7 @@ public class UtilText {
 	
 	public static void resetParsingEngine() {
 		engine = null;
+		memo.clear();
 		specialParsingStrings = new ArrayList<>();
 	}
 	
@@ -9645,6 +9832,7 @@ public class UtilText {
 	public static void initScriptEngine() {
 		// http://hg.openjdk.java.net/jdk8/jdk8/nashorn/rev/eb7b8340ce3a
 		engine = factory.getScriptEngine("-strict", "--no-java", "--no-syntax-extensions");//, "-scripting");
+		memo.clear(); // cached scripts may reference the previous engine; drop them
 		try {
 			engine.getBindings(ScriptContext.ENGINE_SCOPE).remove("exit");
 			engine.getBindings(ScriptContext.ENGINE_SCOPE).remove("quit");
@@ -9730,6 +9918,12 @@ public class UtilText {
 		for(AbstractItemEffectType aiet : ItemEffectType.getAllEffectTypes()) {
 			engine.put("ITEM_EFFECT_TYPE_"+ItemEffectType.getIdFromItemEffectType(aiet), aiet);
 		}
+		for(TFModifier modifier : TFModifier.values()) {
+			engine.put("ENCHANTMENT_MODIFIER_"+modifier.toString(), modifier);
+		}
+		for(TFPotency potency : TFPotency.values()) {
+			engine.put("ENCHANTMENT_POTENCY_"+potency.toString(), potency);
+		}
 		
 		// Tattoos:
 		for(AbstractTattooType tattooType : TattooType.getAllTattooTypes()) {
@@ -9777,6 +9971,9 @@ public class UtilText {
 		}
 		for(LegConfiguration legConf : LegConfiguration.values()) {
 			engine.put("LEG_CONFIGURATION_"+legConf.toString(), legConf);
+		}
+		for(CupSize cupSize : CupSize.values()) {
+			engine.put("CUP_SIZE_"+cupSize.toString(), cupSize);
 		}
 		for(FootStructure footStructure : FootStructure.values()) {
 			engine.put("FOOT_STRUCTURE_"+footStructure.toString(), footStructure);
@@ -9856,6 +10053,9 @@ public class UtilText {
 		}
 		for(EyeShape eyeShape : EyeShape.values()) {
 			engine.put("EYE_SHAPE_"+eyeShape.toString(), eyeShape);
+		}
+		for(OrificeDepth orificeDepth : OrificeDepth.values()) {
+			engine.put("ORIFICE_DEPTH_"+orificeDepth.toString(), orificeDepth);
 		}
 		// Types:
 		for(AbstractFluidType fluidType : FluidType.getAllFluidTypes()) {
@@ -10088,6 +10288,12 @@ public class UtilText {
 		}
 		for(InventoryInteraction interaction : InventoryInteraction.values()) {
 			engine.put("INVENTORY_INTERACTION_"+interaction.toString(), interaction);
+		}
+		for(SlaveJob job : SlaveJob.values()) {
+			engine.put("SLAVE_JOB_"+job.toString(), job);
+		}
+		for(SlaveJobSetting jobSetting : SlaveJobSetting.values()) {
+			engine.put("SLAVE_JOB_SETTING_"+jobSetting.toString(), jobSetting);
 		}
 		
 		
@@ -10778,12 +10984,8 @@ public class UtilText {
 	}
 	
 	
-	// Memoization improvement attempts follow from here:
-	
-//	private static final Map<String, CompiledScript> memo = new HashMap<>();
-//	private static final int memo_limit = 500;
-	// NOTE: This was causing a bug where upon loading a saved game, the player's race wasn't being recalculated properly for some reason.
-	// It seems to have been fixed by changing return script.eval(); to return script.eval(((NashornScriptEngine)engine).getContext());
+	private static final Map<String, CompiledScript> memo = new HashMap<>();
+	private static final int memo_limit = 500;
 	/**
 	 * Added in PR#1442 to increase performance by adding a memoization cache to compile scripting engine scripts.
 	 * <br/>- Adds a cache intended to hold compiled forms of script engine scripts.
@@ -10795,27 +10997,18 @@ public class UtilText {
 	 * @throws ScriptException
 	 */
 	private static Object evaluate(String command) throws ScriptException {
-		// Commented out in 0.4.0.10 as it was continuing to throw parsing errors
-		// Unable to reliably replicate the bug - sometimes everything worked fine, sometimes the #VAR parsing sections would fail to parse completely
-		
-//		CompiledScript script;
-//		if (!memo.containsKey(command)) {
-//			script = ((NashornScriptEngine)engine).compile(command);
-//			if (memo.size() < memo_limit) {
-//				memo.put(command, script);
-//				if (memo.size() == memo_limit) {
-//					System.err.println("Memo has reached capacity! Additional script commands will not be memoized.");
-//				}
-//			}
-//		} else {
-//			script = memo.get(command);
-//		}
-//		return script.eval(((NashornScriptEngine)engine).getContext());
-//		//return script.eval();
-		
-		
-		// This is the old code which works but is slow:
-		CompiledScript script = ((NashornScriptEngine)engine).compile(command);
+		CompiledScript script;
+		if (!memo.containsKey(command)) {
+			script = ((NashornScriptEngine)engine).compile(command);
+			if (memo.size() < memo_limit) {
+				memo.put(command, script);
+				if (memo.size() == memo_limit) {
+					System.err.println("Memo has reached capacity! Additional script commands will not be memoized.");
+				}
+			}
+		} else {
+			script = memo.get(command);
+		}
 		return script.eval();
 	}
 }
