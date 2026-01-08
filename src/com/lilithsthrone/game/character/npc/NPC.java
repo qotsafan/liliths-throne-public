@@ -1514,10 +1514,6 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		return itemType.getEnchantmentEffect();
 	}
 
-	public boolean isHermOrFuta() {
-		return this.getGenderPreference() == Gender.F_P_V_B_FUTANARI || this.getGenderPreference() == Gender.M_P_V_B_HERMAPHRODITE;
-	}
-
 	public TransformativePotion generateTransformativePotion(GameCharacter target) {
 		List<PossibleItemEffect> possibleEffects = new ArrayList<>();
 		AbstractItemType itemType = ItemType.getItemTypeFromId("innoxia_race_human_bread_roll");
@@ -1844,8 +1840,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		//--- CORE ---//
 		
 		// Height:
-		if(target.getHeightValue() + 10 < body.getHeightValue()
-				|| isHermOrFuta()) {
+		if(target.getHeightValue() + 10 < body.getHeightValue()) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_SIZE, TFPotency.MAJOR_BOOST, 1),
 				"Let's make you taller!"));
@@ -1860,16 +1855,14 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		
 		// Muscle:
 		if(target.getMuscleValue() > body.getMuscle()
-				&& target.getMuscle() != Muscle.valueOf(body.getMuscle())
-				&& !isHermOrFuta()) {
+				&& target.getMuscle() != Muscle.valueOf(body.getMuscle())) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_SIZE_SECONDARY, TFPotency.MAJOR_DRAIN, 1),
 				"You're too muscly for me!"));
 			if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 			
 		} else if((target.getMuscleValue() < body.getMuscle()
-				&& target.getMuscle() != Muscle.valueOf(body.getMuscle()))
-				|| isHermOrFuta()) {
+				&& target.getMuscle() != Muscle.valueOf(body.getMuscle()))) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_SIZE_SECONDARY, TFPotency.MAJOR_BOOST, 1),
 				"You need to have more muscle!"));
@@ -1878,16 +1871,14 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 
 		// Body size:
 		if(target.getBodySizeValue() > body.getBodySize()
-				&& target.getBodySize() != BodySize.valueOf(body.getBodySize())
-				&& !isHermOrFuta()) {
+				&& target.getBodySize() != BodySize.valueOf(body.getBodySize())) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_SIZE_TERTIARY, TFPotency.MAJOR_DRAIN, 1),
 				"Let's slim you down a bit!"));
 			if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 			
 		} else if((target.getBodySizeValue() < body.getBodySize()
-				&& target.getBodySize() != BodySize.valueOf(body.getBodySize()))
-				|| isHermOrFuta()) {
+				&& target.getBodySize() != BodySize.valueOf(body.getBodySize()))) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_SIZE_TERTIARY, TFPotency.MAJOR_BOOST, 1),
 				"You're far too slim for my liking!"));
@@ -1896,8 +1887,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		
 		// Femininity:
 		if((target.getFemininityValue() < body.getFemininity()
-				&& Femininity.valueOf(target.getFemininityValue()) != Femininity.valueOf(body.getFemininity()))
-				|| isHermOrFuta()) {
+				&& Femininity.valueOf(target.getFemininityValue()) != Femininity.valueOf(body.getFemininity()))) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_CORE, TFModifier.TF_MOD_FEMININITY, TFPotency.MAJOR_BOOST, 1),
 				"I'm gonna need you to be more feminine!"));
@@ -1916,8 +1906,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		//--- BREASTS ---//
 		// Breast size:
 		// Using a tolerance from 0 to 2 instead of +-1 here, since target breast size can be flats (size = 0)
-		if(target.getBreastSize().getMeasurement() + 3 <= body.getBreast().getSize().getMeasurement()
-				|| isHermOrFuta()) {
+		if(target.getBreastSize().getMeasurement() + 3 <= body.getBreast().getSize().getMeasurement()) {
 			possibleEffects.add(new PossibleItemEffect(
 					new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_BREASTS, TFModifier.TF_MOD_SIZE, TFPotency.MAJOR_BOOST, 1),
 					"Your breasts need to be a lot bigger!"));
@@ -2002,8 +1991,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		//--- ASS ---//
 		
 		// Ass size:
-		if(target.getAssSize().getValue() + 1 < body.getAss().getAssSize().getValue()
-				|| isHermOrFuta()) {
+		if(target.getAssSize().getValue() + 1 < body.getAss().getAssSize().getValue()) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_ASS, TFModifier.TF_MOD_SIZE, TFPotency.BOOST, 1),
 				"Your ass needs to be bigger"));
@@ -2017,8 +2005,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		}
 		
 		// Capacity:
-		if(target.getAssRawCapacityValue()+10 < body.getAss().getAnus().getOrificeAnus().getRawCapacityValue()
-				|| isHermOrFuta()) {
+		if(target.getAssRawCapacityValue()+10 < body.getAss().getAnus().getOrificeAnus().getRawCapacityValue()) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_ASS, TFModifier.TF_MOD_CAPACITY, TFPotency.BOOST, 1),
 				"Your ass is too tight for my liking!"));
@@ -2032,8 +2019,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		}
 		
 		// Wetness:
-		if(target.getAssWetness().getValue() < body.getAss().getAnus().getOrificeAnus().getWetness(null).getValue()
-				|| isHermOrFuta()) {
+		if(target.getAssWetness().getValue() < body.getAss().getAnus().getOrificeAnus().getWetness(null).getValue()) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_ASS, TFModifier.TF_MOD_WETNESS, TFPotency.MINOR_BOOST, 1),
 				"Your ass is too dry!"));
@@ -2041,8 +2027,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		}
 		
 		// Hip size:
-		if(target.getHipSize().getValue() + 1 < body.getAss().getHipSize().getValue()
-				|| isHermOrFuta()) {
+		if(target.getHipSize().getValue() + 1 < body.getAss().getHipSize().getValue()) {
 			possibleEffects.add(new PossibleItemEffect(new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_ASS, TFModifier.TF_MOD_SIZE_SECONDARY, TFPotency.BOOST, 1),
 				"Your hips need to be wider!"));
 			if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
@@ -2062,7 +2047,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		boolean doubleApplication = Math.abs(target.getHairRawLengthValue() - body.getHair().getRawLengthValue()) > 20;
 		for(int i=0; i<(doubleApplication?2:1); i++) {
 			boolean majorChange = Math.abs(target.getHairRawLengthValue() - body.getHair().getRawLengthValue()) > (i==0&&doubleApplication?30:15);
-			if(target.getHairRawLengthValue() + 6 < body.getHair().getRawLengthValue() || isHermOrFuta()) {
+			if(target.getHairRawLengthValue() + 6 < body.getHair().getRawLengthValue()) {
 				possibleEffects.add(new PossibleItemEffect(
 					new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_HAIR, TFModifier.TF_MOD_SIZE, majorChange?TFPotency.MAJOR_BOOST:TFPotency.BOOST, 1),
 					i==0
@@ -2082,8 +2067,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		//--- FACE ---//
 		
 		// Lip size:
-		if(target.getLipSize().getValue() + 1 < body.getFace().getMouth().getLipSize().getValue()
-				|| isHermOrFuta()) {
+		if(target.getLipSize().getValue() + 1 < body.getFace().getMouth().getLipSize().getValue()) {
 			possibleEffects.add(new PossibleItemEffect(
 				new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_FACE, TFModifier.TF_MOD_SIZE, TFPotency.BOOST, 1),
 				"Your [pc.lips] are too small!"));
@@ -2108,10 +2092,8 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 				if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 			}
 			// Size:
-			if(target.getPenisRawSizeValue() < body.getPenis().getRawLengthValue()
-					|| isHermOrFuta()) {
-				if(body.getPenis().getRawLengthValue() - target.getPenisRawSizeValue() > 5
-						|| isHermOrFuta()) {
+			if(target.getPenisRawSizeValue() < body.getPenis().getRawLengthValue()) {
+				if(body.getPenis().getRawLengthValue() - target.getPenisRawSizeValue() > 5) {
 					possibleEffects.add(new PossibleItemEffect(
 						new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_PENIS, TFModifier.TF_MOD_SIZE, TFPotency.BOOST, 1),
 						"Your cock needs to be a lot bigger!"));
@@ -2137,8 +2119,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 				}
 			}
 			// Penis girth:
-			if(target.getPenisRawGirthValue() < body.getPenis().getRawGirthValue()
-					|| isHermOrFuta()) {
+			if(target.getPenisRawGirthValue() < body.getPenis().getRawGirthValue()) {
 				possibleEffects.add(new PossibleItemEffect(
 					new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_PENIS, TFModifier.TF_MOD_SIZE_SECONDARY, TFPotency.MINOR_BOOST, 1),
 					"I want your cock to be nice and thick!"));
@@ -2151,8 +2132,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 				if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 			}
 			// Ball size:
-			if(target.getTesticleSize().getValue() < body.getPenis().getTesticle().getTesticleSize().getValue()
-					|| isHermOrFuta()) {
+			if(target.getTesticleSize().getValue() < body.getPenis().getTesticle().getTesticleSize().getValue()) {
 				possibleEffects.add(new PossibleItemEffect(
 					new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_PENIS, TFModifier.TF_MOD_SIZE_TERTIARY, TFPotency.MINOR_BOOST, 1),
 					"Your balls need to be bigger than that!"));
@@ -2168,11 +2148,9 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		
 		//--- VAGINA ---//
 
-		if((target.getVaginaType() != VaginaType.NONE && body.getVagina().getType() != VaginaType.NONE)
-				|| isHermOrFuta()) {
+		if((target.getVaginaType() != VaginaType.NONE && body.getVagina().getType() != VaginaType.NONE)) {
 			// Capacity:
-			if(target.getVaginaRawCapacityValue()+10 < body.getVagina().getOrificeVagina().getRawCapacityValue()
-					|| isHermOrFuta()) {
+			if(target.getVaginaRawCapacityValue()+10 < body.getVagina().getOrificeVagina().getRawCapacityValue()) {
 				possibleEffects.add(new PossibleItemEffect(
 					new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_VAGINA, TFModifier.TF_MOD_CAPACITY, TFPotency.BOOST, 1),
 					"Your pussy's too tight for my liking!"));
@@ -2185,8 +2163,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 				if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 			}
 			// Wetness:
-			if(target.getVaginaWetness().getValue() < body.getVagina().getOrificeVagina().getWetness(null).getValue()
-					|| isHermOrFuta()) {
+			if(target.getVaginaWetness().getValue() < body.getVagina().getOrificeVagina().getWetness(null).getValue()) {
 				possibleEffects.add(new PossibleItemEffect(
 					new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_VAGINA, TFModifier.TF_MOD_WETNESS, TFPotency.MINOR_BOOST, 1),
 					"Your pussy isn't wet enough!"));
